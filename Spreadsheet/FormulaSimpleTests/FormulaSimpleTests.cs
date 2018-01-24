@@ -15,6 +15,17 @@ namespace FormulaTestCases
     [TestClass]
     public class UnitTests
     {
+
+        [TestMethod]
+        public void MyTest1()
+        {
+
+            Formula tester = new Formula("((1 + 2)+2.9e10/90)");
+            
+
+        }
+
+
         /// <summary>
         /// This tests that a syntactically incorrect parameter to Formula results
         /// in a FormulaFormatException.

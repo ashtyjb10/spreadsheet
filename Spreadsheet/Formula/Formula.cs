@@ -15,6 +15,26 @@ namespace Formulas
     /// </summary>
     public class Formula
     {
+
+        //Object Variables
+        Stack<String> valuesStack;
+        Stack<String> OperatorStack;
+
+        String lpPattern = @"^\($";
+        String rpPattern = @"\)$";
+        String opPattern = @"[\+\-*/]$";
+        String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
+        String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
+        IEnumerable<String> formulaStrings;
+
+        Boolean hasToken = false;
+        Boolean firstToken = false;
+        Boolean lastToken = false;
+        Boolean followOpeningOperator = false;
+        Boolean followNumberVariableClosing = false;
+        int lpCount = 0;
+        int rpCount = 0;
+
         /// <summary>
         /// Creates a Formula from a string that consists of a standard infix expression composed
         /// from non-negative floating-point numbers (using C#-like syntax for double/int literals), 
@@ -37,6 +57,154 @@ namespace Formulas
         /// </summary>
         public Formula(String formula)
         {
+            this.formulaStrings  = GetTokens(formula);
+
+            //Iterator that loops through each token.
+            foreach (String token in formulaStrings)
+            {
+                //If the token is recognized as valid. (Valid tokens are described in the Formula class. and code is provided to detect them.)
+                if (Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                    Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, opPattern) ||
+                    Regex.IsMatch(token, rpPattern) || Regex.IsMatch(token, lpPattern))
+                {
+                    //Change boolean to reflect presence of at least one token.
+                    this.hasToken = true;
+
+                    //The first token of a formula must be a number, a variable, or an opening parenthesis.
+                    //Check for the first token.  If it is not a number, variable or an opening parenthesis, throw exception.
+                    if (this.firstToken == false)
+                    {
+                        if (Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                           Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
+                        {
+                            this.firstToken = true;
+                        }
+                        else
+                        {
+                            throw new FormulaFormatException("First token is not a number, variable or opening parenthesis");
+                        }
+                    }
+
+                    //The last token of a formula must be a number, a variable, or a closing parenthesis.
+                    //If the last viewed token is a right parentheses, variable or a number, then it could be a valid last token.
+                    if (Regex.IsMatch(token, rpPattern) || Regex.IsMatch(token, varPattern) ||
+                        Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace))
+                    {
+                        this.lastToken = true;
+                    }
+                    else
+                    {
+                        //If the last token seen is not a valid last token, then the iteration will end with an error.
+                        this.lastToken = false;
+                    }
+                    if(this.followOpeningOperator == true)
+                    {
+                        if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                           Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
+                        {
+                            this.followOpeningOperator = false;
+                        }
+                        else
+                        {
+                            throw new FormulaFormatException("The token following an opening parenthesis or an oporator is not valid");
+                        }
+                    }
+
+
+
+
+                    //Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
+                    if(Regex.IsMatch(token, lpPattern) || Regex.IsMatch(token,opPattern))
+                    {
+                        this.followOpeningOperator = true;
+                    }
+                    else
+                    {
+                        this.followOpeningOperator = false;
+                    }
+
+
+
+
+
+
+                    if(this.followNumberVariableClosing == true)
+                    {
+                        if(Regex.IsMatch(token, opPattern) || Regex.IsMatch(token, rpPattern))
+                        {
+                            this.followNumberVariableClosing = false;
+                        }
+                        else
+                        {
+                            throw new FormulaFormatException("The token following a number, variable or closing parenthesis is not valid");
+                        }
+                    }
+
+                    //Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
+                    if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                        Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, rpPattern))
+                    {
+                        this.followNumberVariableClosing = true;
+                    }
+                    else
+                    {
+                        this.followNumberVariableClosing = false;
+                    }
+
+
+
+                    //When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.
+                    if (Regex.IsMatch(token, lpPattern))
+                    {
+                        this.lpCount++;
+                    }
+
+                    if (Regex.IsMatch(token, rpPattern))
+                    {
+                        this.rpCount++;
+                    }
+                    
+                    if(this.rpCount > this.lpCount)
+                    {
+                        throw new FormulaFormatException("Closing parentheses appear before openining parentheses.");
+                    }
+
+
+
+
+                }
+                else
+                {
+                    //Throw a format exception.
+                    throw new FormulaFormatException(token + " is an invalid input");
+                }
+            }
+
+            //If no tokens are present
+            if (hasToken == false)
+            {
+                throw new FormulaFormatException("There must be at least one token");
+            }
+
+            //If the last token is not a valid last token, throw an exception.
+            if(this.lastToken == false)
+            {
+                throw new FormulaFormatException("The last token is not a valid last input");
+            }
+
+            //The total number of opening parentheses must equal the total number of closing parentheses.
+            if (this.rpCount != this.lpCount)
+            {
+                throw new FormulaFormatException("The number of opening and closing parentheses is not equal");
+            }
+
+
+
+
+            
+           
+
+
         }
         /// <summary>
         /// Evaluates this Formula, using the Lookup delegate to determine the values of variables.  (The
