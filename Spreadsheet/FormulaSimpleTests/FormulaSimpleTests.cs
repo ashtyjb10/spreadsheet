@@ -25,7 +25,6 @@ namespace FormulaTestCases
 
         }
 
-
         /// <summary>
         /// This tests that a syntactically incorrect parameter to Formula results
         /// in a FormulaFormatException.
