@@ -17,22 +17,22 @@ namespace Formulas
     {
 
         //Object Variables
-        IEnumerable<String> formulaStrings;
-        
+        private IEnumerable<String> formulaStrings;
+
         //Patterns used for recognition of tokens.
-        String lpPattern = @"^\($";
-        String rpPattern = @"\)$";
-        String opPattern = @"[\+\-*/]$";
-        String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
-        String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
+        private String lpPattern = @"^\($";
+        private String rpPattern = @"\)$";
+        private String opPattern = @"[\+\-*/]$";
+        private String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
+        private String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
         //Syntax check variables
-        Boolean hasToken = false;
-        Boolean firstToken = false;
-        Boolean lastToken = false;
-        Boolean followOpeningOperator = false;
-        Boolean followNumberVariableClosing = false;
-        int lpCount = 0;
-        int rpCount = 0;
+        private Boolean hasToken = false;
+        private Boolean firstToken = false;
+        private Boolean lastToken = false;
+        private Boolean followOpeningOperator = false;
+        private Boolean followNumberVariableClosing = false;
+        private int lpCount = 0;
+        private int rpCount = 0;
 
         /// <summary>
         /// Creates a Formula from a string that consists of a standard infix expression composed
@@ -196,9 +196,9 @@ namespace Formulas
         /// </summary>
         public double Evaluate(Lookup lookup)
         {
-            Stack<string> valuesStack = new Stack<string>();
+            Stack<string> valueStack = new Stack<string>();
             Stack<string> operatorStack = new Stack<string>();
-            
+        
             foreach(String token in this.formulaStrings)
             {
                 if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace))
@@ -207,154 +207,167 @@ namespace Formulas
                     //If the string at the top of the oporator stack is * or /
                     if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
                     {
-                        //If the operator is multiplication.
-                        if(operatorStack.Peek().Equals("*"))
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) * (Convert.ToDouble(token))));
-                        }
-                        //If operator is division.
-                        else
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) / (Convert.ToDouble(token))));
-                        }
+                        PopOnceApplyOperator(operatorStack, valueStack, Convert.ToDouble(token));
                     }
                     else
                     {
                         //Otherwise push the token onto the value stack.
-                        valuesStack.Push(token);
+                        valueStack.Push(token);
                     }
                 }
                 
-
-                if(Regex.IsMatch(token, varPattern))
+                if (Regex.IsMatch(token, varPattern))
                 {
+                    //Try to find the value of the variable.
+                    try
+                    {
+                        double tokenLookupValue = lookup(token);
+                    }
+                    catch (Exception)
+                    {
+                        //If no variable is found throw an exception.
+                        throw new FormulaEvaluationException("Could not find the value of the variable");
+                    }
+
                     //If the string at the top of the oporator stack is * or /
                     if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
                     {
-                        //If the operator is multiplication.
-                        if (operatorStack.Peek().Equals("*"))
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) * (lookup(token))));
-                        }
-                        //If operator is division.
-                        else
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) / (lookup(token))));
-                        }
+                        PopOnceApplyOperator(operatorStack, valueStack, lookup(token));
                     }
                     else
                     {
                         //Otherwise push the token onto the value stack.
-                        valuesStack.Push(Convert.ToString(lookup(token)));
+                        valueStack.Push(Convert.ToString(lookup(token)));
                     }
                 }
 
+                //If the token is
                 if(Regex.IsMatch(token, @"[\+\-]$"))
                 {
+                    //If teh operator stack is addition or subtraction, apply the operator to the next two values.
                     if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
                     {
-                        //If the operator is multiplication.
-                        if (operatorStack.Peek().Equals("+"))
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) + (Convert.ToDouble(valuesStack.Pop()))));
-                        }
-                        //If operator is division.
-                        else
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) - (Convert.ToDouble(valuesStack.Pop()))));
-                        }
+                        PopTwiceApplyOperator(operatorStack, valueStack);
                     }
+
+                    //Token must be pushed onto the opearator stack.
                     operatorStack.Push(token);
                 }
 
+                //If the token is multiplication or division.
                 if(Regex.IsMatch(token, @"[\*\/]$"))
                 {
                     operatorStack.Push(token);
                 }
 
+                //If the token is left parentheses.
                 if(Regex.IsMatch(token, lpPattern))
                 {
                     operatorStack.Push(token);
                 }
 
+                //If the token is right parentheses.
                 if(Regex.IsMatch(token, rpPattern))
                 {
+                    //If the sign is addition or subtraction, apply the operator to the next two values.
                     if (Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
                     {
-                        //If the operator is multiplication.
-                        if (operatorStack.Peek().Equals("+"))
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) + (Convert.ToDouble(valuesStack.Pop()))));
-                        }
-                        //If operator is division.
-                        else
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) - (Convert.ToDouble(valuesStack.Pop()))));
-                        }
+                        PopTwiceApplyOperator(operatorStack, valueStack);
                     }
 
+                    //Pop the operatior stack to clear '('
                     operatorStack.Pop();
 
+                    //If the next operation is multiply or divide.
                     if(!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
                     {
-                        //If the operator is multiplication.
-                        if (operatorStack.Peek().Equals("*"))
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) * (Convert.ToDouble(valuesStack.Pop()))));
-                        }
-                        //If operator is division.
-                        else
-                        {
-                            operatorStack.Pop();
-                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) / (Convert.ToDouble(valuesStack.Pop()))));
-                        }
+                        PopTwiceApplyOperator(operatorStack, valueStack);
                     }
                 }
             }
 
+            //Once the iteration has finished, two cases remain to check for the final value.
+            //If the operator stackis empty, return the value on the value stack as the solution.
             if(operatorStack.Count == 0)
             {
-                return Convert.ToDouble(valuesStack.Pop());
+                return Convert.ToDouble(valueStack.Pop());
             }
+            //Otherwise either + or - reamain.  Pop the 
             else
             {
                 if (Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
                 {
-                    //If the operator is multiplication.
-                    if (operatorStack.Peek().Equals("+"))
-                    {
-                        operatorStack.Pop();
-                        valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) + (Convert.ToDouble(valuesStack.Pop()))));
-                    }
-                    //If operator is division.
-                    else
-                    {
-                        operatorStack.Pop();
-                        valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) - (Convert.ToDouble(valuesStack.Pop()))));
-                    }
+                    //apply the operator to the remaining values in the value stack.
+                    PopTwiceApplyOperator(operatorStack, valueStack);
                 }
             }
-
-            return Convert.ToDouble(valuesStack.Pop());
-        }
-        private string PopTwiceApplyOperator(string varOperator)
-        {
-            return null;
+            //Return the value as the solution.
+            return Convert.ToDouble(valueStack.Pop());
         }
 
 
-        private string PopOnceApplyOperator(string varOperator, string token)
+        /* Helper method that will pop the operator stack once and the value stack twice.  The operator that is popped is applied
+         * to the two values popped from the value stack.
+         * 
+         * Two stacks are passed to the method, the operator stack and the value stack.  There is no value returned, the change
+         * is made within the stacks that are passed to the method.
+         * 
+         */
+        private void PopTwiceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack)
         {
-            return null;
+            //If the operator is addition.
+            if (operatorStack.Peek().Equals("+"))
+            {
+                operatorStack.Pop();
+               valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) + (Convert.ToDouble(valueStack.Pop()))));
+                return;
+            }
+            //If operator is subtraction.
+            if(operatorStack.Peek().Equals("-"))
+            {
+                operatorStack.Pop();
+                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) - (Convert.ToDouble(valueStack.Pop()))));
+                return;
+            }
+
+            //If the operator is multiplication.
+            if (operatorStack.Peek().Equals("*"))
+            {
+                operatorStack.Pop();
+                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) * (Convert.ToDouble(valueStack.Pop()))));
+                return;
+            }
+            //If operator is division.
+            if(operatorStack.Peek().Equals("/"))
+            {
+                operatorStack.Pop();
+                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) / (Convert.ToDouble(valueStack.Pop()))));
+                return;
+            }
+        }
+        /* Helper method that will pop the operator stack once and the value stack once.  A double is also passed to the caller.
+         * the method will apply the operator to the value that it is passed and the value that is popped from the value stack.
+         * 
+         * The method retuqires an operator stack and a value stack and a double.  There is no value returned, the change is 
+         * made within the stacks that are passed to the method.
+         */
+
+        private void PopOnceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack, double token)
+        {
+            //If the operator is multiplication.
+            if (operatorStack.Peek().Equals("*"))
+            {
+                operatorStack.Pop();
+                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) * (token)));
+                return;
+            }
+            //If operator is division.
+            else
+            {
+                operatorStack.Pop();
+                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) / (token)));
+                return;
+            }
         }
 
         /// <summary>

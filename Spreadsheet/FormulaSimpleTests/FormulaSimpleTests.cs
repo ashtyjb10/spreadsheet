@@ -19,10 +19,8 @@ namespace FormulaTestCases
         [TestMethod]
         public void MyTest1()
         {
-
-            Formula tester = new Formula("((2*2) + 1) / 5");
-            Assert.AreEqual(1, tester.Evaluate(Lookup4));
-            
+            Formula tester = new Formula("(((25e9*1) + 0) / 25e9) + 2 +8 ");
+            Assert.AreEqual(11, tester.Evaluate(Lookup4));
         }
 
         /// <summary>
