@@ -20,9 +20,9 @@ namespace FormulaTestCases
         public void MyTest1()
         {
 
-            Formula tester = new Formula("((1 + 2)+2.9e10/90)");
+            Formula tester = new Formula("((2*2) + 1) / 5");
+            Assert.AreEqual(1, tester.Evaluate(Lookup4));
             
-
         }
 
         /// <summary>

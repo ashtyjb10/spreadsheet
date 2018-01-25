@@ -1,5 +1,5 @@
 ﻿// Skeleton written by Joe Zachary for CS 3500, January 2017
-
+// Completed by Nathan Herrmann for CS 3500, January 2017
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -17,16 +17,15 @@ namespace Formulas
     {
 
         //Object Variables
-        Stack<String> valuesStack;
-        Stack<String> OperatorStack;
-
+        IEnumerable<String> formulaStrings;
+        
+        //Patterns used for recognition of tokens.
         String lpPattern = @"^\($";
         String rpPattern = @"\)$";
         String opPattern = @"[\+\-*/]$";
         String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
         String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
-        IEnumerable<String> formulaStrings;
-
+        //Syntax check variables
         Boolean hasToken = false;
         Boolean firstToken = false;
         Boolean lastToken = false;
@@ -97,7 +96,9 @@ namespace Formulas
                         //If the last token seen is not a valid last token, then the iteration will end with an error.
                         this.lastToken = false;
                     }
-                    if(this.followOpeningOperator == true)
+                    
+                    //Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
+                    if (this.followOpeningOperator == true)
                     {
                         if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
                            Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
@@ -109,11 +110,8 @@ namespace Formulas
                             throw new FormulaFormatException("The token following an opening parenthesis or an oporator is not valid");
                         }
                     }
-
-
-
-
-                    //Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
+                    
+                    //Set check for following token.
                     if(Regex.IsMatch(token, lpPattern) || Regex.IsMatch(token,opPattern))
                     {
                         this.followOpeningOperator = true;
@@ -123,12 +121,8 @@ namespace Formulas
                         this.followOpeningOperator = false;
                     }
 
-
-
-
-
-
-                    if(this.followNumberVariableClosing == true)
+                    //Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
+                    if (this.followNumberVariableClosing == true)
                     {
                         if(Regex.IsMatch(token, opPattern) || Regex.IsMatch(token, rpPattern))
                         {
@@ -140,7 +134,7 @@ namespace Formulas
                         }
                     }
 
-                    //Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
+                    //Set check for following token.
                     if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
                         Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, rpPattern))
                     {
@@ -150,8 +144,6 @@ namespace Formulas
                     {
                         this.followNumberVariableClosing = false;
                     }
-
-
 
                     //When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.
                     if (Regex.IsMatch(token, lpPattern))
@@ -168,10 +160,6 @@ namespace Formulas
                     {
                         throw new FormulaFormatException("Closing parentheses appear before openining parentheses.");
                     }
-
-
-
-
                 }
                 else
                 {
@@ -179,7 +167,6 @@ namespace Formulas
                     throw new FormulaFormatException(token + " is an invalid input");
                 }
             }
-
             //If no tokens are present
             if (hasToken == false)
             {
@@ -197,14 +184,6 @@ namespace Formulas
             {
                 throw new FormulaFormatException("The number of opening and closing parentheses is not equal");
             }
-
-
-
-
-            
-           
-
-
         }
         /// <summary>
         /// Evaluates this Formula, using the Lookup delegate to determine the values of variables.  (The
@@ -217,7 +196,165 @@ namespace Formulas
         /// </summary>
         public double Evaluate(Lookup lookup)
         {
-            return 0;
+            Stack<string> valuesStack = new Stack<string>();
+            Stack<string> operatorStack = new Stack<string>();
+            
+            foreach(String token in this.formulaStrings)
+            {
+                if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace))
+                {
+
+                    //If the string at the top of the oporator stack is * or /
+                    if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
+                    {
+                        //If the operator is multiplication.
+                        if(operatorStack.Peek().Equals("*"))
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) * (Convert.ToDouble(token))));
+                        }
+                        //If operator is division.
+                        else
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) / (Convert.ToDouble(token))));
+                        }
+                    }
+                    else
+                    {
+                        //Otherwise push the token onto the value stack.
+                        valuesStack.Push(token);
+                    }
+                }
+                
+
+                if(Regex.IsMatch(token, varPattern))
+                {
+                    //If the string at the top of the oporator stack is * or /
+                    if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
+                    {
+                        //If the operator is multiplication.
+                        if (operatorStack.Peek().Equals("*"))
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) * (lookup(token))));
+                        }
+                        //If operator is division.
+                        else
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) / (lookup(token))));
+                        }
+                    }
+                    else
+                    {
+                        //Otherwise push the token onto the value stack.
+                        valuesStack.Push(Convert.ToString(lookup(token)));
+                    }
+                }
+
+                if(Regex.IsMatch(token, @"[\+\-]$"))
+                {
+                    if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
+                    {
+                        //If the operator is multiplication.
+                        if (operatorStack.Peek().Equals("+"))
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) + (Convert.ToDouble(valuesStack.Pop()))));
+                        }
+                        //If operator is division.
+                        else
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) - (Convert.ToDouble(valuesStack.Pop()))));
+                        }
+                    }
+                    operatorStack.Push(token);
+                }
+
+                if(Regex.IsMatch(token, @"[\*\/]$"))
+                {
+                    operatorStack.Push(token);
+                }
+
+                if(Regex.IsMatch(token, lpPattern))
+                {
+                    operatorStack.Push(token);
+                }
+
+                if(Regex.IsMatch(token, rpPattern))
+                {
+                    if (Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
+                    {
+                        //If the operator is multiplication.
+                        if (operatorStack.Peek().Equals("+"))
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) + (Convert.ToDouble(valuesStack.Pop()))));
+                        }
+                        //If operator is division.
+                        else
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) - (Convert.ToDouble(valuesStack.Pop()))));
+                        }
+                    }
+
+                    operatorStack.Pop();
+
+                    if(!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
+                    {
+                        //If the operator is multiplication.
+                        if (operatorStack.Peek().Equals("*"))
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) * (Convert.ToDouble(valuesStack.Pop()))));
+                        }
+                        //If operator is division.
+                        else
+                        {
+                            operatorStack.Pop();
+                            valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) / (Convert.ToDouble(valuesStack.Pop()))));
+                        }
+                    }
+                }
+            }
+
+            if(operatorStack.Count == 0)
+            {
+                return Convert.ToDouble(valuesStack.Pop());
+            }
+            else
+            {
+                if (Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
+                {
+                    //If the operator is multiplication.
+                    if (operatorStack.Peek().Equals("+"))
+                    {
+                        operatorStack.Pop();
+                        valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) + (Convert.ToDouble(valuesStack.Pop()))));
+                    }
+                    //If operator is division.
+                    else
+                    {
+                        operatorStack.Pop();
+                        valuesStack.Push(Convert.ToString(Convert.ToDouble(valuesStack.Pop()) - (Convert.ToDouble(valuesStack.Pop()))));
+                    }
+                }
+            }
+
+            return Convert.ToDouble(valuesStack.Pop());
+        }
+        private string PopTwiceApplyOperator(string varOperator)
+        {
+            return null;
+        }
+
+
+        private string PopOnceApplyOperator(string varOperator, string token)
+        {
+            return null;
         }
 
         /// <summary>
