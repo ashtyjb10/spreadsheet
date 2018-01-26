@@ -18,7 +18,7 @@ namespace FormulaTestCases
         [TestMethod]
         public void MyTest1()
         {
-            Formula tester = new Formula("(((456 + 789 - 456) / 789) /0)");
+            Formula tester = new Formula("(((456 + 789 - 456) / 789) -1)");
             Assert.AreEqual(0, tester.Evaluate(Lookup4));
         }
 
