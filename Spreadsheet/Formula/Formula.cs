@@ -15,7 +15,6 @@ namespace Formulas
     /// </summary>
     public class Formula
     {
-
         //Object Variables
         private IEnumerable<String> formulaStrings;
 
@@ -25,6 +24,7 @@ namespace Formulas
         private String opPattern = @"[\+\-*/]$";
         private String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
         private String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
+     
         //Syntax check variables
         private Boolean hasToken = false;
         private Boolean firstToken = false;
@@ -111,7 +111,7 @@ namespace Formulas
                         }
                     }
                     
-                    //Set check for following token.
+                    //Set check for next token following a left parentheses or an operation.
                     if(Regex.IsMatch(token, lpPattern) || Regex.IsMatch(token,opPattern))
                     {
                         this.followOpeningOperator = true;
@@ -134,7 +134,7 @@ namespace Formulas
                         }
                     }
 
-                    //Set check for following token.
+                    //Set check for the next token following a double, variable or right parentheses.
                     if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
                         Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, rpPattern))
                     {
@@ -150,12 +150,13 @@ namespace Formulas
                     {
                         this.lpCount++;
                     }
-
+                    //If the token is a right parentheses, incrememnt the right parentheses count
                     if (Regex.IsMatch(token, rpPattern))
                     {
                         this.rpCount++;
                     }
                     
+                    //If there are more right parentheses than left, throw an exception.
                     if(this.rpCount > this.lpCount)
                     {
                         throw new FormulaFormatException("Closing parentheses appear before openining parentheses.");
@@ -233,6 +234,7 @@ namespace Formulas
                     if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
                     {
                         PopOnceApplyOperator(operatorStack, valueStack, lookup(token));
+                        
                     }
                     else
                     {
@@ -244,7 +246,7 @@ namespace Formulas
                 //If the token is
                 if(Regex.IsMatch(token, @"[\+\-]$"))
                 {
-                    //If teh operator stack is addition or subtraction, apply the operator to the next two values.
+                    //If the top of the operator stack is addition or subtraction, apply the operator to the next two values.
                     if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
                     {
                         PopTwiceApplyOperator(operatorStack, valueStack);
@@ -315,33 +317,41 @@ namespace Formulas
          */
         private void PopTwiceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack)
         {
+            String varOperator = operatorStack.Pop();
+            double varB = Convert.ToDouble(valueStack.Pop());
+            double varA = Convert.ToDouble(valueStack.Pop());
+
             //If the operator is addition.
-            if (operatorStack.Peek().Equals("+"))
+            if (varOperator.Equals("+"))
             {
-                operatorStack.Pop();
-               valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) + (Convert.ToDouble(valueStack.Pop()))));
+               
+               valueStack.Push(Convert.ToString(varA + varB));
                 return;
             }
             //If operator is subtraction.
-            if(operatorStack.Peek().Equals("-"))
+            if(varOperator.Equals("-"))
             {
-                operatorStack.Pop();
-                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) - (Convert.ToDouble(valueStack.Pop()))));
+                
+                valueStack.Push(Convert.ToString(varA - varB));
                 return;
             }
 
             //If the operator is multiplication.
-            if (operatorStack.Peek().Equals("*"))
+            if (varOperator.Equals("*"))
             {
-                operatorStack.Pop();
-                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) * (Convert.ToDouble(valueStack.Pop()))));
+                
+                valueStack.Push(Convert.ToString(varA * varB));
                 return;
             }
             //If operator is division.
-            if(operatorStack.Peek().Equals("/"))
+            if(varOperator.Equals("/"))
             {
-                operatorStack.Pop();
-                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) / (Convert.ToDouble(valueStack.Pop()))));
+
+                if(varB == 0)
+                {
+                    throw new FormulaEvaluationException("Can't divide by 0");
+                }
+                valueStack.Push(Convert.ToString(varA / varB));
                 return;
             }
         }
@@ -354,18 +364,24 @@ namespace Formulas
 
         private void PopOnceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack, double token)
         {
-            //If the operator is multiplication.
-            if (operatorStack.Peek().Equals("*"))
-            {
-                operatorStack.Pop();
-                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) * (token)));
+            string varOperator = operatorStack.Pop();
+            double varB = token;
+            double varA = Convert.ToDouble(valueStack.Pop());
+
+            //If the operator is multiplication, pop the stacks and multiply the values.
+            if (varOperator.Equals("*"))
+            {   
+                valueStack.Push(Convert.ToString(varA * varB));
                 return;
             }
-            //If operator is division.
+            //If the operator is division, pop the stacks and divide the values.
             else
             {
-                operatorStack.Pop();
-                valueStack.Push(Convert.ToString(Convert.ToDouble(valueStack.Pop()) / (token)));
+                if (varB == 0)
+                {
+                    throw new FormulaEvaluationException("Can't divide by 0");
+                }
+                valueStack.Push(Convert.ToString(varA / varB));
                 return;
             }
         }

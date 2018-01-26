@@ -15,12 +15,11 @@ namespace FormulaTestCases
     [TestClass]
     public class UnitTests
     {
-
         [TestMethod]
         public void MyTest1()
         {
-            Formula tester = new Formula("(((25e9*1) + 0) / 25e9) + 2 +8 ");
-            Assert.AreEqual(11, tester.Evaluate(Lookup4));
+            Formula tester = new Formula("(((456 + 789 - 456) / 789) /0)");
+            Assert.AreEqual(0, tester.Evaluate(Lookup4));
         }
 
         /// <summary>
