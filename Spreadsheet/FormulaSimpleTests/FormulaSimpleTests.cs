@@ -15,6 +15,13 @@ namespace FormulaTestCases
     [TestClass]
     public class UnitTests
     {
+        [TestMethod]
+        public void MyTest1()
+        {
+            Formula tester = new Formula("(((456 + 789 - 456) / 789) /0)");
+            Assert.AreEqual(0, tester.Evaluate(Lookup4));
+        }
+
         /// <summary>
         /// This tests that a syntactically incorrect parameter to Formula results
         /// in a FormulaFormatException.

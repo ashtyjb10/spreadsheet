@@ -1,5 +1,5 @@
 ﻿// Skeleton written by Joe Zachary for CS 3500, January 2017
-
+// Completed by Nathan Herrmann for CS 3500, January 2017
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -15,6 +15,25 @@ namespace Formulas
     /// </summary>
     public class Formula
     {
+        //Object Variables
+        private IEnumerable<String> formulaStrings;
+
+        //Patterns used for recognition of tokens.
+        private String lpPattern = @"^\($";
+        private String rpPattern = @"\)$";
+        private String opPattern = @"[\+\-*/]$";
+        private String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
+        private String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
+     
+        //Syntax check variables
+        private Boolean hasToken = false;
+        private Boolean firstToken = false;
+        private Boolean lastToken = false;
+        private Boolean followOpeningOperator = false;
+        private Boolean followNumberVariableClosing = false;
+        private int lpCount = 0;
+        private int rpCount = 0;
+
         /// <summary>
         /// Creates a Formula from a string that consists of a standard infix expression composed
         /// from non-negative floating-point numbers (using C#-like syntax for double/int literals), 
@@ -37,6 +56,135 @@ namespace Formulas
         /// </summary>
         public Formula(String formula)
         {
+            this.formulaStrings  = GetTokens(formula);
+
+            //Iterator that loops through each token.
+            foreach (String token in formulaStrings)
+            {
+                //If the token is recognized as valid. (Valid tokens are described in the Formula class. and code is provided to detect them.)
+                if (Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                    Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, opPattern) ||
+                    Regex.IsMatch(token, rpPattern) || Regex.IsMatch(token, lpPattern))
+                {
+                    //Change boolean to reflect presence of at least one token.
+                    this.hasToken = true;
+
+                    //The first token of a formula must be a number, a variable, or an opening parenthesis.
+                    //Check for the first token.  If it is not a number, variable or an opening parenthesis, throw exception.
+                    if (this.firstToken == false)
+                    {
+                        if (Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                           Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
+                        {
+                            this.firstToken = true;
+                        }
+                        else
+                        {
+                            throw new FormulaFormatException("First token is not a number, variable or opening parenthesis");
+                        }
+                    }
+
+                    //The last token of a formula must be a number, a variable, or a closing parenthesis.
+                    //If the last viewed token is a right parentheses, variable or a number, then it could be a valid last token.
+                    if (Regex.IsMatch(token, rpPattern) || Regex.IsMatch(token, varPattern) ||
+                        Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace))
+                    {
+                        this.lastToken = true;
+                    }
+                    else
+                    {
+                        //If the last token seen is not a valid last token, then the iteration will end with an error.
+                        this.lastToken = false;
+                    }
+                    
+                    //Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
+                    if (this.followOpeningOperator == true)
+                    {
+                        if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                           Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
+                        {
+                            this.followOpeningOperator = false;
+                        }
+                        else
+                        {
+                            throw new FormulaFormatException("The token following an opening parenthesis or an oporator is not valid");
+                        }
+                    }
+                    
+                    //Set check for next token following a left parentheses or an operation.
+                    if(Regex.IsMatch(token, lpPattern) || Regex.IsMatch(token,opPattern))
+                    {
+                        this.followOpeningOperator = true;
+                    }
+                    else
+                    {
+                        this.followOpeningOperator = false;
+                    }
+
+                    //Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
+                    if (this.followNumberVariableClosing == true)
+                    {
+                        if(Regex.IsMatch(token, opPattern) || Regex.IsMatch(token, rpPattern))
+                        {
+                            this.followNumberVariableClosing = false;
+                        }
+                        else
+                        {
+                            throw new FormulaFormatException("The token following a number, variable or closing parenthesis is not valid");
+                        }
+                    }
+
+                    //Set check for the next token following a double, variable or right parentheses.
+                    if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
+                        Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, rpPattern))
+                    {
+                        this.followNumberVariableClosing = true;
+                    }
+                    else
+                    {
+                        this.followNumberVariableClosing = false;
+                    }
+
+                    //When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.
+                    if (Regex.IsMatch(token, lpPattern))
+                    {
+                        this.lpCount++;
+                    }
+                    //If the token is a right parentheses, incrememnt the right parentheses count
+                    if (Regex.IsMatch(token, rpPattern))
+                    {
+                        this.rpCount++;
+                    }
+                    
+                    //If there are more right parentheses than left, throw an exception.
+                    if(this.rpCount > this.lpCount)
+                    {
+                        throw new FormulaFormatException("Closing parentheses appear before openining parentheses.");
+                    }
+                }
+                else
+                {
+                    //Throw a format exception.
+                    throw new FormulaFormatException(token + " is an invalid input");
+                }
+            }
+            //If no tokens are present
+            if (hasToken == false)
+            {
+                throw new FormulaFormatException("There must be at least one token");
+            }
+
+            //If the last token is not a valid last token, throw an exception.
+            if(this.lastToken == false)
+            {
+                throw new FormulaFormatException("The last token is not a valid last input");
+            }
+
+            //The total number of opening parentheses must equal the total number of closing parentheses.
+            if (this.rpCount != this.lpCount)
+            {
+                throw new FormulaFormatException("The number of opening and closing parentheses is not equal");
+            }
         }
         /// <summary>
         /// Evaluates this Formula, using the Lookup delegate to determine the values of variables.  (The
@@ -49,7 +197,193 @@ namespace Formulas
         /// </summary>
         public double Evaluate(Lookup lookup)
         {
-            return 0;
+            Stack<string> valueStack = new Stack<string>();
+            Stack<string> operatorStack = new Stack<string>();
+        
+            foreach(String token in this.formulaStrings)
+            {
+                if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace))
+                {
+
+                    //If the string at the top of the oporator stack is * or /
+                    if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
+                    {
+                        PopOnceApplyOperator(operatorStack, valueStack, Convert.ToDouble(token));
+                    }
+                    else
+                    {
+                        //Otherwise push the token onto the value stack.
+                        valueStack.Push(token);
+                    }
+                }
+                
+                if (Regex.IsMatch(token, varPattern))
+                {
+                    //Try to find the value of the variable.
+                    try
+                    {
+                        double tokenLookupValue = lookup(token);
+                    }
+                    catch (Exception)
+                    {
+                        //If no variable is found throw an exception.
+                        throw new FormulaEvaluationException("Could not find the value of the variable");
+                    }
+
+                    //If the string at the top of the oporator stack is * or /
+                    if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
+                    {
+                        PopOnceApplyOperator(operatorStack, valueStack, lookup(token));
+                        
+                    }
+                    else
+                    {
+                        //Otherwise push the token onto the value stack.
+                        valueStack.Push(Convert.ToString(lookup(token)));
+                    }
+                }
+
+                //If the token is
+                if(Regex.IsMatch(token, @"[\+\-]$"))
+                {
+                    //If the top of the operator stack is addition or subtraction, apply the operator to the next two values.
+                    if (!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
+                    {
+                        PopTwiceApplyOperator(operatorStack, valueStack);
+                    }
+
+                    //Token must be pushed onto the opearator stack.
+                    operatorStack.Push(token);
+                }
+
+                //If the token is multiplication or division.
+                if(Regex.IsMatch(token, @"[\*\/]$"))
+                {
+                    operatorStack.Push(token);
+                }
+
+                //If the token is left parentheses.
+                if(Regex.IsMatch(token, lpPattern))
+                {
+                    operatorStack.Push(token);
+                }
+
+                //If the token is right parentheses.
+                if(Regex.IsMatch(token, rpPattern))
+                {
+                    //If the sign is addition or subtraction, apply the operator to the next two values.
+                    if (Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
+                    {
+                        PopTwiceApplyOperator(operatorStack, valueStack);
+                    }
+
+                    //Pop the operatior stack to clear '('
+                    operatorStack.Pop();
+
+                    //If the next operation is multiply or divide.
+                    if(!(operatorStack.Count == 0) && Regex.IsMatch(operatorStack.Peek(), @"[\*\/]$"))
+                    {
+                        PopTwiceApplyOperator(operatorStack, valueStack);
+                    }
+                }
+            }
+
+            //Once the iteration has finished, two cases remain to check for the final value.
+            //If the operator stackis empty, return the value on the value stack as the solution.
+            if(operatorStack.Count == 0)
+            {
+                return Convert.ToDouble(valueStack.Pop());
+            }
+            //Otherwise either + or - reamain.  Pop the 
+            else
+            {
+                if (Regex.IsMatch(operatorStack.Peek(), @"[\+\-]$"))
+                {
+                    //apply the operator to the remaining values in the value stack.
+                    PopTwiceApplyOperator(operatorStack, valueStack);
+                }
+            }
+            //Return the value as the solution.
+            return Convert.ToDouble(valueStack.Pop());
+        }
+
+
+        /* Helper method that will pop the operator stack once and the value stack twice.  The operator that is popped is applied
+         * to the two values popped from the value stack.
+         * 
+         * Two stacks are passed to the method, the operator stack and the value stack.  There is no value returned, the change
+         * is made within the stacks that are passed to the method.
+         * 
+         */
+        private void PopTwiceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack)
+        {
+            String varOperator = operatorStack.Pop();
+            double varB = Convert.ToDouble(valueStack.Pop());
+            double varA = Convert.ToDouble(valueStack.Pop());
+
+            //If the operator is addition.
+            if (varOperator.Equals("+"))
+            {
+               
+               valueStack.Push(Convert.ToString(varA + varB));
+                return;
+            }
+            //If operator is subtraction.
+            if(varOperator.Equals("-"))
+            {
+                
+                valueStack.Push(Convert.ToString(varA - varB));
+                return;
+            }
+
+            //If the operator is multiplication.
+            if (varOperator.Equals("*"))
+            {
+                
+                valueStack.Push(Convert.ToString(varA * varB));
+                return;
+            }
+            //If operator is division.
+            if(varOperator.Equals("/"))
+            {
+
+                if(varB == 0)
+                {
+                    throw new FormulaEvaluationException("Can't divide by 0");
+                }
+                valueStack.Push(Convert.ToString(varA / varB));
+                return;
+            }
+        }
+        /* Helper method that will pop the operator stack once and the value stack once.  A double is also passed to the caller.
+         * the method will apply the operator to the value that it is passed and the value that is popped from the value stack.
+         * 
+         * The method retuqires an operator stack and a value stack and a double.  There is no value returned, the change is 
+         * made within the stacks that are passed to the method.
+         */
+
+        private void PopOnceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack, double token)
+        {
+            string varOperator = operatorStack.Pop();
+            double varB = token;
+            double varA = Convert.ToDouble(valueStack.Pop());
+
+            //If the operator is multiplication, pop the stacks and multiply the values.
+            if (varOperator.Equals("*"))
+            {   
+                valueStack.Push(Convert.ToString(varA * varB));
+                return;
+            }
+            //If the operator is division, pop the stacks and divide the values.
+            else
+            {
+                if (varB == 0)
+                {
+                    throw new FormulaEvaluationException("Can't divide by 0");
+                }
+                valueStack.Push(Convert.ToString(varA / varB));
+                return;
+            }
         }
 
         /// <summary>
