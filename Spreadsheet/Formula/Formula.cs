@@ -23,7 +23,7 @@ namespace Formulas
         private String rpPattern = @"\)$";
         private String opPattern = @"[\+\-*/]$";
         private String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
-        private String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";
+        private String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?";  //Needs ^ $
      
         //Syntax check variables
         private Boolean hasToken = false;
