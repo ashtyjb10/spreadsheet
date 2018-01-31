@@ -48,11 +48,18 @@ namespace Dependencies
     /// </summary>
     public class DependencyGraph
     {
+        //Object variables
+        Dictionary<string , dependencyNode> dependentBackingTable;
+        Dictionary<string, dependencyNode> dependeeBackingTable;
+        int dependencySize = 0;
+
         /// <summary>
         /// Creates a DependencyGraph containing no dependencies.
         /// </summary>
         public DependencyGraph()
         {
+            this.dependentBackingTable = new Dictionary<string, dependencyNode>();
+            this.dependeeBackingTable = new Dictionary<string, dependencyNode>();
         }
 
         /// <summary>
@@ -60,7 +67,7 @@ namespace Dependencies
         /// </summary>
         public int Size
         {
-            get { return 0; }
+            get { return this.dependencySize; }
         }
 
         /// <summary>
@@ -68,7 +75,20 @@ namespace Dependencies
         /// </summary>
         public bool HasDependents(string s)
         {
-            return false;
+            if (s == null)
+            {
+                throw new NullReferenceException("Dependent must not be null");
+            }
+
+            if (dependentBackingTable.ContainsKey(s) == true)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -76,7 +96,19 @@ namespace Dependencies
         /// </summary>
         public bool HasDependees(string s)
         {
-            return false;
+            if (s == null)
+            {
+                throw new NullReferenceException("Dependee must not be null");
+            }
+
+            if (dependeeBackingTable.ContainsKey(s) == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -84,7 +116,14 @@ namespace Dependencies
         /// </summary>
         public IEnumerable<string> GetDependents(string s)
         {
-            return null;
+            if (s == null)
+            {
+                throw new NullReferenceException("Dependent must not be null");
+            }
+
+            dependentBackingTable.TryGetValue(s, out dependencyNode dependents);
+            
+            return dependents.getDependers();
         }
 
         /// <summary>
@@ -92,7 +131,14 @@ namespace Dependencies
         /// </summary>
         public IEnumerable<string> GetDependees(string s)
         {
-            return null;
+            if (s == null)
+            {
+                throw new NullReferenceException("Dependee must not be null");
+            }
+
+            dependeeBackingTable.TryGetValue(s, out dependencyNode dependents);
+
+            return dependents.getDependers();
         }
 
         /// <summary>
@@ -102,6 +148,10 @@ namespace Dependencies
         /// </summary>
         public void AddDependency(string s, string t)
         {
+            if (s == null || t == null)
+            {
+                throw new NullReferenceException("Dependecy cannot be null");
+            }
         }
 
         /// <summary>
@@ -111,6 +161,10 @@ namespace Dependencies
         /// </summary>
         public void RemoveDependency(string s, string t)
         {
+            if (s == null || t == null)
+            {
+                throw new NullReferenceException("Removed dependecy cannot be null");
+            }
         }
 
         /// <summary>
@@ -120,6 +174,12 @@ namespace Dependencies
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
+            foreach (string t in newDependents) {
+                if (s == null || t == null)
+                {
+                    throw new NullReferenceException("Dependecy cannot be null");
+                }
+            }
         }
 
         /// <summary>
@@ -129,6 +189,38 @@ namespace Dependencies
         /// </summary>
         public void ReplaceDependees(string t, IEnumerable<string> newDependees)
         {
+            foreach (string s in newDependees)
+            {
+                if (s == null || t == null)
+                {
+                    throw new NullReferenceException("Dependecy cannot be null");
+                }
+            }
+        }
+
+        private class dependencyNode
+        {
+            private List<string> dependers = new List<string>();
+            private string dependent;
+            private int size;
+
+            private dependencyNode(string dependentString)
+            {
+                this.dependent = dependentString;
+            }
+            private void addDependency(string dependee)
+            {
+                this.dependers.Add(dependee);
+                this.size++;
+            }
+            public int getSize()
+            {
+                return size;
+            }
+            public List<string> getDependers()
+            {
+                return this.dependers;
+            }
         }
     }
 }
