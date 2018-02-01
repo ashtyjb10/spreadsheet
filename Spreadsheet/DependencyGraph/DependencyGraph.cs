@@ -149,9 +149,9 @@ namespace Dependencies
         public void AddDependency(string s, string t)
         {
 
-            dependeeBackingTable.TryGetValue(s, out DependencyNode dependency);
+            
             //check if the dependency node is stored
-            if (dependency != null)
+            if (dependentBackingTable.TryGetValue(s, out DependencyNode dependency))
             {
                 //If the dependyncy exists
                 if (dependency.hasDependency(t))
@@ -170,7 +170,30 @@ namespace Dependencies
             {
                 DependencyNode newNode = new DependencyNode(s);
                 newNode.addDependency(t);
+                dependentBackingTable.Add(s,newNode);
                 this.dependencySize++;
+            }
+
+            //check if the dependency node is stored
+            if (dependeeBackingTable.TryGetValue(t, out DependencyNode dependee))
+            {
+                //If the dependyncy exists
+                if (dependee.hasDependency(s))
+                {
+                    //Do nothing
+                }
+                else
+                {
+                    //If the node is already in the list and the dependency does not exist
+                    dependee.addDependency(s);
+                }
+            }
+            //If not, make a new dependency
+            else
+            {
+                DependencyNode newNode = new DependencyNode(t);
+                newNode.addDependency(s);
+                dependeeBackingTable.Add(t, newNode);    
             }
         }
 
@@ -185,8 +208,39 @@ namespace Dependencies
             {
                 throw new NullReferenceException("Removed dependecy cannot be null");
             }
+            //Check for dependent value
+            if (dependentBackingTable.TryGetValue(s, out DependencyNode dependent))
+            {
+                if (dependent.hasDependency(t))
+                {
+                    dependent.removeDependency(t);
+                    this.dependencySize--;
+                }
+                else
+                {
+                    //Do nothing
+                }
+            }
+            else
+            {
+                //Do nothing
+            }
 
-
+            if (dependeeBackingTable.TryGetValue(t, out DependencyNode dependee))
+            {
+                if (dependent.hasDependency(s))
+                {
+                    dependent.removeDependency(s);
+                }
+                else
+                {
+                    //Do nothing
+                }
+            }
+            else
+            {
+                //Do nothing
+            }
 
         }
 
@@ -197,14 +251,47 @@ namespace Dependencies
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
-            foreach (string t in newDependents) {
-                if (s == null || t == null)
+            
+            if (s == null)
+            {
+                throw new NullReferenceException("Dependent cannot be null");
+            }
+
+            this.dependencySize = 0;
+            //Check if key exists.
+            if(dependentBackingTable.TryGetValue(s, out DependencyNode dependent))
+            {
+                //If key is there, replace it with a new dependency node.
+                dependent = new DependencyNode(s);
+                foreach(string t in newDependents)
                 {
-                    throw new NullReferenceException("Dependecy cannot be null");
+                    if (t == null)
+                    {
+                        throw new NullReferenceException("Dependecy cannot be null");
+                    }
+
+                    dependent.addDependency(t);
+                    this.dependencySize++;
                 }
             }
-        }
+            else
+            {
+                //Create a new dependency node and store at the key.
+                DependencyNode newDependent = new DependencyNode(s);
+                foreach(string t in newDependents)
+                {
+                    if (t == null)
+                    {
+                        throw new NullReferenceException("Dependecy cannot be null");
+                    }
 
+                    newDependent.addDependency(t);
+                    this.dependencySize++;
+                }
+                this.dependentBackingTable.Add(s, newDependent);
+            }
+        }
+       
         /// <summary>
         /// Removes all existing dependencies of the form (r,t).  Then, for each 
         /// s in newDependees, adds the dependency (s,t).
@@ -212,14 +299,51 @@ namespace Dependencies
         /// </summary>
         public void ReplaceDependees(string t, IEnumerable<string> newDependees)
         {
-            foreach (string s in newDependees)
+            
+            if (t == null)
             {
-                if (s == null || t == null)
+                throw new NullReferenceException("Dependecy cannot be null");
+            }
+
+            //Check if key exists.
+            if (dependeeBackingTable.TryGetValue(t, out DependencyNode dependee))
+            {
+                //If key is there, replace it with a new dependency node.
+                dependee = new DependencyNode(t);
+                foreach (string s in newDependees)
                 {
-                    throw new NullReferenceException("Dependecy cannot be null");
+                    if (s == null)
+                    {
+                        throw new NullReferenceException("Dependecy cannot be null");
+                    }
+
+                    dependee.addDependency(s);
                 }
             }
+            else
+            {
+                //Create a new dependency node and store at the key.
+                DependencyNode newDependee = new DependencyNode(t);
+                foreach (string s in newDependees)
+                {
+                    if (s == null)
+                    {
+                        throw new NullReferenceException("Dependecy cannot be null");
+                    }
+
+                    newDependee.addDependency(s);
+                }
+                this.dependentBackingTable.Add(t, newDependee);
+            }
+
+
+
+
+
+
+
         }
+    
 
         private class DependencyNode
         {
