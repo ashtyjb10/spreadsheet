@@ -49,17 +49,17 @@ namespace Dependencies
     public class DependencyGraph
     {
         //Object variables
-        Dictionary<string , dependencyNode> dependentBackingTable;
-        Dictionary<string, dependencyNode> dependeeBackingTable;
-        int dependencySize = 0;
+        private Dictionary<string , DependencyNode> dependentBackingTable;
+        private Dictionary<string, DependencyNode> dependeeBackingTable;
+        private int dependencySize = 0;
 
         /// <summary>
         /// Creates a DependencyGraph containing no dependencies.
         /// </summary>
         public DependencyGraph()
         {
-            this.dependentBackingTable = new Dictionary<string, dependencyNode>();
-            this.dependeeBackingTable = new Dictionary<string, dependencyNode>();
+            this.dependentBackingTable = new Dictionary<string, DependencyNode>();
+            this.dependeeBackingTable = new Dictionary<string, DependencyNode>();
         }
 
         /// <summary>
@@ -121,9 +121,9 @@ namespace Dependencies
                 throw new NullReferenceException("Dependent must not be null");
             }
 
-            dependentBackingTable.TryGetValue(s, out dependencyNode dependents);
+            dependentBackingTable.TryGetValue(s, out DependencyNode dependents);
             
-            return dependents.getDependers();
+            return dependents.getDependencyList();
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace Dependencies
                 throw new NullReferenceException("Dependee must not be null");
             }
 
-            dependeeBackingTable.TryGetValue(s, out dependencyNode dependents);
+            dependeeBackingTable.TryGetValue(s, out DependencyNode dependents);
 
-            return dependents.getDependers();
+            return dependents.getDependencyList();
         }
 
         /// <summary>
@@ -148,9 +148,29 @@ namespace Dependencies
         /// </summary>
         public void AddDependency(string s, string t)
         {
-            if (s == null || t == null)
+
+            dependeeBackingTable.TryGetValue(s, out DependencyNode dependency);
+            //check if the dependency node is stored
+            if (dependency != null)
             {
-                throw new NullReferenceException("Dependecy cannot be null");
+                //If the dependyncy exists
+                if (dependency.hasDependency(t))
+                {
+                    //Do nothing
+                }
+                else
+                {
+                    //If the node is already in the list and the dependency does not exist
+                    dependency.addDependency(t);
+                    this.dependencySize++;
+                }
+            }
+            //If not, make a new dependency
+            else
+            {
+                DependencyNode newNode = new DependencyNode(s);
+                newNode.addDependency(t);
+                this.dependencySize++;
             }
         }
 
@@ -165,6 +185,9 @@ namespace Dependencies
             {
                 throw new NullReferenceException("Removed dependecy cannot be null");
             }
+
+
+
         }
 
         /// <summary>
@@ -198,26 +221,34 @@ namespace Dependencies
             }
         }
 
-        private class dependencyNode
+        private class DependencyNode
         {
             private List<string> dependers = new List<string>();
             private string dependent;
             private int size;
 
-            private dependencyNode(string dependentString)
+            public DependencyNode(string dependentString)
             {
                 this.dependent = dependentString;
             }
-            private void addDependency(string dependee)
+            public void addDependency(string dependee)
             {
                 this.dependers.Add(dependee);
                 this.size++;
+            }
+            public void removeDependency(string dependee)
+            {
+                this.dependers.Remove(dependee);
+            }
+            public bool hasDependency(string dependee)
+            {
+                return this.dependers.Contains(dependee);
             }
             public int getSize()
             {
                 return size;
             }
-            public List<string> getDependers()
+            public List<string> getDependencyList()
             {
                 return this.dependers;
             }
