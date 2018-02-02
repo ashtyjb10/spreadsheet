@@ -49,8 +49,8 @@ namespace Dependencies
     public class DependencyGraph
     {
         //Object variables
-        private Dictionary<string, DependencyNode> dependentBackingTable;
-        private Dictionary<string, DependencyNode> dependeeBackingTable;
+        private Dictionary<string, DependencyNode> dependentBackingDictionary;
+        private Dictionary<string, DependencyNode> dependeeBackingDictionary;
         private int dependencySize = 0;
 
         /// <summary>
@@ -58,8 +58,9 @@ namespace Dependencies
         /// </summary>
         public DependencyGraph()
         {
-            this.dependentBackingTable = new Dictionary<string, DependencyNode>();
-            this.dependeeBackingTable = new Dictionary<string, DependencyNode>();
+            //Two dictionaries are used to store dependent and dependee nodes.  Each node uses a HashSet to store dependents and dependees node.
+            this.dependentBackingDictionary = new Dictionary<string, DependencyNode>();
+            this.dependeeBackingDictionary = new Dictionary<string, DependencyNode>();
         }
 
         /// <summary>
@@ -75,18 +76,28 @@ namespace Dependencies
         /// </summary>
         public bool HasDependents(string s)
         {
+            //If the node is null, then an exception is thrown
             if (s == null)
             {
                 throw new NullReferenceException("Dependent must not be null");
             }
 
-            if (dependentBackingTable.ContainsKey(s) == true)
+            //If the key is contained in the dependent backing array, check to see if it has values in the HashTable.
+            if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependee))
             {
-                return true;
+                //If there is a dependency stored
+                if (dependee.getDependencies().Length > 0) {
+                    return true;
+                }
+                else
+                {
+                    //Otherwise return false
+                    return false;
+                }
             }
-
             else
             {
+                //Otherwise return false
                 return false;
             }
         }
@@ -96,17 +107,29 @@ namespace Dependencies
         /// </summary>
         public bool HasDependees(string s)
         {
+            //If s is null throw an exception
             if (s == null)
             {
                 throw new NullReferenceException("Dependee must not be null");
             }
 
-            if (dependeeBackingTable.ContainsKey(s) == true)
+            //If the key is contained in the dependent backing array, check to see if it has values in the HashTable.
+            if (dependeeBackingDictionary.TryGetValue(s, out DependencyNode dependent))
             {
-                return true;
+                //If there is a dependency stored
+                if (dependent.getDependencies().Length > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    //Otherwise return false
+                    return false;
+                }
             }
             else
             {
+                //otherwise return false
                 return false;
             }
         }
@@ -116,14 +139,22 @@ namespace Dependencies
         /// </summary>
         public IEnumerable<string> GetDependents(string s)
         {
+            //If s is null throw exception
             if (s == null)
             {
                 throw new NullReferenceException("Dependent must not be null");
             }
-
-            dependentBackingTable.TryGetValue(s, out DependencyNode dependee);
-
-            return dependee.getDependencyList();
+            //Check if there is a value stored
+            if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependee))
+            {
+                //If there is return the hashset as IEnumerable<string>
+                return dependee.getDependencies();
+            }
+            else
+            {
+                //Or return and empty list
+                return new List<string>();
+            }
         }
 
         /// <summary>
@@ -131,14 +162,22 @@ namespace Dependencies
         /// </summary>
         public IEnumerable<string> GetDependees(string s)
         {
+            //If s is null throw an exception
             if (s == null)
             {
                 throw new NullReferenceException("Dependee must not be null");
             }
-
-            dependeeBackingTable.TryGetValue(s, out DependencyNode dependee);
-
-            return dependee.getDependencyList();
+            //Check if the value is stored
+            if (dependeeBackingDictionary.TryGetValue(s, out DependencyNode dependee))
+            {
+                //If there is then return the hashset as an IEnumerable<string>
+                return dependee.getDependencies();
+            }
+            else
+            { 
+                //Or return and empty list
+                return new List<string>();
+            }
         }
 
         /// <summary>
@@ -148,10 +187,8 @@ namespace Dependencies
         /// </summary>
         public void AddDependency(string s, string t)
         {
-
-
             //check if the dependency node is stored
-            if (dependentBackingTable.TryGetValue(s, out DependencyNode dependency))
+            if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependency))
             {
                 //If the dependyncy exists
                 if (dependency.hasDependency(t))
@@ -170,12 +207,12 @@ namespace Dependencies
             {
                 DependencyNode newNode = new DependencyNode(s);
                 newNode.addDependency(t);
-                dependentBackingTable.Add(s, newNode);
+                dependentBackingDictionary.Add(s, newNode);
                 this.dependencySize++;
             }
 
             //check if the dependency node is stored
-            if (dependeeBackingTable.TryGetValue(t, out DependencyNode dependee))
+            if (dependeeBackingDictionary.TryGetValue(t, out DependencyNode dependee))
             {
                 //If the dependyncy exists
                 if (dependee.hasDependency(s))
@@ -188,12 +225,12 @@ namespace Dependencies
                     dependee.addDependency(s);
                 }
             }
-            //If not, make a new dependency
+            //If not, make a new dependency, add the dependency, and store it
             else
             {
                 DependencyNode newNode = new DependencyNode(t);
                 newNode.addDependency(s);
-                dependeeBackingTable.Add(t, newNode);
+                dependeeBackingDictionary.Add(t, newNode);
             }
         }
 
@@ -204,13 +241,16 @@ namespace Dependencies
         /// </summary>
         public void RemoveDependency(string s, string t)
         {
+            //If s or t is null the throw an exception
             if (s == null || t == null)
             {
                 throw new NullReferenceException("Removed dependecy cannot be null");
             }
+
             //Check for dependent value
-            if (dependentBackingTable.TryGetValue(s, out DependencyNode dependent))
+            if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependent))
             {
+                //If it exists, remove the dependency and update the dependency count
                 if (dependent.hasDependency(t))
                 {
                     dependent.removeDependency(t);
@@ -226,10 +266,13 @@ namespace Dependencies
                 //Do nothing
             }
 
-            if (dependeeBackingTable.TryGetValue(t, out DependencyNode dependee))
+            //If the value exists in the backing dictionary
+            if (dependeeBackingDictionary.TryGetValue(t, out DependencyNode dependee))
             {
+                //If the dependee exists.
                 if (dependee.hasDependency(s))
                 {
+                    //Remove the dependency
                     dependee.removeDependency(s);
                 }
                 else
@@ -250,29 +293,29 @@ namespace Dependencies
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
-
+            //If s is null. throw an exception
             if (s == null)
             {
                 throw new NullReferenceException("Dependent cannot be null");
             }
 
             //Check if key exists.
-            if (dependentBackingTable.TryGetValue(s, out DependencyNode dependee))
+            if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependee))
             {
                 //If it does, dependency must be removed first.
-                while(dependee.getDependencyList().Count > 0)
+                foreach(string toRemove in dependee.getDependencies())
                 {
-                    RemoveDependency(s, dependee.getDependencyList()[0]);
+                    RemoveDependency(s,toRemove);
                 }
             }
-
+            //Add the new dependencies
             foreach (string addDep in newDependents)
             {
+                //If the new dependency is null, throw an exception
                 if(addDep == null)
                 {
                     throw new NullReferenceException("Dependee cannot be null");
                 }
-
                 AddDependency(s, addDep);
             }
         }
@@ -285,41 +328,41 @@ namespace Dependencies
         /// </summary>
         public void ReplaceDependees(string t, IEnumerable<string> newDependees)
         {
-            
+            //if t is null throw an exception
             if (t == null)
             {
                 throw new NullReferenceException("Dependecy cannot be null");
             }
 
             //Check if key exists.
-            if (dependeeBackingTable.TryGetValue(t, out DependencyNode dependent))
+            if (dependeeBackingDictionary.TryGetValue(t, out DependencyNode dependent))
             {
-                //If it does, dependency must be removed first.
-                while (dependent.getDependencyList().Count > 0)
+                //For each dependee, check for a value
+                foreach(string toRemove in dependent.getDependencies())
                 {
-                    RemoveDependency(dependent.getDependencyList()[0], t);
+                    RemoveDependency(toRemove, t);
                 }
             }
-
+            //Add the new dependencies
             foreach (string addDep in newDependees)
             {
+                //If the new dependency is null, throw an exception
                 if (addDep == null)
                 {
                     throw new NullReferenceException("Dependee cannot be null");
                 }
-
                 AddDependency(addDep, t);
             }
         }
     
-        /*This oject represents either a dependent or a dependee relationship.  Each object stores a list which
+        /*This oject represents either a dependent or a dependee relationship.  Each object stores a hashset which
          * represents the different dependents or dependees that are associated with the particular string.
          * Wether the string is a dependent or dependee is shows by which dictionary it is stored in in the dependency graph.
          */
         private class DependencyNode
         {
             //Object variables
-            private List<string> dependers = new List<string>();
+            private HashSet<string> dependers = new HashSet<string>();
             private string dependencyString;
             private int size;
 
@@ -344,9 +387,11 @@ namespace Dependencies
             public void removeDependency(string dependee)
             {
                 this.dependers.Remove(dependee);
+                this.size--;
             }
 
-            //Check if the dependency has a specific depender
+            /*Check if the dependency has a specific depender
+             */
             public bool hasDependency(string depender)
             {
                 return this.dependers.Contains(depender);
@@ -363,9 +408,12 @@ namespace Dependencies
             /*Returns the list of dependers to the caller as a list.
              * 
              */
-            public List<string> getDependencyList()
+            public string[] getDependencies()
             {
-                return this.dependers;
+                string[] toReturn = new string[dependers.Count];
+                dependers.CopyTo(toReturn, 0);
+                return toReturn;
+
             }
         }
     }
