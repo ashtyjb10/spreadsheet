@@ -1,5 +1,5 @@
 ﻿// Skeleton implementation written by Joe Zachary for CS 3500, January 2018.
-
+//Completed by Nathan Herrmann for CS 3500, January 2018
 using System;
 using System.Collections.Generic;
 
