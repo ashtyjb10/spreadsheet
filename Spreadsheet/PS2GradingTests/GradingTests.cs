@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Formulas
 {
+
     [TestClass]
     public class GradingTests
     {
@@ -11,7 +12,9 @@ namespace Formulas
         [ExpectedException(typeof(FormulaFormatException))]
         public void Test1()
         {
-            Formula f = new Formula("        ");
+            
+            
+            Formula f = new Formula("          ");
         }
 
         [TestMethod()]
@@ -285,7 +288,7 @@ namespace Formulas
         [TestMethod()]
         public void Test34()
         {
-            Formula f = new Formula("((((x1+x2)+x3)+x4)+x5)+x6");
+            Formula f = new Formula("((((x1+x2)+x3)+x4)+x5)+x6", n => n.ToUpper(), v => true);
             Assert.AreEqual(12, (double)f.Evaluate(s => 2), 1e-9);
         }
 
@@ -364,5 +367,14 @@ namespace Formulas
         {
             Test41();
         }
+
+
+        [TestMethod()]
+        [ExpectedException(typeof(FormulaFormatException))]
+        public void MyTest_1()
+        {
+            Formula f = new Formula(")x+y3(", n => n.ToUpper(), v => false);
+        }
+
     }
 }

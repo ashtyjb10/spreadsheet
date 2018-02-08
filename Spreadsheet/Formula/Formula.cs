@@ -13,27 +13,18 @@ namespace Formulas
     /// the four binary operator symbols +, -, *, and /.  (The unary operators + and -
     /// are not allowed.)
     /// </summary>
-    public class Formula
+    public struct Formula
     {
         //Object Variables
         private IEnumerable<String> formulaStrings;
 
         //Patterns used for recognition of tokens.
-        private String lpPattern = @"^\($";
-        private String rpPattern = @"\)$";
-        private String opPattern = @"[\+\-*/]$";
-        private String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
-        private String doublePattern = @"^(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?$";  //Needs ^ $
-     
-        //Syntax check variables
-        private Boolean hasToken = false;
-        private Boolean firstToken = false;
-        private Boolean lastToken = false;
-        private Boolean followOpeningOperator = false;
-        private Boolean followNumberVariableClosing = false;
-        private int lpCount = 0;
-        private int rpCount = 0;
-
+        private const String lpPattern = @"^\($";
+        private const String rpPattern = @"\)$";
+        private const String opPattern = @"[\+\-*/]$";
+        private const String varPattern = @"^[a-zA-Z][0-9a-zA-Z]*$";
+        private const String doublePattern = @"^(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: e[\+-]?\d+)?$";
+        
         /// <summary>
         /// Creates a Formula from a string that consists of a standard infix expression composed
         /// from non-negative floating-point numbers (using C#-like syntax for double/int literals), 
@@ -56,7 +47,21 @@ namespace Formulas
         /// </summary>
         public Formula(String formula)
         {
+
+            if(formula == null)
+            {
+                throw new ArgumentNullException("Formula cannot be null");
+            }
             this.formulaStrings  = GetTokens(formula);
+
+            //Syntax check variables
+            Boolean hasToken = false;
+            Boolean firstToken = false;
+            Boolean lastToken = false;
+            Boolean followOpeningOperator = false;
+            Boolean followNumberVariableClosing = false;
+            int lpCount = 0;
+            int rpCount = 0;
 
             //Iterator that loops through each token.
             foreach (String token in formulaStrings)
@@ -67,16 +72,16 @@ namespace Formulas
                     Regex.IsMatch(token, rpPattern) || Regex.IsMatch(token, lpPattern))
                 {
                     //Change boolean to reflect presence of at least one token.
-                    this.hasToken = true;
+                    hasToken = true;
 
                     //The first token of a formula must be a number, a variable, or an opening parenthesis.
                     //Check for the first token.  If it is not a number, variable or an opening parenthesis, throw exception.
-                    if (this.firstToken == false)
+                    if (firstToken == false)
                     {
                         if (Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
                            Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
                         {
-                            this.firstToken = true;
+                            firstToken = true;
                         }
                         else
                         {
@@ -89,21 +94,21 @@ namespace Formulas
                     if (Regex.IsMatch(token, rpPattern) || Regex.IsMatch(token, varPattern) ||
                         Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace))
                     {
-                        this.lastToken = true;
+                        lastToken = true;
                     }
                     else
                     {
                         //If the last token seen is not a valid last token, then the iteration will end with an error.
-                        this.lastToken = false;
+                        lastToken = false;
                     }
                     
                     //Any token that immediately follows an opening parenthesis or an operator must be either a number, a variable, or an opening parenthesis.
-                    if (this.followOpeningOperator == true)
+                    if (followOpeningOperator == true)
                     {
                         if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
                            Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, lpPattern))
                         {
-                            this.followOpeningOperator = false;
+                            followOpeningOperator = false;
                         }
                         else
                         {
@@ -114,19 +119,19 @@ namespace Formulas
                     //Set check for next token following a left parentheses or an operation.
                     if(Regex.IsMatch(token, lpPattern) || Regex.IsMatch(token,opPattern))
                     {
-                        this.followOpeningOperator = true;
+                        followOpeningOperator = true;
                     }
                     else
                     {
-                        this.followOpeningOperator = false;
+                        followOpeningOperator = false;
                     }
 
                     //Any token that immediately follows a number, a variable, or a closing parenthesis must be either an operator or a closing parenthesis.
-                    if (this.followNumberVariableClosing == true)
+                    if (followNumberVariableClosing == true)
                     {
                         if(Regex.IsMatch(token, opPattern) || Regex.IsMatch(token, rpPattern))
                         {
-                            this.followNumberVariableClosing = false;
+                            followNumberVariableClosing = false;
                         }
                         else
                         {
@@ -138,26 +143,26 @@ namespace Formulas
                     if(Regex.IsMatch(token, doublePattern, RegexOptions.IgnorePatternWhitespace) ||
                         Regex.IsMatch(token, varPattern) || Regex.IsMatch(token, rpPattern))
                     {
-                        this.followNumberVariableClosing = true;
+                        followNumberVariableClosing = true;
                     }
                     else
                     {
-                        this.followNumberVariableClosing = false;
+                        followNumberVariableClosing = false;
                     }
 
                     //When reading tokens from left to right, at no point should the number of closing parentheses seen so far be greater than the number of opening parentheses seen so far.
                     if (Regex.IsMatch(token, lpPattern))
                     {
-                        this.lpCount++;
+                        lpCount++;
                     }
                     //If the token is a right parentheses, incrememnt the right parentheses count
                     if (Regex.IsMatch(token, rpPattern))
                     {
-                        this.rpCount++;
+                        rpCount++;
                     }
                     
                     //If there are more right parentheses than left, throw an exception.
-                    if(this.rpCount > this.lpCount)
+                    if(rpCount > lpCount)
                     {
                         throw new FormulaFormatException("Closing parentheses appear before openining parentheses.");
                     }
@@ -175,17 +180,74 @@ namespace Formulas
             }
 
             //If the last token is not a valid last token, throw an exception.
-            if(this.lastToken == false)
+            if(lastToken == false)
             {
                 throw new FormulaFormatException("The last token is not a valid last input");
             }
 
             //The total number of opening parentheses must equal the total number of closing parentheses.
-            if (this.rpCount != this.lpCount)
+            if (rpCount != lpCount)
             {
                 throw new FormulaFormatException("The number of opening and closing parentheses is not equal");
             }
         }
+
+        public Formula(String formula, Normalizer N, Validator V): this(formula)
+        {
+
+            if(formula == null || N == null || V == null)
+            {
+                throw new ArgumentNullException("Parameter cannot be null");
+            }
+
+            this.formulaStrings = GetTokens(formula);
+            string normalizedString = "";
+            
+
+            foreach(string token in this.formulaStrings)
+            {
+                normalizedString = normalizedString + N(token);
+            }
+
+            new Formula(normalizedString);
+
+            this.formulaStrings = GetTokens(normalizedString);
+
+            foreach (string token in this.formulaStrings)
+            {
+                if(V(token) == false)
+                {
+                    throw new FormulaFormatException("Validated string does not ");
+                }
+
+            }
+
+
+        }
+        public ISet<string> GetVariables()
+        {
+            HashSet<string> toReturn = new HashSet<string>();
+            foreach(string token in this.formulaStrings)
+            {
+                toReturn.Add(token);
+            }
+
+            return toReturn;
+        }
+
+        public override string ToString()
+        {
+            string toReturn = "";
+
+            foreach(string token in this.formulaStrings)
+            {
+                toReturn = toReturn + token;
+            }
+
+            return toReturn;
+        }
+
+
         /// <summary>
         /// Evaluates this Formula, using the Lookup delegate to determine the values of variables.  (The
         /// delegate takes a variable name as a parameter and returns its value (if it has one) or throws
@@ -197,6 +259,11 @@ namespace Formulas
         /// </summary>
         public double Evaluate(Lookup lookup)
         {
+            if(lookup == null)
+            {
+                throw new ArgumentNullException("Parameter cannot be nul");
+            }
+
             Stack<string> valueStack = new Stack<string>();
             Stack<string> operatorStack = new Stack<string>();
         
@@ -307,14 +374,15 @@ namespace Formulas
             return Convert.ToDouble(valueStack.Pop());
         }
 
-
-        /* Helper method that will pop the operator stack once and the value stack twice.  The operator that is popped is applied
-         * to the two values popped from the value stack.
-         * 
-         * Two stacks are passed to the method, the operator stack and the value stack.  There is no value returned, the change
-         * is made within the stacks that are passed to the method.
-         * 
-         */
+         ///<summary>
+         ///Helper method that will pop the operator stack once and the value stack twice.  The operator that is popped is applied
+         ///to the two values popped from the value stack.
+         ///
+         ///Two stacks are passed to the method, the operator stack and the value stack.  There is no value returned, the change
+         ///is made within the stacks that are passed to the method.
+         ///
+         ///
+         ///<summary>
         private void PopTwiceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack)
         {
             String varOperator = operatorStack.Pop();
@@ -355,13 +423,14 @@ namespace Formulas
                 return;
             }
         }
-        /* Helper method that will pop the operator stack once and the value stack once.  A double is also passed to the caller.
-         * the method will apply the operator to the value that it is passed and the value that is popped from the value stack.
-         * 
-         * The method retuqires an operator stack and a value stack and a double.  There is no value returned, the change is 
-         * made within the stacks that are passed to the method.
-         */
-
+        ///<summary>
+        ///Helper method that will pop the operator stack once and the value stack once.  A double is also passed to the caller.
+        /// the method will apply the operator to the value that it is passed and the value that is popped from the value stack.
+        /// 
+        ///The method retuqires an operator stack and a value stack and a double.  There is no value returned, the change is 
+        ///made within the stacks that are passed to the method.
+        ///
+        ///<summary>
         private void PopOnceApplyOperator(Stack<string> operatorStack, Stack<string> valueStack, double token)
         {
             string varOperator = operatorStack.Pop();
@@ -438,6 +507,21 @@ namespace Formulas
     /// don't is up to the implementation of the method.
     /// </summary>
     public delegate double Lookup(string var);
+
+    /// <summary>
+    /// The purpose of a Normalizer is to convert variables into a canonical form
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public delegate string Normalizer(string s);
+
+    /// <summary>
+    /// The purpose of a Validator is to impose extra restrictions on the validity of a 
+    /// variable, beyond the ones already built into the Formula definition.
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public delegate bool Validator(string s);
 
     /// <summary>
     /// Used to report that a Lookup delegate is unable to determine the value
