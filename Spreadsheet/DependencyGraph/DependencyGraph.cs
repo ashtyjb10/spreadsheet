@@ -63,6 +63,26 @@ namespace Dependencies
             this.dependeeBackingDictionary = new Dictionary<string, DependencyNode>();
         }
 
+        public DependencyGraph(DependencyGraph graph)
+        {
+            this.dependentBackingDictionary = new Dictionary<string, DependencyNode>();
+            this.dependeeBackingDictionary = new Dictionary<string, DependencyNode>();
+
+            foreach (string dependentKey in graph.dependeeBackingDictionary.Keys)
+            {
+                graph.dependeeBackingDictionary.TryGetValue(dependentKey, out DependencyNode node);
+
+
+                string firstNew = "";
+                foreach (string dependentValue in node.getDependencies())
+                {
+                    AddDependency(firstNew + dependentValue, firstNew + dependentKey);
+
+                }
+            }
+
+        }
+
         /// <summary>
         /// The number of dependencies in the DependencyGraph.
         /// </summary>
@@ -72,14 +92,14 @@ namespace Dependencies
         }
 
         /// <summary>
-        /// Reports whether dependents(s) is non-empty.  Requires s != null.
+        /// Reports whether dependents(s) is non-empty.  Requires s != null.  Throws ArgumentNullException
+        /// in the case that s == null;
         /// </summary>
         public bool HasDependents(string s)
         {
-            //If the node is null, then an exception is thrown
-            if (s == null)
+            if(s == null)
             {
-                throw new NullReferenceException("Dependent must not be null");
+                throw new ArgumentNullException("String cannot be null");
             }
 
             //If the key is contained in the dependent backing array, check to see if it has values in the HashTable.
@@ -103,14 +123,15 @@ namespace Dependencies
         }
 
         /// <summary>
-        /// Reports whether dependees(s) is non-empty.  Requires s != null.
+        /// Reports whether dependees(s) is non-empty.  Requires s != null. throws ArgumentNullException
+        /// in the case that s == null
         /// </summary>
         public bool HasDependees(string s)
         {
             //If s is null throw an exception
             if (s == null)
             {
-                throw new NullReferenceException("Dependee must not be null");
+                throw new ArgumentNullException("Dependee must not be null");
             }
 
             //If the key is contained in the dependent backing array, check to see if it has values in the HashTable.
@@ -135,14 +156,15 @@ namespace Dependencies
         }
 
         /// <summary>
-        /// Enumerates dependents(s).  Requires s != null.
+        /// Enumerates dependents(s).  Requires s != null.  throws ArgumentNullException
+        /// in the case that s == null
         /// </summary>
         public IEnumerable<string> GetDependents(string s)
         {
             //If s is null throw exception
             if (s == null)
             {
-                throw new NullReferenceException("Dependent must not be null");
+                throw new ArgumentNullException("Dependent must not be null");
             }
             //Check if there is a value stored
             if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependee))
@@ -158,14 +180,15 @@ namespace Dependencies
         }
 
         /// <summary>
-        /// Enumerates dependees(s).  Requires s != null.
+        /// Enumerates dependees(s).  Requires s != null.  throws ArgumentNullException
+        /// in the case that s == null
         /// </summary>
         public IEnumerable<string> GetDependees(string s)
         {
             //If s is null throw an exception
             if (s == null)
             {
-                throw new NullReferenceException("Dependee must not be null");
+                throw new ArgumentNullException("Dependee must not be null");
             }
             //Check if the value is stored
             if (dependeeBackingDictionary.TryGetValue(s, out DependencyNode dependee))
@@ -183,10 +206,15 @@ namespace Dependencies
         /// <summary>
         /// Adds the dependency (s,t) to this DependencyGraph.
         /// This has no effect if (s,t) already belongs to this DependencyGraph.
-        /// Requires s != null and t != null.
+        /// Requires s != null and t != null.  throws ArgumentNullException in the
+        /// case that s == null or t == null
         /// </summary>
         public void AddDependency(string s, string t)
         {
+            if(s == null || t == null)
+            {
+                throw new ArgumentNullException("Parameters cannot be null");
+            }
             //check if the dependency node is stored
             if (dependentBackingDictionary.TryGetValue(s, out DependencyNode dependency))
             {
@@ -237,14 +265,15 @@ namespace Dependencies
         /// <summary>
         /// Removes the dependency (s,t) from this DependencyGraph.
         /// Does nothing if (s,t) doesn't belong to this DependencyGraph.
-        /// Requires s != null and t != null.
+        /// Requires s != null and t != null.  throws ArgumentNullException in the case
+        /// that s == null or t == null
         /// </summary>
         public void RemoveDependency(string s, string t)
         {
             //If s or t is null the throw an exception
             if (s == null || t == null)
             {
-                throw new NullReferenceException("Removed dependecy cannot be null");
+                throw new ArgumentNullException("Removed dependecy cannot be null");
             }
 
             //Check for dependent value
@@ -289,14 +318,15 @@ namespace Dependencies
         /// <summary>
         /// Removes all existing dependencies of the form (s,r).  Then, for each
         /// t in newDependents, adds the dependency (s,t).
-        /// Requires s != null and t != null.
+        /// Requires s != null and newDependents != null.  throws ArgumentNullException in the
+        /// case that s == null or newDependents == null or a string in newDependent == null.
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
             //If s is null. throw an exception
-            if (s == null)
+            if (s == null || newDependents == null)
             {
-                throw new NullReferenceException("Dependent cannot be null");
+                throw new ArgumentNullException("Dependent cannot be null");
             }
 
             //Check if key exists.
@@ -314,24 +344,25 @@ namespace Dependencies
                 //If the new dependency is null, throw an exception
                 if(addDep == null)
                 {
-                    throw new NullReferenceException("Dependee cannot be null");
+                    throw new ArgumentNullException("Dependee cannot be null");
                 }
                 AddDependency(s, addDep);
             }
         }
-    
-       
+
+
         /// <summary>
         /// Removes all existing dependencies of the form (r,t).  Then, for each 
         /// s in newDependees, adds the dependency (s,t).
-        /// Requires s != null and t != null.
+        /// Requires s != null and t != null.  throws ArgumentNullException in the 
+        /// case that t == null or newdependees == null or a string in newDependees == null
         /// </summary>
         public void ReplaceDependees(string t, IEnumerable<string> newDependees)
         {
             //if t is null throw an exception
-            if (t == null)
+            if (t == null || newDependees == null)
             {
-                throw new NullReferenceException("Dependecy cannot be null");
+                throw new ArgumentNullException("Dependecy cannot be null");
             }
 
             //Check if key exists.
@@ -349,16 +380,17 @@ namespace Dependencies
                 //If the new dependency is null, throw an exception
                 if (addDep == null)
                 {
-                    throw new NullReferenceException("Dependee cannot be null");
+                    throw new ArgumentNullException("Dependee cannot be null");
                 }
                 AddDependency(addDep, t);
             }
         }
-    
-        /*This oject represents either a dependent or a dependee relationship.  Each object stores a hashset which
-         * represents the different dependents or dependees that are associated with the particular string.
-         * Wether the string is a dependent or dependee is shows by which dictionary it is stored in in the dependency graph.
-         */
+
+        ///<summary>
+        ///This oject represents either a dependent or a dependee relationship.  Each object stores a hashset which
+        ///epresents the different dependents or dependees that are associated with the particular string.
+        ///Wether the string is a dependent or dependee is shows by which dictionary it is stored in in the dependency graph.
+        ///</summary> 
         private class DependencyNode
         {
             //Object variables
@@ -372,42 +404,42 @@ namespace Dependencies
                 this.dependencyString = dependentString;
             }
 
-            /*Adds a depender to the DependencyNode list.
-             * 
-             */
+            ///<summary>
+            ///Adds a depender to the DependencyNode list.
+            ///</summary>
             public void addDependency(string dependee)
             {
                 this.dependers.Add(dependee);
                 this.size++;
             }
 
-            /*Removes a depender from the Dependency list.
-             * 
-             */
+            ///<summary>
+            ///Removes a depender from the Dependency list.
+            ///</summary>
             public void removeDependency(string dependee)
             {
                 this.dependers.Remove(dependee);
                 this.size--;
             }
 
-            /*Check if the dependency has a specific depender
-             */
+            ///<summary>
+            ///Check if the dependency has a specific depender
+            ///</summary>
             public bool hasDependency(string depender)
             {
                 return this.dependers.Contains(depender);
             }
 
-            /*Returns the number of dependers in the stored list.
-             * 
-             */
+            ///<summary>
+            ///Returns the number of dependers in the stored list. 
+            ///</summary>
             public int getSize()
             {
                 return size;
             }
-
-            /*Returns the list of dependers to the caller as a list.
-             * 
-             */
+            ///<summary>
+            ///Returns the list of dependers to the caller as a list.
+            ///</summary>
             public string[] getDependencies()
             {
                 string[] toReturn = new string[dependers.Count];

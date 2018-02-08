@@ -938,6 +938,56 @@ namespace GradingTests
             {
                 StressTest15();
             }
+
+
+            [TestMethod()]
+            public void MyTest1()
+            {
+
+                DependencyGraph g1 = new DependencyGraph();
+                g1.AddDependency("berry","pie");
+                g1.AddDependency("beer", "drink");
+                g1.AddDependency("beef","stew");
+
+                DependencyGraph g2 = new DependencyGraph(g1);
+
+                Assert.AreNotSame(g1,g2);
+                Assert.AreNotSame(g1.GetDependents("drink"), g2.GetDependents("drink"));
+                
+            }
+
+
+            [TestMethod()]
+            public void MyTest2()
+            {
+
+                DependencyGraph g1 = new DependencyGraph();
+                g1.AddDependency("berry", "pie");
+                g1.AddDependency("beer", "drink");
+                g1.AddDependency("beef", "stew");
+
+                int index = 0;
+                DependencyGraph g2 = new DependencyGraph(g1);
+                List<string> g2check = new List<string>();
+
+                foreach(string move in g2.GetDependents("beer"))
+                {
+                    g2check.Add(move);
+                }
+
+                List<string> newStuff = new List<string>();
+                newStuff.Add("Gold");
+
+                g1.ReplaceDependents("beer", newStuff);
+
+                foreach(string check in g1.GetDependents("beer"))
+                {
+                    Assert.AreNotEqual(check, g2check[index]);
+                    Assert.AreNotSame(check, g2check[index]);
+                    index++;
+                }
+            }
+
         }
     }
 }
