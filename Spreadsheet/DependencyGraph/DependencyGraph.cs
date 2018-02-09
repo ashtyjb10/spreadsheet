@@ -63,24 +63,31 @@ namespace Dependencies
             this.dependeeBackingDictionary = new Dictionary<string, DependencyNode>();
         }
 
+        /// <summary>
+        /// Second constructor that takes a dependency graph.  The resulting dependency graph will be a dependency graph that
+        /// is identical to the graph that is passed to the constructor, thouhg it is a different, independent object.
+        /// </summary>
+        /// <param name="graph"></param>
         public DependencyGraph(DependencyGraph graph)
         {
+            //Initialize the variables
             this.dependentBackingDictionary = new Dictionary<string, DependencyNode>();
             this.dependeeBackingDictionary = new Dictionary<string, DependencyNode>();
 
+            //For each key in the backing dictionary of the graph that is passed
             foreach (string dependentKey in graph.dependeeBackingDictionary.Keys)
             {
+                //Get each dependent of that key.
                 graph.dependeeBackingDictionary.TryGetValue(dependentKey, out DependencyNode node);
 
-
+                //Create a base string to make the stored string
                 string firstNew = "";
                 foreach (string dependentValue in node.getDependencies())
                 {
-                    AddDependency(firstNew + dependentValue, firstNew + dependentKey);
-
+                    //Adds a new dependency equal to the depenency of the other graph.
+                    AddDependency(firstNew + dependentValue, dependentKey);
                 }
             }
-
         }
 
         /// <summary>
