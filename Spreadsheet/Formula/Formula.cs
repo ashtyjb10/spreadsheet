@@ -50,7 +50,7 @@ namespace Formulas
 
             if(formula == null)
             {
-                throw new ArgumentNullException("Formula cannot be null");
+                throw new FormulaFormatException("Formula cannot be null");
             }
             this.formulaStrings  = GetTokens(formula);
 
@@ -192,38 +192,56 @@ namespace Formulas
             }
         }
 
+        /// <summary>
+        /// A second constructor that takes a Normalizer and a Valudator for a argument.
+        /// The normalizer is used to convert variables into a canonical form.  The Validator is used to
+        /// impose extra restrictions past what is already required of the first constructor.
+        /// 
+        /// Constructor chaining is used to ensure that the requirements of the first constructor are met.
+        /// If any argument is null then an ArgumentNullException is thrown.
+        /// </summary>
+        /// <param name="formula"></param>
+        /// <param name="N"></param>
+        /// <param name="V"></param>
         public Formula(String formula, Normalizer N, Validator V): this(formula)
         {
-
+            //If ano
             if(formula == null || N == null || V == null)
             {
-                throw new ArgumentNullException("Parameter cannot be null");
+                throw new FormulaFormatException("Parameter cannot be null");
             }
-
+            //Gets each token from the formula.
             this.formulaStrings = GetTokens(formula);
             string normalizedString = "";
             
-
+            //Each token is normalized and placed into a new string.
             foreach(string token in this.formulaStrings)
             {
                 normalizedString = normalizedString + N(token);
             }
 
+            //The string is checked against the first constructor for errors afer normalization.
             new Formula(normalizedString);
 
+            //Tokens are extracted from the normalized string.
             this.formulaStrings = GetTokens(normalizedString);
 
+            //Tokens are checked against the validator.
             foreach (string token in this.formulaStrings)
             {
+                //If validator returns false then throws a FormulaFormatException.
                 if(V(token) == false)
                 {
                     throw new FormulaFormatException("Validated string does not ");
                 }
 
             }
-
-
         }
+
+        /// <summary>
+        /// Returns a set of all tokens in the normalized formula string.
+        /// </summary>
+        /// <returns></returns>
         public ISet<string> GetVariables()
         {
             HashSet<string> toReturn = new HashSet<string>();
@@ -235,6 +253,11 @@ namespace Formulas
             return toReturn;
         }
 
+
+        /// <summary>
+        /// Overrides the ToString method and returns a string version of the tokens.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             string toReturn = "";
@@ -261,7 +284,7 @@ namespace Formulas
         {
             if(lookup == null)
             {
-                throw new ArgumentNullException("Parameter cannot be nul");
+                throw new FormulaFormatException("Parameter cannot be nul");
             }
 
             Stack<string> valueStack = new Stack<string>();
