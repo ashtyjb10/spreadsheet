@@ -70,6 +70,11 @@ namespace Dependencies
         /// <param name="graph"></param>
         public DependencyGraph(DependencyGraph graph)
         {
+            if(graph == null)
+            {
+                throw new ArgumentNullException("Graph cannot be null");
+            }
+
             //Initialize the variables
             this.dependentBackingDictionary = new Dictionary<string, DependencyNode>();
             this.dependeeBackingDictionary = new Dictionary<string, DependencyNode>();

@@ -988,6 +988,127 @@ namespace GradingTests
                 }
             }
 
+            /// <summary>
+            /// Tests for null check if dependency graph is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck1()
+            {
+                DependencyGraph nullGraph = new DependencyGraph(null);
+            }
+
+            /// <summary>
+            /// Tests the HasDependents method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck2()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.HasDependents(null);
+            }
+
+            /// <summary>
+            /// Tests the HasDependees method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck3()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.HasDependees(null);
+            }
+
+            /// <summary>
+            /// Tests the GetDependents method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck4()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.GetDependents(null);
+            }
+
+            /// <summary>
+            /// Tests the HasDependees method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck5()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.GetDependees(null);
+            }
+
+            /// <summary>
+            /// Tests the AddDepedency method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck6()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.AddDependency(null, null);
+            }
+
+            /// <summary>
+            /// Tests the RemoveDependency method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck7()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.RemoveDependency(null, null);
+            }
+
+            /// <summary>
+            /// Tests the ReplaceDependees method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck8()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.ReplaceDependees(null, null);
+            }
+
+            /// <summary>
+            /// Tests the ReplaceDependents method if the parameter is null
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck9()
+            {
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.ReplaceDependents(null, null);
+            }
+
+            /// <summary>
+            /// Tests for nulls in the list of strings sent to the ReplaceDependent method.
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck10()
+            {
+                String[] array = new String[1];
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.ReplaceDependents("ToAdd", array);
+            }
+
+            /// <summary>
+            /// Tests for nulls in the list of strings sent to the ReplaceDependees method.
+            /// </summary>
+            [TestMethod()]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void NullTestCheck11()
+            {
+                String[] array = new String[1];
+                DependencyGraph nullGraph = new DependencyGraph();
+                nullGraph.ReplaceDependees("ToAdd", array);
+            }
         }
     }
 }
