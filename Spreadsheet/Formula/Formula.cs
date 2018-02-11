@@ -237,9 +237,12 @@ namespace Formulas
             foreach (string token in this.formulaStrings)
             {
                 //If validator returns false then throws a FormulaFormatException.
-                if(V(token) == false)
+                if (Regex.IsMatch(token, varPattern))
                 {
-                    throw new FormulaFormatException("Validated string does not ");
+                    if (V(token) == false)
+                    {
+                        throw new FormulaFormatException("Validated string does not ");
+                    }
                 }
 
             }
