@@ -217,7 +217,14 @@ namespace Formulas
             //Each token is normalized and placed into a new string.
             foreach(string token in this.formulaStrings)
             {
-                normalizedString = normalizedString + N(token);
+                if (Regex.IsMatch(token, varPattern))
+                {
+                    normalizedString = normalizedString + N(token);
+                }
+                else
+                {
+                    normalizedString = normalizedString + token;
+                }
             }
 
             //The string is checked against the first constructor for errors afer normalization.
@@ -245,9 +252,18 @@ namespace Formulas
         public ISet<string> GetVariables()
         {
             HashSet<string> toReturn = new HashSet<string>();
+
+            if(this.formulaStrings == null)
+            {
+                return toReturn;
+            }
+
             foreach(string token in this.formulaStrings)
             {
-                toReturn.Add(token);
+                if (Regex.IsMatch(token, varPattern))
+                {
+                    toReturn.Add(token);
+                }
             }
 
             return toReturn;
@@ -261,6 +277,11 @@ namespace Formulas
         public override string ToString()
         {
             string toReturn = "";
+
+            if(formulaStrings == null)
+            {
+                return "0";
+            }
 
             foreach(string token in this.formulaStrings)
             {
@@ -285,6 +306,11 @@ namespace Formulas
             if(lookup == null)
             {
                 throw new FormulaFormatException("Parameter cannot be nul");
+            }
+
+            if(this.formulaStrings == null)
+            {
+                return 0;
             }
 
             Stack<string> valueStack = new Stack<string>();
