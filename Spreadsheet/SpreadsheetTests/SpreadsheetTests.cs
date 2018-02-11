@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SS;
 
-namespace PS5SimpleTests
+namespace SpreadsheetTests
 {
     [TestClass]
-    public class PS5SimpleTests
+    public class SpreadsheetTests
     {
         [TestMethod]
         public void TestMethod1()
