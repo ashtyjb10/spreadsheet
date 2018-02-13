@@ -8,9 +8,11 @@ namespace SpreadsheetTests
     public class SpreadsheetTests
     {
         [TestMethod]
-        public void TestMethod1()
+        //[ExpectedException(typeof(InvalidNameException))]
+        public void ATestMethod()
         {
             AbstractSpreadsheet sheet = new Spreadsheet();
+            sheet.GetCellContents("AAcd31");
         }
     }
 }
