@@ -1,6 +1,7 @@
 ﻿//Created by Nathan Herrmann for CS 3500
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using Dependencies;
 using Formulas;
@@ -21,6 +22,8 @@ namespace SS
             nonEmptyCells = new Dictionary<string, Cell>();
             dependencyGraph = new DependencyGraph();
         }
+
+        public override bool Changed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
 
         /// <summary>
         /// If name is null or invalid, throws an InvalidNameException.
@@ -50,6 +53,11 @@ namespace SS
             }        
         }
 
+        public override object GetCellValue(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Enumerates the names of all the non-empty cells in the spreadsheet.
         /// </summary>
@@ -67,6 +75,11 @@ namespace SS
             return cellNames;
         }
 
+        public override void Save(TextWriter dest)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// If name is null or invalid, throws an InvalidNameException.
         /// 
@@ -77,7 +90,7 @@ namespace SS
         /// For example, if name is A1, B1 contains A1*2, and C1 contains B1+A1, the
         /// set {A1, B1, C1} is returned.
         /// </summary>
-        public override ISet<string> SetCellContents(string name, double number)
+        protected override ISet<string> SetCellContents(string name, double number)
         {
             //Null name check and pattern matching
             if (name == null || !Regex.IsMatch(name, namePattern))
@@ -122,7 +135,7 @@ namespace SS
         /// For example, if name is A1, B1 contains A1*2, and C1 contains B1+A1, the
         /// set {A1, B1, C1} is returned.
         /// </summary>
-        public override ISet<string> SetCellContents(string name, string text)
+        protected override ISet<string> SetCellContents(string name, string text)
         {
             //Null check
             if(text == null)
@@ -184,7 +197,7 @@ namespace SS
         /// For example, if name is A1, B1 contains A1*2, and C1 contains B1+A1, the
         /// set {A1, B1, C1} is returned.
         /// </summary>
-        public override ISet<string> SetCellContents(string name, Formula formula)
+        protected override ISet<string> SetCellContents(string name, Formula formula)
         {
             //Null check.
             if (formula.Equals(null))
@@ -226,6 +239,11 @@ namespace SS
             GetAllDependents(name, name, toReturn);
 
             return toReturn;
+        }
+
+        public override ISet<string> SetContentsOfCell(string name, string content)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
