@@ -16,7 +16,7 @@ namespace SpreadsheetTests
         public void nameTest1()
         {
             AbstractSpreadsheet sheet = new Spreadsheet();
-            sheet.GetCellContents("AAcd31");
+            sheet.GetCellContents("AA31");
         }
 
         /// <summary>
@@ -56,39 +56,7 @@ namespace SpreadsheetTests
             sheet.SetCellContents("A;1", 12);
             
         }
-        ///<summary>
-        /// A1 contains 3
-        /// B1 contains the formula A1 * A1
-        /// C1 contains the formula B1 + A1
-        /// D1 contains the formula B1 - C1
-        /// The direct dependents of A1 are B1 and C1
-        /// <summary>
-        [TestMethod]
-        public void GetCellContent4()
-        {
-            AbstractSpreadsheet sheet = new Spreadsheet();
-            Formula f = new Formula("A1 * A1");
-            Formula f2 = new Formula("B1 + A1");
-            Formula f3 = new Formula("B1 - C1");
-            int index = 0;
-
-            ISet<string> set;
-            HashSet<string> checkSet = new HashSet<string>();
-            checkSet.Add("A1");
-            checkSet.Add("B1");
-            checkSet.Add("C1");
-
-            sheet.SetCellContents("B1", f);
-            sheet.SetCellContents("C1", f2);
-            sheet.SetCellContents("D1", f3);
-            set = sheet.SetCellContents("A1", 3);
-
-            foreach (string dep in set)
-            {
-                Assert.AreEqual(true, checkSet.Contains(dep));
-            }
-
-        }
+        
         ///<summary>
         ///Adds a cell and changes the content, no exception thrown
         ///<summary>

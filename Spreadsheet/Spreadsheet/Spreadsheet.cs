@@ -10,7 +10,7 @@ namespace SS
 {
     public class Spreadsheet : AbstractSpreadsheet
     {
-        const string namePattern = @"([a-zA-Z+])([1-9])(\d+)?";
+        const string namePattern = @"^([a-zA-Z]+)([1-9])(\d+)?$";
         private Dictionary<string, Cell> nonEmptyCells;
         private DependencyGraph dependencyGraph;
 
@@ -114,12 +114,8 @@ namespace SS
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
 
-            //Populate the list
-            foreach (string dependent in dependencyGraph.GetDependents(name))
-            {
-                toReturn.Add(dependent);
-            }
-            
+            GetAllDependents(name, name, toReturn);
+
             return toReturn;
     }
 
@@ -152,6 +148,11 @@ namespace SS
             //If the content is an empty string, the cell is empty and does not have any dependency other than itself.
             if (text.Equals(""))
             {
+                if (nonEmptyCells.ContainsKey(name))
+                {
+                    nonEmptyCells.Remove(name);
+                }
+
                 HashSet<string> toReturnEmpty = new HashSet<string>();
                 toReturnEmpty.Add(name);
                 return toReturnEmpty;
@@ -173,12 +174,7 @@ namespace SS
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
 
-            //Populate list
-            foreach (string dependency in dependencyGraph.GetDependents(name))
-            {
-                toReturn.Add(dependency);
-            }
-
+            GetAllDependents(name, name, toReturn);
             return toReturn;
         }
 
@@ -210,6 +206,25 @@ namespace SS
             {
                 throw new InvalidNameException();
             }
+            
+            
+
+            //Set up dependencies.
+            foreach (string token in formula.GetVariables())
+            {
+                if(Regex.IsMatch(token, namePattern))
+                {
+                    dependencyGraph.AddDependency(token, name);
+                }
+            }
+
+            //HashSet to return to the caller created.
+            HashSet<string> toReturn = new HashSet<string>();
+            toReturn.Add(name);
+
+            //Get all the direct and indirect dependencies.
+            GetAllDependents(name, name, toReturn);
+            
 
             //If the cell exits, it along with all its dependencies must be removed
             if (nonEmptyCells.ContainsKey(name))
@@ -221,22 +236,6 @@ namespace SS
             //Create a new cell and add it to the cell list.
             Cell newCell = new Cell(name, formula);
             nonEmptyCells.Add(name, newCell);
-
-            //HashSet to return to the caller created.
-            HashSet<string> toReturn = new HashSet<string>();
-            toReturn.Add(name);
-
-            //Set up dependencies.
-            foreach (string token in formula.GetVariables())
-            {
-                if(Regex.IsMatch(token, namePattern))
-                {
-                    dependencyGraph.AddDependency(token, name);
-                }
-            }
-
-            //Get all the direct and indirect dependencies.
-            GetAllDependents(name, name, toReturn);
 
             return toReturn;
         }
@@ -297,7 +296,7 @@ namespace SS
         private void GetAllDependents(string start, string name, ISet<string> set)
         {
             //Get all the dependencies of the named cell.
-            foreach (string dependency in dependencyGraph.GetDependees(name))
+            foreach (string dependency in dependencyGraph.GetDependents(name))
             {
                 //If the top cell is dependenct on itself, throw an exception
                 if (dependency.Equals(start))
@@ -313,6 +312,21 @@ namespace SS
                 }
             }
         }
+
+       private void CheckCircularDependencies(string start, string name)
+        {
+            foreach(string dependency in dependencyGraph.GetDependents(name))
+            {
+                if (dependency.Equals(start))
+                {
+                    throw new CircularException();
+                }
+
+                CheckCircularDependencies(start, dependency);
+            }
+
+        }
+
         
         /// <summary>
         /// Private struct that is used to represent a cell in a spreadhseet, contains the name of the cell
