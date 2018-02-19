@@ -193,11 +193,24 @@ namespace SS
             {
                 throw new InvalidNameException();
             }
+            
+            
 
-            foreach(string token in formula.GetVariables())
+            //Set up dependencies.
+            foreach (string token in formula.GetVariables())
             {
-                CheckCircularDependencies(name, token);
+                if(Regex.IsMatch(token, namePattern))
+                {
+                    dependencyGraph.AddDependency(token, name);
+                }
             }
+
+            //HashSet to return to the caller created.
+            HashSet<string> toReturn = new HashSet<string>();
+            toReturn.Add(name);
+
+            //Get all the direct and indirect dependencies.
+            GetAllDependents(name, name, toReturn);
             
 
             //If the cell exits, it along with all its dependencies must be removed
@@ -210,22 +223,6 @@ namespace SS
             //Create a new cell and add it to the cell list.
             Cell newCell = new Cell(name, formula);
             nonEmptyCells.Add(name, newCell);
-
-            //HashSet to return to the caller created.
-            HashSet<string> toReturn = new HashSet<string>();
-            toReturn.Add(name);
-
-            //Set up dependencies.
-            foreach (string token in formula.GetVariables())
-            {
-                if(Regex.IsMatch(token, namePattern))
-                {
-                    dependencyGraph.AddDependency(token, name);
-                }
-            }
-
-            //Get all the direct and indirect dependencies.
-            GetAllDependents(name, name, toReturn);
 
             return toReturn;
         }
