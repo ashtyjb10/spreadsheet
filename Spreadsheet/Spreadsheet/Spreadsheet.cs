@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Schema;
 using Dependencies;
 using Formulas;
 
@@ -64,6 +66,7 @@ namespace SS
         private Dictionary<string, Cell> nonEmptyCells;
         private DependencyGraph dependencyGraph;
         private Regex IsValid;
+        private bool hasChanges = false;
 
         /// <summary>
         /// Creates an empty Spreadsheet whose IsValid regular expression accepts every string.
@@ -120,14 +123,115 @@ namespace SS
         /// </summary>
         public Spreadsheet (TextReader source, Regex newIsValid)
         {
+            //Create schema.
+            XmlSchemaSet schema = new XmlSchemaSet();
+            schema.Add(null, "Spreadsheet.xsd");
 
+            //Create settings.
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.ValidationType = ValidationType.Schema;
+            settings.Schemas = schema;
+            settings.ValidationEventHandler += ValidationCallback;
+
+            //Object variables
+            nonEmptyCells = new Dictionary<string, Cell>();
+            dependencyGraph = new DependencyGraph();
+            this.IsValid = newIsValid;
+            Regex oldIsValid = null;
+
+            //Open reader for reading the file
+            using (XmlReader reader = XmlReader.Create(source, settings))
+            {
+                //As long as there is more to read.
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        switch (reader.Name)
+                        {
+                            //If the StartElement is spreadsheet.
+                            case "spreadsheet":
+
+                                //Copies oldIsValid to a string.
+                                string oldIsValidString = reader["IsValid"];
+
+                                try
+                                {
+                                    //If the string is a valid regex, no exception thrown.
+                                    oldIsValid = new Regex(oldIsValidString);
+                                }
+                                catch (Exception)
+                                {
+                                    //If regex is not valid, throw spreadsheetReadException
+                                    throw new SpreadsheetReadException("oldIsValid is not a valid Regex");
+                                }
+
+                                //Bail out.
+                                break;
+
+                            //If the startElement is cell
+                            case "cell":
+
+                                //make the cell from the stored info
+                                string cellName = reader["name"].ToUpper();
+                                string cellContent = reader["contents"];
+
+                                //If the cell is already in named cells, throw a spreadhseetreadexception
+                                if (nonEmptyCells.ContainsKey(cellName))
+                                {
+                                    throw new SpreadsheetReadException("Duplicate cell names exist");
+                                }
+
+                                //If the name is not valid on the old regex.
+                                if (!oldIsValid.IsMatch(cellName))
+                                {
+                                    throw new SpreadsheetReadException("Name is not valid to oldIsValid expression");
+                                }
+
+                                //If the name is not valid throw a spreadsheetversionexception
+                                if (!newIsValid.IsMatch(cellName))
+                                {
+                                    throw new SpreadsheetVersionException("Name is not valid to newIsValid expression");
+                                }
+
+                                //Try to set the content.  If there is a circulat exception, throw a spreasheetreadexceotion.
+                                try
+                                {
+                                    SetContentsOfCell(cellName, cellContent);
+                                }
+                                catch (CircularException)
+                                {
+                                    throw new SpreadsheetReadException("Circular Dependency exists in source");
+                                }
+                                //If there is a formulaformatexception, throw a spreadsheetread exception.
+                                catch (FormulaFormatException)
+                                {
+                                    throw new SpreadsheetReadException("Formula in source is invalid");
+                                }
+                                
+                                //bail out
+                                break;
+                        }
+                    }
+                }
+            }
         }
-        
+
+        /// <summary>
+        /// Throws an exception in the case that the schematic is not followed by the source.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ValidationCallback(object sender, ValidationEventArgs e)
+        {
+            throw new SpreadsheetReadException("Could not validate spreasdheet");
+        }
+
         /// <summary>
         /// True if this spreadsheet has been modified since it was created or saved
         /// (whichever happened most recently); false otherwise.
         /// </summary>
-        public override bool Changed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override bool Changed { get => this.hasChanges; protected set => hasChanges = true; }
 
         /// <summary>
         /// If name is null or invalid, throws an InvalidNameException.
@@ -220,30 +324,44 @@ namespace SS
         /// </summary>
         public override void Save(TextWriter dest)
         {
+            
 
-            try
+            using(XmlWriter writer = XmlWriter.Create(dest))
             {
-                dest.WriteLine("<spreadsheet IsValid=" + IsValid.ToString() + ">");
-                foreach(Cell writeCell in nonEmptyCells.Values)
+                writer.WriteStartDocument();
+                char[] toTrim = { '"' };
+                
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("IsValid", this.IsValid.ToString());
+                foreach(Cell cell in nonEmptyCells.Values)
                 {
-                    if (!(writeCell.GetContent() is Formula))
+                    
+                    writer.WriteStartElement("cell");
+                    writer.WriteAttributeString("name", cell.GetName());
+
+                    if (cell.GetContent() is string)
                     {
-                        dest.WriteLine("\t" + "<cell name=" + writeCell.GetName() + " contents=" + writeCell.GetContent().ToString() + "></cell>");
-                    }
-                    else
-                    {
-                        dest.WriteLine("\t" + "<cell name=" + writeCell.GetName() + " contents==" + writeCell.GetContent().ToString() + "></cell>");
+                        writer.WriteAttributeString("contents", cell.GetContent().ToString());
                     }
 
+                    if(cell.GetContent() is Double)
+                    {
+                        writer.WriteAttributeString("contents", cell.GetContent().ToString());
+                    }
+                    
+
+                    if (cell.GetContent() is Formula)
+                    {     
+                        writer.WriteAttributeString("contents", "=" + cell.GetContent().ToString());
+                    }
+                    
+                    writer.WriteFullEndElement();
                 }
-                dest.WriteLine("</spreadsheet>");
-                dest.Flush();
-                dest.Close();
+                writer.WriteFullEndElement();
+                writer.WriteEndDocument();
             }
-            catch (Exception)
-            {
-                throw new IOException();
-            }
+
+            this.hasChanges = false;
         }
 
         /// <summary>
@@ -439,6 +557,9 @@ namespace SS
         /// </summary>
         public override ISet<string> SetContentsOfCell(string name, string content)
         {
+            //Set changes to be true.
+            this.hasChanges = true;
+
             //To return value.
             ISet<String> toReturn;
             name = name.ToUpper();
@@ -626,7 +747,9 @@ namespace SS
             catch (FormulaFormatException)
             {
                 toEvaluate.SetValue(toEvaluate.GetContent());
-            }      
+            }
+            
+
         }
 
         
@@ -709,7 +832,8 @@ namespace SS
             public void Calculate(Formula content, Dictionary<String, Cell> dictionary)
             {
                 value = content.Evaluate(s => {if (dictionary.TryGetValue(s, out Cell cell))
-                                                     return (double) cell.GetValue(); else return 0.0; });
+                        return (double)cell.GetValue();
+                    else throw new FormulaFormatException(""); });
             }
 
             /// <summary>
