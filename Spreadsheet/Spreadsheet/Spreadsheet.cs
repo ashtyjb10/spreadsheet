@@ -76,7 +76,6 @@ namespace SS
             nonEmptyCells = new Dictionary<string, Cell>();
             dependencyGraph = new DependencyGraph();
             IsValid = new Regex(@"(.+)?");
-            
         }
 
         /// <summary>
