@@ -492,7 +492,6 @@ namespace SS
             }
             
             
-
             //Set up dependencies.
             foreach (string token in formula.GetVariables())
             {
