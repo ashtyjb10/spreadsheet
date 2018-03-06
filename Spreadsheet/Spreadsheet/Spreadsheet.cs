@@ -240,6 +240,7 @@ namespace SS
         /// </summary>
         public override object GetCellContents(string name)
         {
+            name = name.ToUpper();
             if (name == null || !Regex.IsMatch(name, namePattern) || !IsValid.IsMatch(name))
             {
                 throw new InvalidNameException();
@@ -268,6 +269,7 @@ namespace SS
         /// </summary>
         public override object GetCellValue(string name)
         {
+            name = name.ToUpper();
             if (name == null || !Regex.IsMatch(name, namePattern) || !IsValid.IsMatch(name))
             {
                 throw new InvalidNameException();
@@ -275,9 +277,9 @@ namespace SS
 
             nonEmptyCells.TryGetValue(name, out Cell returnedCell);
 
-            if (returnedCell.Equals(null))
+            if (returnedCell.GetValue() == null)
             {
-                return 0;
+                return "";
             }
             else
             {
@@ -489,8 +491,16 @@ namespace SS
             {
                 throw new InvalidNameException();
             }
-            
-            
+
+            nonEmptyCells.TryGetValue(name, out Cell toRemove);
+
+            //If the cell exits, it along with all its dependencies must be removed
+            if (nonEmptyCells.ContainsKey(name))
+            {
+                dependencyGraph.ReplaceDependees(name, new HashSet<string>());
+                nonEmptyCells.Remove(name);
+            }
+
             //Set up dependencies.
             foreach (string token in formula.GetVariables())
             {
@@ -504,16 +514,23 @@ namespace SS
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
 
-            //Get all the direct and indirect dependencies.
-            GetAllDependents(name, name, toReturn);
-            
 
-            //If the cell exits, it along with all its dependencies must be removed
-            if (nonEmptyCells.ContainsKey(name))
+            try
             {
-                dependencyGraph.ReplaceDependees(name, new HashSet<string>());
-                nonEmptyCells.Remove(name);
+                //Get all the direct and indirect dependencies.
+                GetAllDependents(name, name, toReturn);
             }
+            catch(CircularException thrownException)
+            {
+                if(toRemove.GetContent() != null)
+                {
+                    nonEmptyCells.Add(toRemove.GetName(), toRemove);
+                }
+
+                throw thrownException;
+            }
+
+            
 
             //Create a new cell and add it to the cell list.
             Cell newCell = new Cell(name, formula);
@@ -608,7 +625,8 @@ namespace SS
             //If the content starts with "=" then make the cotnent a formula.
             if (content.StartsWith("="))
             {
-                toReturn = SetCellContents(name, new Formula(content.Substring(1), s => s.ToUpper(), s => Regex.IsMatch(s, namePattern)));
+
+                toReturn = SetCellContents(name, new Formula(content.Substring(1), s => s.ToUpper(), s => IsValid.IsMatch(s)));
                 
                  //Update required cells.
                 foreach (String cellName in GetCellsToRecalculate(toReturn))
@@ -638,19 +656,22 @@ namespace SS
             //Update required cells.
             foreach (String cellName in GetCellsToRecalculate(toReturn))
             {
-                //If a FormulaEvaluationException happens.
-                try
+                if (nonEmptyCells.ContainsKey(cellName))
                 {
-                    nonEmptyCells.TryGetValue(cellName, out Cell actualCell);
-                    EvaluateByType(cellName, actualCell);
-                }
-                //The cell that could not be evaluatr
-                catch (FormulaEvaluationException)
-                {
-                    nonEmptyCells.TryGetValue(cellName, out Cell toError);
-                    toError.SetValue(new FormulaError());
-                    nonEmptyCells[cellName] = toError;
-                    
+                    //If a FormulaEvaluationException happens.
+                    try
+                    {
+                        nonEmptyCells.TryGetValue(cellName, out Cell actualCell);
+                        EvaluateByType(cellName, actualCell);
+                    }
+                    //The cell that could not be evaluated
+                    catch (FormulaEvaluationException)
+                    {
+                        nonEmptyCells.TryGetValue(cellName, out Cell toError);
+                        toError.SetValue(new FormulaError());
+                        nonEmptyCells[cellName] = toError;
+
+                    }
                 }
             }
             //return dependents.
@@ -734,17 +755,20 @@ namespace SS
         /// <param name="toEvaluate"></param>
         private void EvaluateByType(string name, Cell toEvaluate)
         {
-            //Try to evaluate
-            try
+            if (!(toEvaluate.GetContent() == null))
             {
-                toEvaluate.Calculate(new Formula(toEvaluate.GetContent().ToString(), s => s.ToUpper(), s => Regex.IsMatch(s, namePattern)), nonEmptyCells);
-                nonEmptyCells[name] = toEvaluate;
-                
-            }
-            //If exception is caught then set the value to the string of the cell.
-            catch (FormulaFormatException)
-            {
-                toEvaluate.SetValue(toEvaluate.GetContent());
+                //Try to evaluate
+                try
+                {
+                    toEvaluate.Calculate(new Formula(toEvaluate.GetContent().ToString(), s => s.ToUpper(), s => Regex.IsMatch(s, namePattern)), nonEmptyCells);
+                    nonEmptyCells[name] = toEvaluate;
+
+                }
+                //If exception is caught then set the value to the string of the cell.
+                catch (FormulaFormatException)
+                {
+                    toEvaluate.SetValue(toEvaluate.GetContent());
+                }
             }
             
 

@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Formulas;
 using System.Collections.Generic;
 using SS;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Xml;
 using System.Threading.Tasks;
+using Formulas;
 
 namespace PS6GradingTests
 {
@@ -900,7 +900,7 @@ namespace PS6GradingTests
         [TestMethod()]
         public void LongTestWithTimeout3()
         {
-            TestWithTimeout(LongTest, 3);
+            TestWithTimeout(LongTest, 5);
         }
 
         [TestMethod()]
