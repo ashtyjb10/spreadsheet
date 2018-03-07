@@ -28,33 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.spreadsheetPanel1 = new SSGui.SpreadsheetPanel();
+            this.spreadsheetPanel = new SSGui.SpreadsheetPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.cellBox = new System.Windows.Forms.TextBox();
+            this.contentsBox = new System.Windows.Forms.TextBox();
+            this.cellLabel = new System.Windows.Forms.Label();
+            this.contentsLabel = new System.Windows.Forms.Label();
+            this.valueBox = new System.Windows.Forms.TextBox();
+            this.valueLabel = new System.Windows.Forms.Label();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // spreadsheetPanel1
+            // spreadsheetPanel
             // 
-            this.spreadsheetPanel1.AutoSize = true;
-            this.spreadsheetPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.spreadsheetPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spreadsheetPanel1.Location = new System.Drawing.Point(0, 88);
-            this.spreadsheetPanel1.Name = "spreadsheetPanel1";
-            this.spreadsheetPanel1.Size = new System.Drawing.Size(1771, 832);
-            this.spreadsheetPanel1.TabIndex = 0;
+            this.spreadsheetPanel.AutoSize = true;
+            this.spreadsheetPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.spreadsheetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spreadsheetPanel.Location = new System.Drawing.Point(0, 88);
+            this.spreadsheetPanel.Name = "spreadsheetPanel";
+            this.spreadsheetPanel.Size = new System.Drawing.Size(1771, 832);
+            this.spreadsheetPanel.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -65,57 +65,57 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "File";
             // 
-            // textBox1
+            // cellBox
             // 
-            this.textBox1.AccessibleName = "";
-            this.textBox1.Location = new System.Drawing.Point(526, 30);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(186, 31);
-            this.textBox1.TabIndex = 2;
+            this.cellBox.AccessibleName = "";
+            this.cellBox.Location = new System.Drawing.Point(526, 30);
+            this.cellBox.Name = "cellBox";
+            this.cellBox.ReadOnly = true;
+            this.cellBox.Size = new System.Drawing.Size(186, 31);
+            this.cellBox.TabIndex = 2;
             // 
-            // textBox3
+            // contentsBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(1251, 33);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(187, 31);
-            this.textBox3.TabIndex = 4;
+            this.contentsBox.Location = new System.Drawing.Point(1251, 33);
+            this.contentsBox.Name = "contentsBox";
+            this.contentsBox.Size = new System.Drawing.Size(187, 31);
+            this.contentsBox.TabIndex = 4;
             // 
-            // label1
+            // cellLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(451, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 25);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Cell";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.cellLabel.AutoSize = true;
+            this.cellLabel.Location = new System.Drawing.Point(451, 33);
+            this.cellLabel.Name = "cellLabel";
+            this.cellLabel.Size = new System.Drawing.Size(49, 25);
+            this.cellLabel.TabIndex = 5;
+            this.cellLabel.Text = "Cell";
+            this.cellLabel.Click += new System.EventHandler(this.label1_Click);
             // 
-            // label2
+            // contentsLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1137, 33);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(98, 25);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Contents";
+            this.contentsLabel.AutoSize = true;
+            this.contentsLabel.Location = new System.Drawing.Point(1137, 33);
+            this.contentsLabel.Name = "contentsLabel";
+            this.contentsLabel.Size = new System.Drawing.Size(98, 25);
+            this.contentsLabel.TabIndex = 6;
+            this.contentsLabel.Text = "Contents";
             // 
-            // textBox2
+            // valueBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(871, 33);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(219, 31);
-            this.textBox2.TabIndex = 7;
+            this.valueBox.Location = new System.Drawing.Point(871, 33);
+            this.valueBox.Name = "valueBox";
+            this.valueBox.ReadOnly = true;
+            this.valueBox.Size = new System.Drawing.Size(219, 31);
+            this.valueBox.TabIndex = 7;
             // 
-            // label3
+            // valueLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(773, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 25);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Value";
+            this.valueLabel.AutoSize = true;
+            this.valueLabel.Location = new System.Drawing.Point(773, 33);
+            this.valueLabel.Name = "valueLabel";
+            this.valueLabel.Size = new System.Drawing.Size(67, 25);
+            this.valueLabel.TabIndex = 8;
+            this.valueLabel.Text = "Value";
             // 
             // menuStrip2
             // 
@@ -131,7 +131,7 @@
             this.menuStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
+            this.menuFile,
             this.helpToolStripMenuItem});
             this.menuStrip3.Location = new System.Drawing.Point(0, 0);
             this.menuStrip3.Name = "menuStrip3";
@@ -139,15 +139,15 @@
             this.menuStrip3.TabIndex = 10;
             this.menuStrip3.Text = "menuStrip3";
             // 
-            // fileToolStripMenuItem
+            // menuFile
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.closeWindowToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 36);
-            this.fileToolStripMenuItem.Text = "File";
+            this.openMenu,
+            this.closeMenu});
+            this.menuFile.Name = "menuFile";
+            this.menuFile.Size = new System.Drawing.Size(64, 36);
+            this.menuFile.Text = "File";
             // 
             // helpToolStripMenuItem
             // 
@@ -161,17 +161,17 @@
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(268, 38);
             this.saveToolStripMenuItem.Text = "Save";
             // 
-            // openToolStripMenuItem
+            // openMenu
             // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(268, 38);
-            this.openToolStripMenuItem.Text = "Open";
+            this.openMenu.Name = "openMenu";
+            this.openMenu.Size = new System.Drawing.Size(268, 38);
+            this.openMenu.Text = "Open";
             // 
-            // closeWindowToolStripMenuItem
+            // closeMenu
             // 
-            this.closeWindowToolStripMenuItem.Name = "closeWindowToolStripMenuItem";
-            this.closeWindowToolStripMenuItem.Size = new System.Drawing.Size(268, 38);
-            this.closeWindowToolStripMenuItem.Text = "Close Window";
+            this.closeMenu.Name = "closeMenu";
+            this.closeMenu.Size = new System.Drawing.Size(268, 38);
+            this.closeMenu.Text = "Close Window";
             // 
             // Spreadsheet
             // 
@@ -181,13 +181,13 @@
             this.AutoSize = true;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(1771, 920);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.spreadsheetPanel1);
+            this.Controls.Add(this.valueLabel);
+            this.Controls.Add(this.valueBox);
+            this.Controls.Add(this.contentsLabel);
+            this.Controls.Add(this.cellLabel);
+            this.Controls.Add(this.contentsBox);
+            this.Controls.Add(this.cellBox);
+            this.Controls.Add(this.spreadsheetPanel);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.menuStrip2);
             this.Controls.Add(this.menuStrip3);
@@ -204,20 +204,20 @@
 
         #endregion
 
-        private SSGui.SpreadsheetPanel spreadsheetPanel1;
+        private SSGui.SpreadsheetPanel spreadsheetPanel;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox cellBox;
+        private System.Windows.Forms.TextBox contentsBox;
+        private System.Windows.Forms.Label cellLabel;
+        private System.Windows.Forms.Label contentsLabel;
+        private System.Windows.Forms.TextBox valueBox;
+        private System.Windows.Forms.Label valueLabel;
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.MenuStrip menuStrip3;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuFile;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeWindowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openMenu;
+        private System.Windows.Forms.ToolStripMenuItem closeMenu;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     }
 }
