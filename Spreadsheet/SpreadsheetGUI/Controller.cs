@@ -29,6 +29,13 @@ namespace SpreadsheetGUI
             window.GetCellInfo += HandleGetCellInfo;
             window.ContentsChanged += HandleContentsChanged;
             window.Save += HandleSave;
+            window.SelectionChanged += HandleSelectionChanged;
+        }
+
+        private void HandleSelectionChanged(string cellNameChangedTo)
+        {
+            window.Content = spreadsheet.GetCellContents(cellNameChangedTo).ToString();
+            window.Value = spreadsheet.GetCellValue(cellNameChangedTo).ToString();
         }
 
         private void HandleSave()

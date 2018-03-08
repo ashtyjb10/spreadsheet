@@ -96,12 +96,18 @@ namespace SpreadsheetGUI
                 }
             }
         }
-
         public string Title
         {
             set { Text = value; }
             get { return Text; }
         }
 
+        public string Content { set => contentsBox.Text = value; }
+        public string Value { set => valueBox.Text = value; }
+
+        private void spreadsheetPanel_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

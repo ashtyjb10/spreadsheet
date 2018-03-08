@@ -27,6 +27,10 @@ namespace SpreadsheetGUI
 
         string Title { set; get; }
 
+        string Content { set; }
+
+        string Value { set; }
+
         void DoClose();
     }
 }
