@@ -6,15 +6,20 @@ using System.Threading.Tasks;
 
 namespace SpreadsheetGUI
 {
+    /// <summary>
+    /// Controller is allowed to use these to modify the view.
+    /// </summary>
     public interface IAnalysisView
     {
         event Action<string> NewFileChosen;
 
-        event Action CloseEvent;
-
         event Action<string> GetCellInfo;
 
         event Action<string> ContentsChanged;
+
+        event Action<string> SelectionChanged;
+
+        event Action CloseEvent;
 
         event Action Save;
 

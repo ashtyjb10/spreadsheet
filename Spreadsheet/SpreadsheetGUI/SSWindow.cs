@@ -12,12 +12,7 @@ namespace SpreadsheetGUI
 {
     public partial class SSWindow : Form, IAnalysisView
     {
-
         public bool isChanged => throw new NotImplementedException();
-        
-
-        
-        string IAnalysisView.Title { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public SSWindow()
         {
@@ -25,14 +20,15 @@ namespace SpreadsheetGUI
         }
 
         public event Action<string> NewFileChosen;
-        public event Action CloseEvent;
         public event Action<string> GetCellInfo;
         public event Action<string> ContentsChanged;
+        public event Action<string> SelectionChanged;
         public event Action Save;
+        public event Action CloseEvent;
 
         private void label1_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -52,10 +48,11 @@ namespace SpreadsheetGUI
 
         private void OpenFromSpreadsheet_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog1.ShowDialog();
-            openFileDialog1.DefaultExt = "ss";
-            openFileDialog1.Filter = "Text Files (*.txt)";
+            //Sets the default extension to *.ss when opening a file.
+            openFileDialog1.Filter = "All|*.*|Spreadsheet|*.ss";
+            openFileDialog1.DefaultExt = "Text|*.ss";
             openFileDialog1.FilterIndex = 2;
+            DialogResult result = openFileDialog1.ShowDialog();
 
             if (result == DialogResult.Yes || result == DialogResult.OK)
             {
@@ -75,8 +72,6 @@ namespace SpreadsheetGUI
 
             Save();
         }
-
-        
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
