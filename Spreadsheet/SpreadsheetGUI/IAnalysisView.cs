@@ -26,6 +26,7 @@ namespace SpreadsheetGUI
         bool isChanged { get; }
 
         string Title { set; get; }
-        
+
+        void DoClose();
     }
 }

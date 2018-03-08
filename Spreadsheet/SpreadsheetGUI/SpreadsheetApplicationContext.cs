@@ -54,6 +54,5 @@ namespace SpreadsheetGUI
             window.Show();
 
         }
-
     }
 }
