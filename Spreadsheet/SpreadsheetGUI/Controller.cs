@@ -51,7 +51,7 @@ namespace SpreadsheetGUI
 
         private void HandleCloseEvent()
         {
-            throw new NotImplementedException();
+             window.DoClose();
         }
 
         private void HandleNewFileChosen(string fileName)

@@ -42,6 +42,18 @@ namespace SpreadsheetGUI
 
         private void closeMenu_Click(object sender, EventArgs e)
         {
+            if (CloseEvent != null)
+            {
+                CloseEvent();
+            }
+
+        }
+
+        /// <summary>
+        /// Closes this window
+        /// </summary>
+        public void DoClose()
+        {
             Close();
         }
 
