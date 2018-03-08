@@ -39,10 +39,10 @@
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.closeMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,15 +51,15 @@
             this.spreadsheetPanel.AutoSize = true;
             this.spreadsheetPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.spreadsheetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spreadsheetPanel.Location = new System.Drawing.Point(0, 88);
+            this.spreadsheetPanel.Location = new System.Drawing.Point(0, 90);
             this.spreadsheetPanel.Name = "spreadsheetPanel";
-            this.spreadsheetPanel.Size = new System.Drawing.Size(1771, 832);
+            this.spreadsheetPanel.Size = new System.Drawing.Size(1771, 830);
             this.spreadsheetPanel.TabIndex = 0;
             // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.menuStrip1.Location = new System.Drawing.Point(0, 64);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 66);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1771, 24);
             this.menuStrip1.TabIndex = 1;
@@ -120,7 +120,7 @@
             // menuStrip2
             // 
             this.menuStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.menuStrip2.Location = new System.Drawing.Point(0, 40);
+            this.menuStrip2.Location = new System.Drawing.Point(0, 42);
             this.menuStrip2.Name = "menuStrip2";
             this.menuStrip2.Size = new System.Drawing.Size(1771, 24);
             this.menuStrip2.TabIndex = 9;
@@ -135,7 +135,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip3.Location = new System.Drawing.Point(0, 0);
             this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(1771, 40);
+            this.menuStrip3.Size = new System.Drawing.Size(1771, 42);
             this.menuStrip3.TabIndex = 10;
             this.menuStrip3.Text = "menuStrip3";
             // 
@@ -146,14 +146,8 @@
             this.openMenu,
             this.closeMenu});
             this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(64, 36);
+            this.menuFile.Size = new System.Drawing.Size(64, 38);
             this.menuFile.Text = "File";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 36);
-            this.helpToolStripMenuItem.Text = "Help";
             // 
             // saveToolStripMenuItem
             // 
@@ -172,6 +166,12 @@
             this.closeMenu.Name = "closeMenu";
             this.closeMenu.Size = new System.Drawing.Size(268, 38);
             this.closeMenu.Text = "Close Window";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
             // Spreadsheet
             // 
