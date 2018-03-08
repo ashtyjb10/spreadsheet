@@ -8,7 +8,7 @@ namespace SpreadsheetGUI
 {
     public interface IAnalysisView
     {
-        event Action<string> NewFileChoses;
+        event Action<string> NewFileChosen;
 
         event Action CloseEvent;
 
@@ -16,6 +16,11 @@ namespace SpreadsheetGUI
 
         event Action<string> ContentsChanged;
 
+        event Action Save;
 
+        bool isChanged { get; }
+
+        string Title { set; get; }
+        
     }
 }
