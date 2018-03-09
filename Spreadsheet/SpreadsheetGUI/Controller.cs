@@ -44,7 +44,9 @@ namespace SpreadsheetGUI
         public Controller(IAnalysisView window, string fileName)
         {
             this.window = window;
-            this.spreadsheet = new Spreadsheet(new StreamReader(fileName), new Regex(@"^([a-zA-Z]+)([1-9])(\d+)?$"));
+            StreamReader reader = new StreamReader(fileName);
+            this.spreadsheet = new Spreadsheet(reader, new Regex(@"^([a-zA-Z]+)([1-9])(\d+)?$"));
+            reader.Close();
             window.Title = "";
             window.NewFileChosen += HandleNewFileChosen;
             window.SaveFileChosen += HandleSaveFileChosen;
@@ -55,13 +57,37 @@ namespace SpreadsheetGUI
             window.RowChanged += HandleRowChanged;
             window.ColChanged += HandleColChanged;
 
-            
+            int itterator = 0;
+            foreach(string cell in spreadsheet.GetNamesOfAllNonemptyCells())
+            {
+                string firstLet = cell.Substring(0, 1);
+                string rest = cell.Substring(1, cell.Length - 1);
+                int row = Convert.ToInt32(rest) - 1;
+
+                int col = GetColumn(firstLet);
+
+                window.UpdatedValue(col, row, spreadsheet.GetCellValue(cell));
+
+                //if we are on the first one we need to update the current boxes!
+                if (itterator == 0)
+                {
+                    window.CellNameText(cell);
+                    window.ContentsBox(spreadsheet.GetCellContents(cell));
+                    window.ValueBox(spreadsheet.GetCellValue(cell));
+                    //update the current contents box and value box
+                    itterator++;
+                }
+            }
         }
 
         private void HandleSaveFileChosen(string obj)
         {
             window.Title = obj;
-            spreadsheet.Save(new StreamWriter(obj));
+            StreamWriter writer = new StreamWriter(obj);
+            spreadsheet.Save(writer);
+            writer.Close();
+            
+
         }
 
         private void HandleRowChanged(int newRow)

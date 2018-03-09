@@ -170,7 +170,7 @@ namespace SpreadsheetGUI
                     RowChanged(currentRow);
                     ColChanged(currentCol);
                     ContentsChanged(txb.Text);
-                    MessageBox.Show(txb.Text);
+                    //MessageBox.Show(txb.Text);
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace SpreadsheetGUI
         {
             spreadsheetPanel.SetValue(col, row, value.ToString());
         }
-
+    
         private void SpreadsheetPanel_Load(object sender, EventArgs e)
         {
         }

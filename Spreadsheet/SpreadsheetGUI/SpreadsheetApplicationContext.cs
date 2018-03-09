@@ -60,7 +60,7 @@ namespace SpreadsheetGUI
         {
             // Create the window and the controller
             SSWindow window = new SSWindow();
-            new Controller(window);
+            new Controller(window, fileName);
             window.Text = fileName;
 
             // One more form is running
