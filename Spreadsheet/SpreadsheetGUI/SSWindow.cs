@@ -13,7 +13,8 @@ namespace SpreadsheetGUI
     public partial class SSWindow : Form, IAnalysisView
     {
         public bool isChanged => throw new NotImplementedException();
-
+        private int currentRow;
+        private int currentCol;
         public SSWindow()
         {
             InitializeComponent();
@@ -22,7 +23,7 @@ namespace SpreadsheetGUI
         public event Action<string> NewFileChosen;
         public event Action<string> GetCellInfo;
         public event Action<string> ContentsChanged;
-        public event Action<string> SelectionChanged;
+        public event Action SelectionChanged;
         public event Action<int> ColChanged;
         public event Action<int> RowChanged;
         public event Action CloseEvent;
@@ -166,7 +167,8 @@ namespace SpreadsheetGUI
                 if (sender is TextBox)
                 {
                     TextBox txb = (TextBox)sender;
-                    Console.WriteLine(txb.Text);
+                    RowChanged(currentRow);
+                    ColChanged(currentCol);
                     ContentsChanged(txb.Text);
                     MessageBox.Show(txb.Text);
                 }
@@ -177,23 +179,18 @@ namespace SpreadsheetGUI
         {
             //get name, get value, get Contents
             sender.GetSelection(out int col, out int row);
+            currentCol = col;
+            currentRow = row;
             
-            sender.GetValue(col, row, out string value);
-            if (value == "")
-            {
-
-            }
-
             //pass col, row , and value into the controler.
 
             //change the row and the column and set the new name
             RowChanged(row);
             ColChanged(col);
 
-            
-
-            ValueBox(value);
-
+            //get new cell value and contents
+            SelectionChanged();
+            sender.SetValue(col, row, valueBox.Text);
         }
 
         /// <summary>
@@ -204,23 +201,18 @@ namespace SpreadsheetGUI
         {
             cellBox.Text = cName;
         }
-
-        /// <summary>
-        /// Cetter for the Value Box
-        /// </summary>
-        /// <param name="value"></param>
-        public void ValueBox(string value)
+        public void ValueBox(object value)
         {
-            valueBox.Text = value;
+            valueBox.Text = value.ToString();
+
         }
-
-        /// <summary>
-        /// setter for the contents box.
-        /// </summary>
-        /// <param name="contents"></param>
-        public void ContentsBox(string contents)
+        public void ContentsBox(object contents)
         {
-            contentsBox.Text = contents;
+            contentsBox.Text = contents.ToString();
+        }
+        public void UpdatedValue(int col, int row, object value)
+        {
+            spreadsheetPanel.SetValue(col, row, value.ToString());
         }
 
         private void SpreadsheetPanel_Load(object sender, EventArgs e)
