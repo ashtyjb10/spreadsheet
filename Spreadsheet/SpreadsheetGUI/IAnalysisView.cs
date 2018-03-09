@@ -31,6 +31,8 @@ namespace SpreadsheetGUI
 
         string Value { set; }
 
+        string Cell { set; }
+
         void DoClose();
     }
 }

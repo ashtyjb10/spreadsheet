@@ -36,13 +36,11 @@ namespace SpreadsheetGUI
         {
             window.Content = spreadsheet.GetCellContents(cellNameChangedTo).ToString();
             window.Value = spreadsheet.GetCellValue(cellNameChangedTo).ToString();
+            
         }
 
         private void HandleSave()
         {
-            string s = "tempSpreadsheet";
-            TextWriter writer = new StreamWriter(s);
-            spreadsheet.Save(writer);
             
         }
 

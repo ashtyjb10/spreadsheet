@@ -87,6 +87,8 @@ namespace SpreadsheetGUI
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            saveFileDialog1.Filter = "All| *.*|Spreadsheet|*.ss";
+            saveFileDialog1.FilterIndex = 2;
             DialogResult result = saveFileDialog1.ShowDialog();
             if (result == DialogResult.Yes || result == DialogResult.OK)
             {
@@ -104,10 +106,11 @@ namespace SpreadsheetGUI
 
         public string Content { set => contentsBox.Text = value; }
         public string Value { set => valueBox.Text = value; }
+        public string Cell { set => cellBox.Text = value; }
 
-        private void spreadsheetPanel_Load(object sender, EventArgs e)
+        private void SpreadsheetPanel_Load(object sender, EventArgs e)
         {
-
+            
         }
     }
 }
