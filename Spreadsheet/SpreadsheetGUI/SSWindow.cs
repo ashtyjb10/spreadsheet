@@ -19,10 +19,13 @@ namespace SpreadsheetGUI
             InitializeComponent();
         }
 
+
         public event Action<string> NewFileChosen;
         public event Action<string> GetCellInfo;
         public event Action<string> ContentsChanged;
         public event Action<string> SelectionChanged;
+        public event Action<int> ColChanged;
+        public event Action<int> RowChanged;
         public event Action Save;
         public event Action CloseEvent;
 
@@ -33,6 +36,7 @@ namespace SpreadsheetGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            spreadsheetPanel.SetValue(1, 1, "=A2");
 
         }
 
@@ -121,7 +125,45 @@ namespace SpreadsheetGUI
                     MessageBox.Show(txb.Text);
                 }
             }
+
+
+        }
+
+        private void spreadsheetPanel_SelectionChanged(SSGui.SpreadsheetPanel sender)
+        {
+            //get name, get value, get Contents
+            sender.GetSelection(out int col, out int row);
             
+            sender.GetValue(col, row, out string value);
+            if (value == "")
+            {
+
+            }
+
+            //pass col, row , and value into the controler.
+
+            //change the row and the column and set the new name
+            RowChanged(row);
+            ColChanged(col);
+
+            //get new cell value
+            NewValue();
+
+            ValueBox(value);
+
+        }
+        public void CellNameText(String cName)
+        {
+            cellBox.Text = cName;
+        }
+        public void ValueBox(string value)
+        {
+            valueBox.Text = value;
+
+        }
+        public void ContentsBox(string contents)
+        {
+            contentsBox.Text = contents;
         }
     }
 }
