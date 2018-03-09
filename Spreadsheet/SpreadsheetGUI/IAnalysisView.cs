@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SpreadsheetGUI
 {
@@ -15,8 +16,6 @@ namespace SpreadsheetGUI
 
         event Action<string> SaveFileChosen;
 
-        event Action<string> GetCellInfo;
-
         event Action<string> ContentsChanged;
 
         event Action SelectionChanged;
@@ -25,7 +24,7 @@ namespace SpreadsheetGUI
 
         event Action<int> RowChanged;
 
-        event Action CloseEvent;
+        event Action<FormClosingEventArgs> CloseEvent;
 
         void CellNameText(string CellName);
 
@@ -45,5 +44,7 @@ namespace SpreadsheetGUI
         string Cell { set; }
 
         void DoClose();
+
+        void QuitWarning(FormClosingEventArgs e);
     }
 }

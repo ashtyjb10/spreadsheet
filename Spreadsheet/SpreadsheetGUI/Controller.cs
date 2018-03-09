@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using SS;
 
 namespace SpreadsheetGUI
@@ -34,7 +35,6 @@ namespace SpreadsheetGUI
             window.NewFileChosen += HandleNewFileChosen;
             window.SaveFileChosen += HandleSaveFileChosen;
             window.CloseEvent += HandleCloseEvent;
-            window.GetCellInfo += HandleGetCellInfo;
             window.ContentsChanged += HandleContentsChanged;
             window.SelectionChanged += HandleSelectionChanged;
             window.RowChanged += HandleRowChanged;
@@ -51,7 +51,6 @@ namespace SpreadsheetGUI
             window.NewFileChosen += HandleNewFileChosen;
             window.SaveFileChosen += HandleSaveFileChosen;
             window.CloseEvent += HandleCloseEvent;
-            window.GetCellInfo += HandleGetCellInfo;
             window.ContentsChanged += HandleContentsChanged;
             window.SelectionChanged += HandleSelectionChanged;
             window.RowChanged += HandleRowChanged;
@@ -86,8 +85,6 @@ namespace SpreadsheetGUI
             StreamWriter writer = new StreamWriter(obj);
             spreadsheet.Save(writer);
             writer.Close();
-            
-
         }
 
         private void HandleRowChanged(int newRow)
@@ -150,14 +147,18 @@ namespace SpreadsheetGUI
             //throw new NotImplementedException();
         }
 
-        private void HandleGetCellInfo(string obj)
+        private void HandleCloseEvent(FormClosingEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private void HandleCloseEvent()
-        {
-             window.DoClose();
+            //If the spreadsheet is changed, send to display save warning window.
+            if (spreadsheet.Changed)
+            {
+                window.QuitWarning(e);
+            }
+            //Otherwise close the spreadsheet.
+            else
+            {
+                //window.DoClose();
+            }
         }
 
         private void HandleNewFileChosen(string fileName)

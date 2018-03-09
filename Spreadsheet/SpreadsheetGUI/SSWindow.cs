@@ -21,12 +21,11 @@ namespace SpreadsheetGUI
         }
 
         public event Action<string> NewFileChosen;
-        public event Action<string> GetCellInfo;
         public event Action<string> ContentsChanged;
         public event Action SelectionChanged;
         public event Action<int> ColChanged;
         public event Action<int> RowChanged;
-        public event Action CloseEvent;
+        public event Action<FormClosingEventArgs> CloseEvent;
         public event Action<string> SaveFileChosen;
 
         private void label1_Click(object sender, EventArgs e)
@@ -36,7 +35,7 @@ namespace SpreadsheetGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         /// <summary>
@@ -46,11 +45,49 @@ namespace SpreadsheetGUI
         /// <param name="e"></param>
         private void closeMenu_Click(object sender, EventArgs e)
         {
+
             if (CloseEvent != null)
             {
-                CloseEvent();
+                Close();
             }
 
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            //If the window needs to close for another reason then close;
+            if (e.CloseReason == CloseReason.WindowsShutDown
+                || e.CloseReason == CloseReason.TaskManagerClosing
+                || e.CloseReason == CloseReason.ApplicationExitCall)
+            {
+                return;
+            }
+            // Initiate closing.
+            CloseEvent(e);
+        }
+
+
+        /// <summary>
+        /// Shows a dialog in the case that there is unsaved data.
+        /// </summary>
+        public void QuitWarning(FormClosingEventArgs e)
+        {
+            //Show dialog
+           DialogResult dialogResult = MessageBox.Show("There is unsaved data.  Are you sure you want to quit?", 
+               "UnsavedData", 
+               MessageBoxButtons.YesNo);
+
+            //If user choosees yes, close dialog.  Otherwise cancel closing.
+            if(dialogResult == DialogResult.Yes)
+            {
+                
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
         /// <summary>
