@@ -46,5 +46,9 @@ namespace SpreadsheetGUI
         void DoClose();
 
         void QuitWarning(FormClosingEventArgs e);
+
+        void CircularExceptionWarinig();
+
+        void FormulaExceptionWarning();
     }
 }

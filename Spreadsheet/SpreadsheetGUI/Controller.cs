@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Formulas;
 using SS;
 
 namespace SpreadsheetGUI
@@ -18,7 +19,7 @@ namespace SpreadsheetGUI
         private string spreadsheetTitle = "";
         private int row;
         private int col;
-        private String CellName = "";
+        private String CellName = "A1";
         private String[] cellLett = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
         "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 
@@ -77,12 +78,13 @@ namespace SpreadsheetGUI
                     itterator++;
                 }
             }
+            HandleSaveFileChosen(fileName);
         }
 
-        private void HandleSaveFileChosen(string obj)
+        private void HandleSaveFileChosen(string fileName)
         {
-            window.Title = obj;
-            StreamWriter writer = new StreamWriter(obj);
+            window.Title = fileName;
+            StreamWriter writer = new StreamWriter(fileName);
             spreadsheet.Save(writer);
             writer.Close();
         }
@@ -116,33 +118,44 @@ namespace SpreadsheetGUI
 
         private void HandleContentsChanged(string newContents)
         {
-            //cells not changed yet.
-           ISet<string> needToChangeCells =  spreadsheet.SetContentsOfCell(CellName, newContents);
-
-            int itterator = 0;
-            foreach (string cell in needToChangeCells)
+            try
             {
-                string firstLet = cell.Substring(0, 1);
-                string rest = cell.Substring(1, cell.Length-1);
-                int row = Convert.ToInt32(rest)-1;
+                //cells not changed yet.
+                ISet<string> needToChangeCells = spreadsheet.SetContentsOfCell(CellName, newContents);
 
-                int col = GetColumn(firstLet);
-
-                window.UpdatedValue(col, row, spreadsheet.GetCellValue(cell));
-
-                //if we are on the first one we need to update the current boxes!
-                if (itterator == 0)
+                int itterator = 0;
+                foreach (string cell in needToChangeCells)
                 {
-                    window.ValueBox(spreadsheet.GetCellValue(cell));
-                    //update the current contents box and value box
-                    itterator++;
+                    string firstLet = cell.Substring(0, 1);
+                    string rest = cell.Substring(1, cell.Length - 1);
+                    int row = Convert.ToInt32(rest) - 1;
+
+                    int col = GetColumn(firstLet);
+
+                    window.UpdatedValue(col, row, spreadsheet.GetCellValue(cell));
+
+                    //if we are on the first one we need to update the current boxes!
+                    if (itterator == 0)
+                    {
+                        window.ValueBox(spreadsheet.GetCellValue(cell));
+                        //update the current contents box and value box
+                        itterator++;
+                    }
+
+                    //get value and contents pass back to the window to reset.
                 }
 
-                //get value and contents pass back to the window to reset.
+                window.ContentsBox(newContents);
             }
-
-            window.ContentsBox(newContents);
-            
+            //If there is a circular equation. show message box.
+            catch (CircularException)
+            {
+                window.CircularExceptionWarinig();
+            }
+            catch (FormulaFormatException)
+            {
+                window.FormulaExceptionWarning();
+            }
             
             //throw new NotImplementedException();
         }

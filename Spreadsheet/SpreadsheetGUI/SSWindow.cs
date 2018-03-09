@@ -15,11 +15,13 @@ namespace SpreadsheetGUI
         public bool isChanged => throw new NotImplementedException();
         private int currentRow;
         private int currentCol;
+        
         public SSWindow()
         {
             InitializeComponent();
+            cellBox.Text = "A1";
         }
-
+        
         public event Action<string> NewFileChosen;
         public event Action<string> ContentsChanged;
         public event Action SelectionChanged;
@@ -37,7 +39,7 @@ namespace SpreadsheetGUI
         {
             
         }
-
+        
         /// <summary>
         /// Closing events
         /// </summary>
@@ -201,12 +203,13 @@ namespace SpreadsheetGUI
         {
             if (e.KeyCode == Keys.Enter)
             {
+
                 if (sender is TextBox)
                 {
                     TextBox txb = (TextBox)sender;
+                    ContentsChanged(txb.Text);
                     RowChanged(currentRow);
                     ColChanged(currentCol);
-                    ContentsChanged(txb.Text);
                     //MessageBox.Show(txb.Text);
                 }
             }
@@ -254,6 +257,18 @@ namespace SpreadsheetGUI
     
         private void SpreadsheetPanel_Load(object sender, EventArgs e)
         {
+        }
+
+        public void CircularExceptionWarinig()
+        {
+            MessageBox.Show("Could not evaluate circular equation.  Please provide a correct equation."
+                , "Circular Exception Error", MessageBoxButtons.OK);
+        }
+
+        public void FormulaExceptionWarning()
+        {
+            MessageBox.Show("Could not evaluate equation.  Please provide a correct equation format."
+                , "Equation Format Error", MessageBoxButtons.OK);
         }
     }
 }
