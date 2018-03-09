@@ -425,6 +425,7 @@ namespace SSGui
                 }
                 Invalidate();
             }
+
         }
     }
 }
