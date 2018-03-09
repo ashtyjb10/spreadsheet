@@ -127,13 +127,6 @@ namespace SpreadsheetGUI
             
         }
 
-        private void spreadsheetPanel_Click(object sender, EventArgs e)
-        {
-            //Save active cell as string
-            
-
-
-            //Trigger changed even passing string.
-        }
+        
     }
 }

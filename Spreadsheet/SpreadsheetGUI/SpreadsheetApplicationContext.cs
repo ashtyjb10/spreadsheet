@@ -33,6 +33,7 @@ namespace SpreadsheetGUI
             }
             return context;
         }
+
         
         /// <summary>
         /// Runs a form in this application context

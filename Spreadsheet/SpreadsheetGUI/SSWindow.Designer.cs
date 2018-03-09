@@ -58,12 +58,11 @@
             this.spreadsheetPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.spreadsheetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spreadsheetPanel.Location = new System.Drawing.Point(0, 72);
-            this.spreadsheetPanel.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.spreadsheetPanel.Margin = new System.Windows.Forms.Padding(1);
             this.spreadsheetPanel.Name = "spreadsheetPanel";
             this.spreadsheetPanel.Size = new System.Drawing.Size(886, 406);
             this.spreadsheetPanel.TabIndex = 0;
             this.spreadsheetPanel.Tag = "";
-            this.spreadsheetPanel.Click += new System.EventHandler(this.spreadsheetPanel_Click);
             // 
             // menuStrip1
             // 
@@ -79,7 +78,7 @@
             // 
             this.cellBox.AccessibleName = "";
             this.cellBox.Location = new System.Drawing.Point(263, 16);
-            this.cellBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cellBox.Margin = new System.Windows.Forms.Padding(2);
             this.cellBox.Name = "cellBox";
             this.cellBox.ReadOnly = true;
             this.cellBox.Size = new System.Drawing.Size(95, 20);
@@ -88,7 +87,7 @@
             // contentsBox
             // 
             this.contentsBox.Location = new System.Drawing.Point(626, 17);
-            this.contentsBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.contentsBox.Margin = new System.Windows.Forms.Padding(2);
             this.contentsBox.Name = "contentsBox";
             this.contentsBox.Size = new System.Drawing.Size(96, 20);
             this.contentsBox.TabIndex = 4;
@@ -118,7 +117,7 @@
             // valueBox
             // 
             this.valueBox.Location = new System.Drawing.Point(436, 17);
-            this.valueBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.valueBox.Margin = new System.Windows.Forms.Padding(2);
             this.valueBox.Name = "valueBox";
             this.valueBox.ReadOnly = true;
             this.valueBox.Size = new System.Drawing.Size(112, 20);
@@ -250,7 +249,7 @@
             this.Controls.Add(this.menuStrip2);
             this.Controls.Add(this.menuStrip3);
             this.MainMenuStrip = this.menuStrip2;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SSWindow";
             this.Text = "Spreadsheet";
             this.Load += new System.EventHandler(this.Form1_Load);
