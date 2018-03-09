@@ -44,9 +44,12 @@ namespace SpreadsheetGUI
             
         }
 
-        private void HandleContentsChanged(string obj)
+        private void HandleContentsChanged(string newContents)
         {
-            throw new NotImplementedException();
+            //cells not changed yet.
+           ISet<string> needToChangeCells =  spreadsheet.SetContentsOfCell("A1", newContents);
+            
+            //throw new NotImplementedException();
         }
 
         private void HandleGetCellInfo(string obj)

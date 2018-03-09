@@ -119,7 +119,8 @@ namespace SpreadsheetGUI
                 if (sender is TextBox)
                 {
                     TextBox txb = (TextBox)sender;
-                    
+                    Console.WriteLine(txb.Text);
+                    ContentsChanged(txb.Text);
                     MessageBox.Show(txb.Text);
                 }
             }
