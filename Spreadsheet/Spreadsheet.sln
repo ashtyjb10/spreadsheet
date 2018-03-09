@@ -19,13 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS3GradingTests", "PS3Gradi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS4bGradingTests", "PS4bGradingTests\PS4bGradingTests.csproj", "{E9C7F6BD-A771-44B0-A029-D2AC2FE0A8FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS6UnitTests", "UnitTestProject1\PS6UnitTests.csproj", "{F97BC939-45EC-4053-B621-260D17F980A7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS6GradingTests", "PS6GradingTests\PS6GradingTests.csproj", "{2145911F-6669-4308-A0F2-63B4C2AAAE5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetDemo", "SpreadsheetDemo\SpreadsheetDemo.csproj", "{7069D83A-3933-4135-922B-76F754740A00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetPanel", "SpreadsheetPanel\SpreadsheetPanel.csproj", "{F31299DC-288F-4E46-A3AF-6BF461B21C79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetGUI", "SpreadsheetGUI\SpreadsheetGUI.csproj", "{1B1FE0E7-0902-4814-95C9-177F9A4336F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +89,8 @@ Global
 		{F97BC939-45EC-4053-B621-260D17F980A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F97BC939-45EC-4053-B621-260D17F980A7}.Release|x86.ActiveCfg = Release|Any CPU
 		{F97BC939-45EC-4053-B621-260D17F980A7}.Release|x86.Build.0 = Release|Any CPU
+		{E9C7F6BD-A771-44B0-A029-D2AC2FE0A8FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9C7F6BD-A771-44B0-A029-D2AC2FE0A8FF}.Release|x86.Build.0 = Release|Any CPU
 		{2145911F-6669-4308-A0F2-63B4C2AAAE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2145911F-6669-4308-A0F2-63B4C2AAAE5E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{2145911F-6669-4308-A0F2-63B4C2AAAE5E}.Debug|x86.Build.0 = Debug|Any CPU
@@ -111,6 +113,14 @@ Global
 		{F31299DC-288F-4E46-A3AF-6BF461B21C79}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F31299DC-288F-4E46-A3AF-6BF461B21C79}.Release|x86.ActiveCfg = Release|x86
 		{F31299DC-288F-4E46-A3AF-6BF461B21C79}.Release|x86.Build.0 = Release|x86
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B1FE0E7-0902-4814-95C9-177F9A4336F0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
