@@ -270,5 +270,18 @@ namespace SpreadsheetGUI
             MessageBox.Show("Could not evaluate equation.  Please provide a correct equation format."
                 , "Equation Format Error", MessageBoxButtons.OK);
         }
+
+        private void howToUseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Choosing any cell below will allow you to edit the cell." + "\r"
+                + "Editing a cell by typing your input in the contents box at the top." + "\r"
+                + "A valid entry is a number, words, or a valid formula." + "\r"
+                + "A valid formula begins with an '=' along with cell names and these mathematical signs. '+ - * /'" + "\r"
+                + "Example:  =A1 + A2" + "\r"
+                + "Be careful use only valid fomulas and avoid circular equations that cannot be calculated." + "\r"
+                + "A circular equation is tryint to make a cell equal to itself!" + "\r"
+                + "Happy spreadsheet-ing!",
+                "How To Use This Spreadsheet", MessageBoxButtons.OK);
+        }
     }
 }
