@@ -28,7 +28,7 @@ namespace SpreadsheetGUI
 
         private void label1_Click(object sender, EventArgs e)
         {
-            
+        
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -110,6 +110,19 @@ namespace SpreadsheetGUI
 
         private void SpreadsheetPanel_Load(object sender, EventArgs e)
         {
+        }
+
+        private void contentsBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (sender is TextBox)
+                {
+                    TextBox txb = (TextBox)sender;
+                    
+                    MessageBox.Show(txb.Text);
+                }
+            }
             
         }
     }
