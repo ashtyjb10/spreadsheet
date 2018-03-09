@@ -171,8 +171,6 @@ namespace SpreadsheetGUI
                     MessageBox.Show(txb.Text);
                 }
             }
-
-
         }
 
         private void spreadsheetPanel_SelectionChanged(SSGui.SpreadsheetPanel sender)
@@ -197,14 +195,29 @@ namespace SpreadsheetGUI
             ValueBox(value);
 
         }
+
+        /// <summary>
+        /// Setter for the cell name box
+        /// </summary>
+        /// <param name="cName"></param>
         public void CellNameText(String cName)
         {
             cellBox.Text = cName;
         }
+
+        /// <summary>
+        /// Cetter for the Value Box
+        /// </summary>
+        /// <param name="value"></param>
         public void ValueBox(string value)
         {
             valueBox.Text = value;
         }
+
+        /// <summary>
+        /// setter for the contents box.
+        /// </summary>
+        /// <param name="contents"></param>
         public void ContentsBox(string contents)
         {
             contentsBox.Text = contents;
