@@ -19,7 +19,18 @@ namespace SpreadsheetGUI
 
         event Action<string> SelectionChanged;
 
+        event Action<int> ColChanged;
+
+        event Action<int> RowChanged;
+
+        event Action NewValue;
+
         event Action CloseEvent;
+
+        void CellNameText(string CellName);
+
+        void ContentsBox(string contents);
+
 
         event Action Save;
 
@@ -29,7 +40,7 @@ namespace SpreadsheetGUI
 
         string Content { set; }
 
-        string Value { set; }
+        string Value {   set; }
 
         string Cell { set; }
 

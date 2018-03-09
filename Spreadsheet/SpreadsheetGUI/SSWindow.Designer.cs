@@ -63,6 +63,8 @@
             this.spreadsheetPanel.Size = new System.Drawing.Size(886, 406);
             this.spreadsheetPanel.TabIndex = 0;
             this.spreadsheetPanel.Tag = "";
+            this.spreadsheetPanel.SelectionChanged += new SSGui.SelectionChangedHandler(this.spreadsheetPanel_SelectionChanged);
+            this.spreadsheetPanel.Load += new System.EventHandler(this.spreadsheetPanel_Load);
             // 
             // menuStrip1
             // 
