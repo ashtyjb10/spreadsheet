@@ -13,6 +13,8 @@ namespace SpreadsheetGUI
     {
         event Action<string> NewFileChosen;
 
+        event Action<string> SaveFileChosen;
+
         event Action<string> GetCellInfo;
 
         event Action<string> ContentsChanged;
@@ -23,16 +25,11 @@ namespace SpreadsheetGUI
 
         event Action<int> RowChanged;
 
-        event Action NewValue;
-
         event Action CloseEvent;
 
         void CellNameText(string CellName);
 
         void ContentsBox(string contents);
-
-
-        event Action Save;
 
         bool isChanged { get; }
 

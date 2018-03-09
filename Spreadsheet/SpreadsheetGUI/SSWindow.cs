@@ -19,15 +19,14 @@ namespace SpreadsheetGUI
             InitializeComponent();
         }
 
-
         public event Action<string> NewFileChosen;
         public event Action<string> GetCellInfo;
         public event Action<string> ContentsChanged;
         public event Action<string> SelectionChanged;
         public event Action<int> ColChanged;
         public event Action<int> RowChanged;
-        public event Action Save;
         public event Action CloseEvent;
+        public event Action<string> SaveFileChosen;
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -36,10 +35,14 @@ namespace SpreadsheetGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            spreadsheetPanel.SetValue(1, 1, "=A2");
 
         }
 
+        /// <summary>
+        /// Closing events
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void closeMenu_Click(object sender, EventArgs e)
         {
             if (CloseEvent != null)
@@ -50,20 +53,31 @@ namespace SpreadsheetGUI
         }
 
         /// <summary>
-        /// Closes this window
+        /// Closes this window.
         /// </summary>
         public void DoClose()
         {
             Close();
         }
 
+        /// <summary>
+        /// Creates a new window for an empy spreadsheet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewSpreadsheet_Click(object sender, EventArgs e)
         {
             SpreadsheetApplicationContext.GetContext().RunNew();
         }
 
+        /// <summary>
+        /// Loads an existing spreadsheet in a new window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenFromSpreadsheet_Click(object sender, EventArgs e)
         {
+            
             //Sets the default extension to *.ss when opening a file.
             openFileDialog1.Filter = "All|*.*|Spreadsheet|*.ss";
             openFileDialog1.DefaultExt = "Text|*.ss";
@@ -79,16 +93,29 @@ namespace SpreadsheetGUI
             }
         }
 
+        /// <summary>
+        /// Saves the spreadsheet, if there is no name then the save is redirected to save as.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            //If there is no name for the spreadsheet.
             if (Title.Equals(""))
             {
-
+                saveAsToolStripMenuItem_Click(sender, e);
             }
-
-            Save();
+            else
+            {
+                SaveFileChosen(Title);
+            }
         }
 
+        /// <summary>
+        /// Save as requires a name as an input.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.Filter = "All| *.*|Spreadsheet|*.ss";
@@ -96,26 +123,42 @@ namespace SpreadsheetGUI
             DialogResult result = saveFileDialog1.ShowDialog();
             if (result == DialogResult.Yes || result == DialogResult.OK)
             {
-                if (NewFileChosen != null)
+                if (SaveFileChosen != null)
                 {
-                    NewFileChosen(saveFileDialog1.FileName);
+                    SaveFileChosen(saveFileDialog1.FileName);
                 }
             }
         }
+
+        /// <summary>
+        /// Getter and setter for the title.
+        /// </summary>
         public string Title
         {
             set { Text = value; }
             get { return Text; }
         }
 
+        /// <summary>
+        /// Content setter
+        /// </summary>
         public string Content { set => contentsBox.Text = value; }
+       
+        /// <summary>
+        ///Setter for Value 
+        /// </summary>
         public string Value { set => valueBox.Text = value; }
+
+        /// <summary>
+        /// Setter for the Cell
+        /// </summary>
         public string Cell { set => cellBox.Text = value; }
 
-        private void SpreadsheetPanel_Load(object sender, EventArgs e)
-        {
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contentsBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -149,8 +192,7 @@ namespace SpreadsheetGUI
             RowChanged(row);
             ColChanged(col);
 
-            //get new cell value
-            NewValue();
+            
 
             ValueBox(value);
 
@@ -162,13 +204,14 @@ namespace SpreadsheetGUI
         public void ValueBox(string value)
         {
             valueBox.Text = value;
-
         }
         public void ContentsBox(string contents)
         {
             contentsBox.Text = contents;
         }
 
-        
+        private void SpreadsheetPanel_Load(object sender, EventArgs e)
+        {
+        }
     }
 }

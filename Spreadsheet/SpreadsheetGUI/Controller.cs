@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SS;
 
@@ -27,17 +28,39 @@ namespace SpreadsheetGUI
         {
             this.window = window;
             this.spreadsheet = new Spreadsheet();
+            window.Title = "";
             window.NewFileChosen += HandleNewFileChosen;
+            window.SaveFileChosen += HandleSaveFileChosen;
             window.CloseEvent += HandleCloseEvent;
             window.GetCellInfo += HandleGetCellInfo;
             window.ContentsChanged += HandleContentsChanged;
-            window.Save += HandleSave;
             window.SelectionChanged += HandleSelectionChanged;
             window.RowChanged += HandleRowChanged;
             window.ColChanged += HandleColChanged;
         }
 
+        public Controller(IAnalysisView window, string fileName)
+        {
+            this.window = window;
+            this.spreadsheet = new Spreadsheet(new StreamReader(fileName), new Regex(@"^([a-zA-Z]+)([1-9])(\d+)?$"));
+            window.Title = "";
+            window.NewFileChosen += HandleNewFileChosen;
+            window.SaveFileChosen += HandleSaveFileChosen;
+            window.CloseEvent += HandleCloseEvent;
+            window.GetCellInfo += HandleGetCellInfo;
+            window.ContentsChanged += HandleContentsChanged;
+            window.SelectionChanged += HandleSelectionChanged;
+            window.RowChanged += HandleRowChanged;
+            window.ColChanged += HandleColChanged;
 
+            
+        }
+
+        private void HandleSaveFileChosen(string obj)
+        {
+            window.Title = obj;
+            spreadsheet.Save(new StreamWriter(obj));
+        }
 
         private void HandleRowChanged(int newRow)
         {
@@ -89,8 +112,7 @@ namespace SpreadsheetGUI
 
         private void HandleNewFileChosen(string fileName)
         {
-            window.Title = fileName;
- 
+            SpreadsheetApplicationContext.GetContext().RunNew(fileName);
         }
 
         public bool isChanged()
