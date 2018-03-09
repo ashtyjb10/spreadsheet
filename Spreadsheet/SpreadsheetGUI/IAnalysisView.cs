@@ -17,19 +17,20 @@ namespace SpreadsheetGUI
 
         event Action<string> ContentsChanged;
 
-        event Action<string> SelectionChanged;
+        event Action SelectionChanged;
 
         event Action<int> ColChanged;
 
         event Action<int> RowChanged;
 
-        event Action NewValue;
-
         event Action CloseEvent;
 
         void CellNameText(string CellName);
 
-        void ContentsBox(string contents);
+        void ContentsBox(object contents);
+
+        void ValueBox(object value);
+        void UpdatedValue(int col, int row, object value);
 
 
         event Action Save;

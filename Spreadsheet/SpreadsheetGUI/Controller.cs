@@ -17,6 +17,8 @@ namespace SpreadsheetGUI
         private int row;
         private int col;
         private String CellName = "";
+        private String[] cellLett = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+        "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 
 
         /// <summary>
@@ -48,17 +50,17 @@ namespace SpreadsheetGUI
         {
             col = newCol;
             CellName = GetCellName();
-            Console.WriteLine(CellName);
 
             window.CellNameText(CellName);
         }
 
-        private void HandleSelectionChanged(string cellNameChangedTo)
+        private void HandleSelectionChanged()
         {
-            // change this now!!!
+            object value = spreadsheet.GetCellValue(CellName);
+            object contents = spreadsheet.GetCellContents(CellName);
 
-            window.Content = spreadsheet.GetCellContents(cellNameChangedTo).ToString();
-            window.Value = spreadsheet.GetCellValue(cellNameChangedTo).ToString();
+            window.ValueBox(value);
+            window.ContentsBox(contents);
         }
 
         private void HandleSave()
@@ -72,7 +74,30 @@ namespace SpreadsheetGUI
         private void HandleContentsChanged(string newContents)
         {
             //cells not changed yet.
-           ISet<string> needToChangeCells =  spreadsheet.SetContentsOfCell("A1", newContents);
+           ISet<string> needToChangeCells =  spreadsheet.SetContentsOfCell(CellName, newContents);
+
+            int itterator = 0;
+            foreach (string cell in needToChangeCells)
+            {
+                string firstLet = cell.Substring(0, 1);
+                string rest = cell.Substring(1, cell.Length-1);
+                int row = Convert.ToInt32(rest)-1;
+
+                int col = GetColumn(firstLet);
+
+                window.UpdatedValue(col, row, spreadsheet.GetCellValue(cell));
+
+                //if we are on the first one we need to update the current boxes!
+                if (itterator == 0)
+                {
+                    window.ValueBox(spreadsheet.GetCellValue(cell));
+                    //update the current contents box and value box
+                    itterator++;
+                }
+
+                //get value and contents pass back to the window to reset.
+            }
+
             window.ContentsBox(newContents);
             
             
@@ -101,91 +126,23 @@ namespace SpreadsheetGUI
         }
         private String GetCellName()
         {
-            String CellName = "";
-            int row1 = row + 1;
-            switch (col)
+            //have column number need the letter a =0
+            int tempRow = row + 1;
+            return cellLett[col] + tempRow;
+        }
+        private int GetColumn(string let)
+        {
+            //spreadsheet starts at A1 (row = -1)
+            int itterator = 0;
+            foreach (string letter in cellLett)
             {
-                case 0:
-                    CellName = "A"+row1;
+                if(letter.Equals(let))
+                {
                     break;
-                case 1:
-                    CellName = "B" + row1;
-                    break;
-                case 2:
-                    CellName = "C" + row1;
-                    break;
-                case 3:
-                    CellName = "D" + row1;
-                    break;
-                case 4:
-                    CellName = "E" + row1;
-                    break;
-                case 5:
-                    CellName = "F" + row1;
-                    break;
-                case 6:
-                    CellName = "G" + row1;
-                    break;
-                case 7:
-                    CellName = "H" + row1;
-                    break;
-                case 8:
-                    CellName = "I" + row1;
-                    break;
-                case 9:
-                    CellName = "J" + row1;
-                    break;
-                case 10:
-                    CellName = "K" + row1;
-                    break;
-                case 11:
-                    CellName = "L" + row1;
-                    break;
-                case 12:
-                    CellName = "M" + row1;
-                    break;
-                case 13:
-                    CellName = "N" + row1;
-                    break;
-                case 14:
-                    CellName = "O" + row1;
-                    break;
-                case 15:
-                    CellName = "P" + row1;
-                    break;
-                case 16:
-                    CellName = "Q" + row1;
-                    break;
-                case 17:
-                    CellName = "R" + row1;
-                    break;
-                case 18:
-                    CellName = "S" + row1;
-                    break;
-                case 19:
-                    CellName = "T" + row1;
-                    break;
-                case 20:
-                    CellName = "U" + row1;
-                    break;
-                case 21:
-                    CellName = "V" + row1;
-                    break;
-                case 22:
-                    CellName = "W" + row1;
-                    break;
-                case 23:
-                    CellName = "x" + row1;
-                    break;
-                case 24:
-                    CellName = "Y" + row1;
-                    break;
-                case 25:
-                    CellName = "Z" + row1;
-                    break;
-
+                }
+                itterator++;
             }
-             return CellName;
+            return itterator;
         }
     }
 }

@@ -13,7 +13,8 @@ namespace SpreadsheetGUI
     public partial class SSWindow : Form, IAnalysisView
     {
         public bool isChanged => throw new NotImplementedException();
-
+        private int currentRow;
+        private int currentCol;
         public SSWindow()
         {
             InitializeComponent();
@@ -23,7 +24,7 @@ namespace SpreadsheetGUI
         public event Action<string> NewFileChosen;
         public event Action<string> GetCellInfo;
         public event Action<string> ContentsChanged;
-        public event Action<string> SelectionChanged;
+        public event Action SelectionChanged;
         public event Action<int> ColChanged;
         public event Action<int> RowChanged;
         public event Action Save;
@@ -36,7 +37,6 @@ namespace SpreadsheetGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            spreadsheetPanel.SetValue(1, 1, "=A2");
 
         }
 
@@ -120,7 +120,8 @@ namespace SpreadsheetGUI
                 if (sender is TextBox)
                 {
                     TextBox txb = (TextBox)sender;
-                    Console.WriteLine(txb.Text);
+                    RowChanged(currentRow);
+                    ColChanged(currentCol);
                     ContentsChanged(txb.Text);
                     MessageBox.Show(txb.Text);
                 }
@@ -133,37 +134,35 @@ namespace SpreadsheetGUI
         {
             //get name, get value, get Contents
             sender.GetSelection(out int col, out int row);
+            currentCol = col;
+            currentRow = row;
             
-            sender.GetValue(col, row, out string value);
-            if (value == "")
-            {
-
-            }
-
             //pass col, row , and value into the controler.
 
             //change the row and the column and set the new name
             RowChanged(row);
             ColChanged(col);
 
-            //get new cell value
-            NewValue();
-
-            ValueBox(value);
-
+            //get new cell value and contents
+            SelectionChanged();
+            sender.SetValue(col, row, valueBox.Text);
         }
         public void CellNameText(String cName)
         {
             cellBox.Text = cName;
         }
-        public void ValueBox(string value)
+        public void ValueBox(object value)
         {
-            valueBox.Text = value;
+            valueBox.Text = value.ToString();
 
         }
-        public void ContentsBox(string contents)
+        public void ContentsBox(object contents)
         {
-            contentsBox.Text = contents;
+            contentsBox.Text = contents.ToString();
+        }
+        public void UpdatedValue(int col, int row, object value)
+        {
+            spreadsheetPanel.SetValue(col, row, value.ToString());
         }
     }
 }
