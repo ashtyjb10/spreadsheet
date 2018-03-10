@@ -216,9 +216,9 @@ namespace SpreadsheetGUI
             //send for the arrow key events.
             else if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
             {
-                    spreadsheetPanel_KeyDown(sender, e);
-                
+                    spreadsheetPanel_KeyDown(sender, e);                
             }
+
         }
 
         /// <summary>
