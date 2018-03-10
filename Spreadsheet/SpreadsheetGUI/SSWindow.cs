@@ -93,14 +93,6 @@ namespace SpreadsheetGUI
         }
 
         /// <summary>
-        /// Closes this window.
-        /// </summary>
-        public void DoClose()
-        {
-            Close();
-        }
-
-        /// <summary>
         /// Creates a new window for an empy spreadsheet.
         /// </summary>
         /// <param name="sender"></param>
@@ -390,6 +382,11 @@ namespace SpreadsheetGUI
             MessageBox.Show("Unable to save file.  Please try again.",
                 "Unable To Save File.",
                 MessageBoxButtons.OK);
+        }
+
+        //Permit the close.
+        public void DoClose()
+        {
         }
     }
 }

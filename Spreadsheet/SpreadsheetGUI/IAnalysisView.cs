@@ -33,17 +33,7 @@ namespace SpreadsheetGUI
         void ValueBox(object value);
         void UpdatedValue(int col, int row, object value);
 
-        //bool isChanged { get; }
-
         string Title { set; get; }
-
-        //string Content { set; }
-
-        //string Value {   set; }
-
-        //string Cell { set; }
-
-        void DoClose();
 
         void QuitWarning(FormClosingEventArgs e);
 
@@ -54,5 +44,7 @@ namespace SpreadsheetGUI
         void CouldNotLoadFileMessage();
 
         void CouldNotSaveFileMessage();
+
+        void DoClose();
     }
 }

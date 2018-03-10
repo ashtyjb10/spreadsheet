@@ -203,7 +203,7 @@ namespace SpreadsheetGUI
             //Otherwise close the spreadsheet.
             else
             {
-                //window.DoClose();
+                window.DoClose();
             }
         }
 

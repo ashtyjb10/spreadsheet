@@ -10,7 +10,7 @@ namespace SSGUITesters
 {
     class ViewStub : IAnalysisView
     {
-        public string Title { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Title { get; set; }
 
         public event Action<string> NewFileChosen;
 
@@ -38,10 +38,20 @@ namespace SSGUITesters
 
         public void ContentsBox(object contents)
         {
+            ContentsBoxCalled = true;
+        }
+
+        public bool ContentsBoxCalled
+        {
+            get; private set;
+        }
+
+        public void CouldNotLoadFileMessage()
+        {
             throw new NotImplementedException();
         }
 
-        public void DoClose()
+        public void CouldNotSaveFileMessage()
         {
             throw new NotImplementedException();
         }
@@ -53,17 +63,58 @@ namespace SSGUITesters
 
         public void QuitWarning(FormClosingEventArgs e)
         {
-            throw new NotImplementedException();
+            CalledCloseEvent = true;
         }
 
         public void UpdatedValue(int col, int row, object value)
         {
-            throw new NotImplementedException();
+            UpdateValueCalled = true;
+        }
+
+        public bool UpdateValueCalled
+        {
+            get; private set;
         }
 
         public void ValueBox(object value)
         {
-            throw new NotImplementedException();
+            ValueBoxCalled = true;
         }
+
+        public bool ValueBoxCalled
+        {
+            get; private set;
+        }
+
+        public void FireCloseEvent()
+        {
+            if(CloseEvent != null)
+            {
+                CloseEvent(null);
+            }
+        }
+        public void QuitWarning()
+        {
+            CalledCloseEvent = true;
+        }
+
+        public void DoClose()
+        {
+            CalledCloseEvent = true;
+        }
+
+        public bool CalledCloseEvent
+        {
+            get; private set;
+        }
+
+        public void FireContentsChanged(string contents)
+        {
+            ContentsChanged(contents);
+        }
+
+        
+
+
     }
 }
