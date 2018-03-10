@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using Formulas;
 using SS;
 
@@ -16,7 +17,6 @@ namespace SpreadsheetGUI
         //Window being controlled
         private IAnalysisView window;
         private AbstractSpreadsheet spreadsheet;
-        private string spreadsheetTitle = "";
         private int row;
         private int col;
         private String CellName = "A1";
@@ -84,10 +84,21 @@ namespace SpreadsheetGUI
 
         private void HandleSaveFileChosen(string fileName)
         {
-            window.Title = fileName;
-            StreamWriter writer = new StreamWriter(fileName);
-            spreadsheet.Save(writer);
-            writer.Close();
+            try
+            {
+                window.Title = fileName;
+                StreamWriter writer = new StreamWriter(fileName);
+                spreadsheet.Save(writer);
+                writer.Close();
+            }
+            catch (IOException e)
+            {
+                window.CouldNotSaveFileMessage();
+            }
+            catch (XmlException)
+            {
+                window.CouldNotSaveFileMessage();
+            }
         }
 
         /// <summary>
@@ -175,8 +186,6 @@ namespace SpreadsheetGUI
             {
                 window.FormulaExceptionWarning();
             }
-            
-            //throw new NotImplementedException();
         }
 
 
@@ -205,7 +214,18 @@ namespace SpreadsheetGUI
         /// <param name="fileName"></param>
         private void HandleNewFileChosen(string fileName)
         {
-            SpreadsheetApplicationContext.GetContext().RunNew(fileName);
+            try
+            {
+                SpreadsheetApplicationContext.GetContext().RunNew(fileName);
+            }
+            catch(IOException)
+            {
+                window.CouldNotLoadFileMessage();
+            }
+            catch (XmlException)
+            {
+                window.CouldNotLoadFileMessage();
+            }
         }
 
         /*public bool isChanged()

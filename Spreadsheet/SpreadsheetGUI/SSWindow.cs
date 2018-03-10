@@ -377,5 +377,19 @@ namespace SpreadsheetGUI
                 spreadsheetPanel_KeyDown(sender, e);
             }
         }
+
+        public void CouldNotLoadFileMessage()
+        {
+            MessageBox.Show("Unable to load file.  Try again or choose a new file.",
+                "Unable To Load File.",
+                MessageBoxButtons.OK);
+        }
+
+        public void CouldNotSaveFileMessage()
+        {
+            MessageBox.Show("Unable to save file.  Please try again.",
+                "Unable To Save File.",
+                MessageBoxButtons.OK);
+        }
     }
 }

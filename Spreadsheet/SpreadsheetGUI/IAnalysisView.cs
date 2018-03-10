@@ -50,5 +50,9 @@ namespace SpreadsheetGUI
         void CircularExceptionWarinig();
 
         void FormulaExceptionWarning();
+
+        void CouldNotLoadFileMessage();
+
+        void CouldNotSaveFileMessage();
     }
 }
