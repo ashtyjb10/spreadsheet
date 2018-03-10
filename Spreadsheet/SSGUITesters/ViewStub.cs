@@ -26,8 +26,18 @@ namespace SSGUITesters
 
         public event Action<FormClosingEventArgs> CloseEvent;
 
-        public void CellNameText(string CellName)
+        public void FireSelectionChanged()
         {
+            SelectionChanged();
+        }
+
+        public bool SelectionChangedResult()
+        {
+            if (ValueBoxCalled == true && ContentsBoxCalled == true)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void CircularExceptionWarinig()
@@ -43,6 +53,24 @@ namespace SSGUITesters
         {
             get; private set;
         }
+        public void FireUpdateRow(int s)
+        {
+            RowChanged(s);
+        }
+        public void FireUpdateCol(int s)
+        {
+            ColChanged(s);
+        }
+        public void CellNameText(String s)
+        {
+            cellNameCalled = true;
+        }
+        public bool cellNameCalled
+        {
+            get; private set;
+        }
+
+
 
         public void CouldNotLoadFileMessage()
         {
