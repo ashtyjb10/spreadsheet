@@ -12,7 +12,7 @@ namespace SSGUITesters
         public void CloseNonChangedSpreadsheet()
         {
             ViewStub stub = new ViewStub();
-            Controller controller = new Controller(stub);
+            Controller controller = new Controller(stub, "");
             stub.FireCloseEvent();
             Assert.IsTrue(stub.CalledCloseEvent);
 
@@ -22,7 +22,7 @@ namespace SSGUITesters
         public void CloseChangedSpreadsheet()
         {
             ViewStub stub = new ViewStub();
-            Controller controller = new Controller(stub);
+            Controller controller = new Controller(stub, "");
             stub.FireContentsChanged("=A2");
             stub.FireCloseEvent();
             Assert.IsTrue(stub.CalledCloseEvent);
@@ -35,7 +35,7 @@ namespace SSGUITesters
         public void SaveSpreadsheet()
         {
             ViewStub stub = new ViewStub();
-            Controller controller = new Controller(stub);
+            Controller controller = new Controller(stub,"");
             stub.FireContentsChanged("=A2");
             string fileName = "Anything";
             stub.FireSaveFileChosen(fileName);
@@ -46,9 +46,9 @@ namespace SSGUITesters
         public void LoadNewSpreadsheet()
         {
             ViewStub stub = new ViewStub();
-            Controller controller = new Controller(stub);
+            Controller controller = new Controller(stub,"");
             stub.FireContentsChanged("=A2");
-            string fileName = "Test.ss";
+            string fileName = "TEST1.ss";
             stub.FireSaveFileChosen(fileName);
             stub.FireNewFileChosen(fileName);
             Assert.AreEqual(fileName, stub.Title);

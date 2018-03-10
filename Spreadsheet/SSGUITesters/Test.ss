@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?><spreadsheet IsValid="(.+)?"></spreadsheet>
+<?xml version="1.0" encoding="utf-8"?><spreadsheet IsValid="^([a-zA-Z]+)([1-9])(\d+)?$"><cell name="A1" contents="5"></cell><cell name="A2" contents="5"></cell><cell name="A3" contents="=A1+A2"></cell></spreadsheet>
