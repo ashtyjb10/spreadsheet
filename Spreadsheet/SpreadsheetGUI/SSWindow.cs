@@ -357,18 +357,6 @@ namespace SpreadsheetGUI
             spreadsheetPanel.SetValue(currentCol, currentRow, valueBox.Text);
         }
 
-        private void SSWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            //X = col, Y= row
-            if (e.KeyCode == Keys.Enter)
-            {
-                contentsBox_KeyDown(sender, e);
-            }
-            else
-            {
-                spreadsheetPanel_KeyDown(sender, e);
-            }
-        }
 
         public void CouldNotLoadFileMessage()
         {
@@ -387,6 +375,11 @@ namespace SpreadsheetGUI
         //Permit the close.
         public void DoClose()
         {
+        }
+
+        private void spreadsheetPanel_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
