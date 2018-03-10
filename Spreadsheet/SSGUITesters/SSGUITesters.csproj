@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\TEST1.ss" />
+    <None Include="TEST1.ss" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpreadsheetGUI\SpreadsheetGUI.csproj">

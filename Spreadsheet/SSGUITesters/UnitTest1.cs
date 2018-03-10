@@ -30,5 +30,17 @@ namespace SSGUITesters
             Assert.IsTrue(stub.ValueBoxCalled);
             Assert.IsTrue(stub.UpdateValueCalled);
         }
+        [TestMethod]
+        public void UpdateRowAndCol()
+        {
+            ViewStub stub = new ViewStub();
+            Controller controller = new Controller(stub);
+            stub.FireUpdateRow(1);
+            stub.FireUpdateCol(1);
+            stub.FireSelectionChanged();
+            Assert.IsTrue(stub.cellNameCalled);
+            Assert.IsTrue(stub.SelectionChangedResult());
+
+        }
     }
 }
