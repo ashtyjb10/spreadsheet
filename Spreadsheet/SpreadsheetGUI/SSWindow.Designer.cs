@@ -65,6 +65,7 @@
             this.spreadsheetPanel.TabIndex = 0;
             this.spreadsheetPanel.Tag = "";
             this.spreadsheetPanel.SelectionChanged += new SSGui.SelectionChangedHandler(this.spreadsheetPanel_SelectionChanged);
+            this.spreadsheetPanel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.spreadsheetPanel_KeyDown);
             // 
             // menuStrip1
             // 
@@ -262,7 +263,6 @@
             this.Name = "SSWindow";
             this.Text = "Spreadsheet";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SSWindow_KeyDown);
             this.menuStrip3.ResumeLayout(false);
             this.menuStrip3.PerformLayout();
             this.ResumeLayout(false);
