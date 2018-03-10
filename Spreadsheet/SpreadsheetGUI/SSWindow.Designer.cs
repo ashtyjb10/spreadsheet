@@ -36,7 +36,6 @@
             this.contentsLabel = new System.Windows.Forms.Label();
             this.valueBox = new System.Windows.Forms.TextBox();
             this.valueLabel = new System.Windows.Forms.Label();
-            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.menuStrip3 = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,19 +57,21 @@
             this.spreadsheetPanel.AutoSize = true;
             this.spreadsheetPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.spreadsheetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spreadsheetPanel.Location = new System.Drawing.Point(0, 88);
+            this.spreadsheetPanel.Location = new System.Drawing.Point(0, 64);
             this.spreadsheetPanel.Margin = new System.Windows.Forms.Padding(2);
             this.spreadsheetPanel.Name = "spreadsheetPanel";
-            this.spreadsheetPanel.Size = new System.Drawing.Size(1772, 831);
+            this.spreadsheetPanel.Size = new System.Drawing.Size(1772, 855);
             this.spreadsheetPanel.TabIndex = 0;
             this.spreadsheetPanel.Tag = "";
             this.spreadsheetPanel.SelectionChanged += new SSGui.SelectionChangedHandler(this.spreadsheetPanel_SelectionChanged);
+            this.spreadsheetPanel.Load += new System.EventHandler(this.spreadsheetPanel_Load_1);
             this.spreadsheetPanel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.spreadsheetPanel_KeyDown);
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.Color.Gray;
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.menuStrip1.Location = new System.Drawing.Point(0, 64);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 40);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1772, 24);
             this.menuStrip1.TabIndex = 1;
@@ -135,17 +136,9 @@
             this.valueLabel.TabIndex = 8;
             this.valueLabel.Text = "Value";
             // 
-            // menuStrip2
-            // 
-            this.menuStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.menuStrip2.Location = new System.Drawing.Point(0, 40);
-            this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1772, 24);
-            this.menuStrip2.TabIndex = 9;
-            this.menuStrip2.Text = "menuStrip2";
-            // 
             // menuStrip3
             // 
+            this.menuStrip3.BackColor = System.Drawing.Color.Gray;
             this.menuStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip3.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -246,6 +239,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(1772, 919);
             this.Controls.Add(this.valueLabel);
@@ -256,9 +250,7 @@
             this.Controls.Add(this.cellBox);
             this.Controls.Add(this.spreadsheetPanel);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.menuStrip2);
             this.Controls.Add(this.menuStrip3);
-            this.MainMenuStrip = this.menuStrip2;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SSWindow";
             this.Text = "Spreadsheet";
@@ -280,7 +272,6 @@
         private System.Windows.Forms.Label contentsLabel;
         private System.Windows.Forms.TextBox valueBox;
         private System.Windows.Forms.Label valueLabel;
-        private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.MenuStrip menuStrip3;
         private System.Windows.Forms.ToolStripMenuItem menuFile;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;

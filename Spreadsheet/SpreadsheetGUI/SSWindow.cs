@@ -376,5 +376,10 @@ namespace SpreadsheetGUI
         public void DoClose()
         {
         }
+
+        private void spreadsheetPanel_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
