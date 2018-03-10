@@ -30,5 +30,28 @@ namespace SSGUITesters
             Assert.IsTrue(stub.ValueBoxCalled);
             Assert.IsTrue(stub.UpdateValueCalled);
         }
+
+        [TestMethod]
+        public void SaveSpreadsheet()
+        {
+            ViewStub stub = new ViewStub();
+            Controller controller = new Controller(stub);
+            stub.FireContentsChanged("=A2");
+            string fileName = "Anything";
+            stub.FireSaveFileChosen(fileName);
+            Assert.AreEqual(fileName, stub.Title);
+        }
+
+        [TestMethod]
+        public void LoadNewSpreadsheet()
+        {
+            ViewStub stub = new ViewStub();
+            Controller controller = new Controller(stub);
+            stub.FireContentsChanged("=A2");
+            string fileName = "Test.ss";
+            stub.FireSaveFileChosen(fileName);
+            stub.FireNewFileChosen(fileName);
+            Assert.AreEqual(fileName, stub.Title);
+        }
     }
 }

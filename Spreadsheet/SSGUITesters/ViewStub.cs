@@ -28,12 +28,10 @@ namespace SSGUITesters
 
         public void CellNameText(string CellName)
         {
-            throw new NotImplementedException();
         }
 
         public void CircularExceptionWarinig()
         {
-            throw new NotImplementedException();
         }
 
         public void ContentsBox(object contents)
@@ -48,17 +46,20 @@ namespace SSGUITesters
 
         public void CouldNotLoadFileMessage()
         {
-            throw new NotImplementedException();
         }
 
         public void CouldNotSaveFileMessage()
         {
-            throw new NotImplementedException();
         }
 
         public void FormulaExceptionWarning()
         {
-            throw new NotImplementedException();
+            ExceptionWarningCalled = true;
+        }
+
+        public bool ExceptionWarningCalled
+        {
+            get; private set;
         }
 
         public void QuitWarning(FormClosingEventArgs e)
@@ -113,7 +114,17 @@ namespace SSGUITesters
             ContentsChanged(contents);
         }
 
-        
+        public void FireSaveFileChosen(string fileName)
+        {
+            Title = fileName;
+            SaveFileChosen(fileName);
+        }
+
+        public void FireNewFileChosen(string fileName)
+        {
+            Title = fileName;
+            NewFileChosen(fileName);
+        }
 
 
     }
