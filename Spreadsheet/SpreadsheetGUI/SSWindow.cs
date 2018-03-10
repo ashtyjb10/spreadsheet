@@ -182,39 +182,52 @@ namespace SpreadsheetGUI
         /// <summary>
         /// Content setter
         /// </summary>
-        public string Content { set => contentsBox.Text = value; }
+        //public string Content { set => contentsBox.Text = value; }
        
         /// <summary>
         ///Setter for Value 
         /// </summary>
-        public string Value { set => valueBox.Text = value; }
+       // public string Value { set => valueBox.Text = value; }
 
         /// <summary>
         /// Setter for the Cell
         /// </summary>
-        public string Cell { set => cellBox.Text = value; }
+       // public string Cell { set => cellBox.Text = value; }
 
         /// <summary>
-        /// 
+        /// If a key is pressed It goes here. If the key is an enter we get the string in the contents box and
+        /// pass that when firing the events contents changed, row changed, column changed so that we update the cell.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void contentsBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter )
             {
-
                 if (sender is TextBox)
                 {
-                    TextBox txb = (TextBox)sender;
-                    ContentsChanged(txb.Text);
-                    RowChanged(currentRow);
-                    ColChanged(currentCol);
-                    //MessageBox.Show(txb.Text);
+                   
+                     TextBox txb = (TextBox)sender;
+                     ContentsChanged(txb.Text);
+                     RowChanged(currentRow);
+                     ColChanged(currentCol);
                 }
+            }
+            //send for the arrow key events.
+            else if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
+            {
+                    spreadsheetPanel_KeyDown(sender, e);
+                
             }
         }
 
+        /// <summary>
+        /// When a cell is clicked on we enter this. It gets the row and column of the current sell and 
+        /// set to to the currentCol, currentRow. We then fire the event RowChanged, ColChanged, and SelectionChanged.
+        /// We then set the value of the current cell we are working on.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
         private void spreadsheetPanel_SelectionChanged(SSGui.SpreadsheetPanel sender)
         {
             //get name, get value, get Contents
@@ -222,7 +235,6 @@ namespace SpreadsheetGUI
             currentCol = col;
             currentRow = row;
             
-            //pass col, row , and value into the controler.
 
             //change the row and the column and set the new name
             RowChanged(row);
@@ -234,22 +246,36 @@ namespace SpreadsheetGUI
         }
 
         /// <summary>
-        /// Setter for the cell name box
+        /// Setter for the cell name box so that we can have the letter number combination (A1, A2 etc.)
         /// </summary>
         /// <param name="cName"></param>
         public void CellNameText(String cName)
         {
             cellBox.Text = cName;
         }
+        /// <summary>
+        /// Setter for the value box.
+        /// </summary>
+        /// <param name="value"></param>
         public void ValueBox(object value)
         {
             valueBox.Text = value.ToString();
 
         }
+        /// <summary>
+        /// setter for the contents box.
+        /// </summary>
+        /// <param name="contents"></param>
         public void ContentsBox(object contents)
         {
             contentsBox.Text = contents.ToString();
         }
+        /// <summary>
+        /// calls the spreadsheetPanel's set value so that we can see it within the cell.
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="row"></param>
+        /// <param name="value"></param>
         public void UpdatedValue(int col, int row, object value)
         {
             spreadsheetPanel.SetValue(col, row, value.ToString());
@@ -274,7 +300,7 @@ namespace SpreadsheetGUI
         private void howToUseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Choosing any cell below will allow you to edit the cell." + "\r"
-                + "Editing a cell by typing your input in the contents box at the top." + "\r"
+                + "Editing a cell by typing your input in the contents box at the top. *IMPORTANT: arrow keys wont work for text. " + "\r"
                 + "A valid entry is a number, words, or a valid formula." + "\r"
                 + "A valid formula begins with an '=' along with cell names and these mathematical signs. '+ - * /'" + "\r"
                 + "Example:  =A1 + A2" + "\r"
@@ -282,6 +308,74 @@ namespace SpreadsheetGUI
                 + "A circular equation is tryint to make a cell equal to itself!" + "\r"
                 + "Happy spreadsheet-ing!",
                 "How To Use This Spreadsheet", MessageBoxButtons.OK);
+        }
+
+
+        /// <summary>
+        /// Called from the other key down event, and checks to see if it is any of the arrow keys. If it is
+        /// we set the selected cell to the correct one and update the current cell in our class. If it retruns false
+        /// we revet back to the old cell.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void spreadsheetPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+            //X = col, Y= row
+            if (e.KeyCode == Keys.Left)
+            {
+                currentCol = currentCol - 1;
+                if (spreadsheetPanel.SetSelection(currentCol, currentRow) == false)
+                {
+                    currentCol = currentCol + 1;
+                }
+              
+            }
+            if (e.KeyCode == Keys.Right)
+            {
+                currentCol = currentCol + 1;
+                spreadsheetPanel.SetSelection(currentCol , currentRow);
+                if (spreadsheetPanel.SetSelection(currentCol , currentRow) == false)
+                {
+                    currentCol = currentCol - 1;
+                }
+            }
+            if (e.KeyCode == Keys.Up)
+            {
+                currentRow = currentRow - 1;
+                if (spreadsheetPanel.SetSelection(currentCol, currentRow) == false)
+                {
+                    currentRow = currentRow + 1;
+                }
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                currentRow = currentRow + 1;
+                if (spreadsheetPanel.SetSelection(currentCol, currentRow) == false)
+                {
+                    currentRow = currentRow - 1;
+                }
+            }
+
+            //change the row and the column and set the new name
+            RowChanged(currentRow);
+            ColChanged(currentCol);
+
+            //get new cell value and contents
+            SelectionChanged();
+            spreadsheetPanel.SetValue(currentCol, currentRow, valueBox.Text);
+        }
+
+        private void SSWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            //X = col, Y= row
+            if (e.KeyCode == Keys.Enter)
+            {
+                contentsBox_KeyDown(sender, e);
+            }
+            else
+            {
+                spreadsheetPanel_KeyDown(sender, e);
+            }
         }
     }
 }

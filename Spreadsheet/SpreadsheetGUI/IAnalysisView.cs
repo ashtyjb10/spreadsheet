@@ -33,15 +33,15 @@ namespace SpreadsheetGUI
         void ValueBox(object value);
         void UpdatedValue(int col, int row, object value);
 
-        bool isChanged { get; }
+        //bool isChanged { get; }
 
         string Title { set; get; }
 
-        string Content { set; }
+        //string Content { set; }
 
-        string Value {   set; }
+        //string Value {   set; }
 
-        string Cell { set; }
+        //string Cell { set; }
 
         void DoClose();
 

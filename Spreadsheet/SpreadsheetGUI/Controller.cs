@@ -40,7 +40,8 @@ namespace SpreadsheetGUI
             window.SelectionChanged += HandleSelectionChanged;
             window.RowChanged += HandleRowChanged;
             window.ColChanged += HandleColChanged;
-        }
+            
+    }
 
         public Controller(IAnalysisView window, string fileName)
         {
@@ -89,11 +90,20 @@ namespace SpreadsheetGUI
             writer.Close();
         }
 
+        /// <summary>
+        ///  hangle for :getting the new row for getting the cell name.
+        /// </summary>
+        /// <param name="newRow"></param>
         private void HandleRowChanged(int newRow)
         {
             row = newRow;
         }
 
+        /// <summary>
+        /// handle for: getting the new col for getting the cell name. then we get the cell name because we
+        /// have updated both the row and col at this point, and send that back to the window.
+        /// </summary>
+        /// <param name="newCol"></param>
         private void HandleColChanged(int newCol)
         {
             col = newCol;
@@ -102,6 +112,10 @@ namespace SpreadsheetGUI
             window.CellNameText(CellName);
         }
 
+        /// <summary>
+        /// Handles a request for the selection change. it gets the value and contents from spreadsheet and 
+        /// sends it back to the window.
+        /// </summary>
         private void HandleSelectionChanged()
         {
             object value = spreadsheet.GetCellValue(CellName);
@@ -116,6 +130,11 @@ namespace SpreadsheetGUI
             
         }
 
+        /// <summary>
+        /// handles the contents changed. we change it in the spreadsheet, and then we change all of the values 
+        /// of the cells that are returned from the spreadsheet. and pass that back to the window.
+        /// </summary>
+        /// <param name="newContents"></param>
         private void HandleContentsChanged(string newContents)
         {
             try
@@ -160,6 +179,11 @@ namespace SpreadsheetGUI
             //throw new NotImplementedException();
         }
 
+
+        /// <summary>
+        /// handles a close request.
+        /// </summary>
+        /// <param name="e"></param>
         private void HandleCloseEvent(FormClosingEventArgs e)
         {
             //If the spreadsheet is changed, send to display save warning window.
@@ -174,21 +198,36 @@ namespace SpreadsheetGUI
             }
         }
 
+
+        /// <summary>
+        /// handles a new File chosen and runs a new one.
+        /// </summary>
+        /// <param name="fileName"></param>
         private void HandleNewFileChosen(string fileName)
         {
             SpreadsheetApplicationContext.GetContext().RunNew(fileName);
         }
 
-        public bool isChanged()
+        /*public bool isChanged()
         {
             return spreadsheet.Changed;
-        }
+        }*/
+        /// <summary>
+        /// gets the cell name of the current row and column.
+        /// </summary>
+        /// <returns></returns>
         private String GetCellName()
         {
             //have column number need the letter a =0
             int tempRow = row + 1;
             return cellLett[col] + tempRow;
         }
+
+        /// <summary>
+        /// get the column with input being the letter of the cell column.
+        /// </summary>
+        /// <param name="let"></param>
+        /// <returns></returns>
         private int GetColumn(string let)
         {
             //spreadsheet starts at A1 (row = -1)
