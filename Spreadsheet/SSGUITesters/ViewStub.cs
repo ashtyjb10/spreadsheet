@@ -1,16 +1,18 @@
-﻿using System;
+﻿using SpreadsheetGUI;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using SpreadsheetGUI;
 
-namespace SSGuiTester
+namespace SSGUITesters
 {
     class ViewStub : IAnalysisView
     {
-       public event Action<string> NewFileChosen;
+        public event Action<string> NewFileChosen;
 
-         public event Action<string> SaveFileChosen;
+        public event Action<string> SaveFileChosen;
 
         public event Action<string> ContentsChanged;
 
@@ -22,5 +24,4 @@ namespace SSGuiTester
 
         public event Action<FormClosingEventArgs> CloseEvent;
     }
-
 }
