@@ -240,7 +240,7 @@
             // BoggleLabel
             // 
             this.BoggleLabel.AutoSize = true;
-            this.BoggleLabel.BackColor = System.Drawing.Color.Gray;
+            this.BoggleLabel.BackColor = System.Drawing.Color.Blue;
             this.BoggleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BoggleLabel.Location = new System.Drawing.Point(532, 154);
             this.BoggleLabel.Name = "BoggleLabel";
