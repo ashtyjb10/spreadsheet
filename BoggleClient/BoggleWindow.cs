@@ -35,5 +35,14 @@ namespace BoggleClient
 
             }
         }
+
+        private void oneThreetxt_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.oneThreeTxt.BackColor == Color.White)
+            {
+                this.oneThreeTxt.BackColor = Color.Red;
+
+            }
+        }
     }
 }

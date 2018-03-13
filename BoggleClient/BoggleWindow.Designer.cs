@@ -34,7 +34,7 @@
             this.oneOneTxt = new System.Windows.Forms.TextBox();
             this.BoggleLabel = new System.Windows.Forms.Label();
             this.oneTwoTxt = new System.Windows.Forms.TextBox();
-            this.oneThreetxt = new System.Windows.Forms.TextBox();
+            this.oneThreeTxt = new System.Windows.Forms.TextBox();
             this.oneFourTxt = new System.Windows.Forms.TextBox();
             this.twoOneTxt = new System.Windows.Forms.TextBox();
             this.twoTwoTxt = new System.Windows.Forms.TextBox();
@@ -87,7 +87,7 @@
             this.panel1.Controls.Add(this.twoTwoTxt);
             this.panel1.Controls.Add(this.twoOneTxt);
             this.panel1.Controls.Add(this.oneFourTxt);
-            this.panel1.Controls.Add(this.oneThreetxt);
+            this.panel1.Controls.Add(this.oneThreeTxt);
             this.panel1.Controls.Add(this.oneTwoTxt);
             this.panel1.Controls.Add(this.oneOneTxt);
             this.panel1.Location = new System.Drawing.Point(308, 242);
@@ -136,19 +136,20 @@
             this.oneTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.oneTwoTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneTwoTxt_MouseDown);
             // 
-            // oneThreetxt
+            // oneThreeTxt
             // 
-            this.oneThreetxt.AccessibleName = "";
-            this.oneThreetxt.BackColor = System.Drawing.Color.White;
-            this.oneThreetxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oneThreetxt.Location = new System.Drawing.Point(361, 25);
-            this.oneThreetxt.Multiline = true;
-            this.oneThreetxt.Name = "oneThreetxt";
-            this.oneThreetxt.ReadOnly = true;
-            this.oneThreetxt.Size = new System.Drawing.Size(100, 100);
-            this.oneThreetxt.TabIndex = 3;
-            this.oneThreetxt.Text = "QU";
-            this.oneThreetxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.oneThreeTxt.AccessibleName = "";
+            this.oneThreeTxt.BackColor = System.Drawing.Color.White;
+            this.oneThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.oneThreeTxt.Location = new System.Drawing.Point(361, 25);
+            this.oneThreeTxt.Multiline = true;
+            this.oneThreeTxt.Name = "oneThreeTxt";
+            this.oneThreeTxt.ReadOnly = true;
+            this.oneThreeTxt.Size = new System.Drawing.Size(100, 100);
+            this.oneThreeTxt.TabIndex = 3;
+            this.oneThreeTxt.Text = "QU";
+            this.oneThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.oneThreeTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneThreetxt_MouseDown);
             // 
             // oneFourTxt
             // 
@@ -380,7 +381,7 @@
         private System.Windows.Forms.TextBox twoTwoTxt;
         private System.Windows.Forms.TextBox twoOneTxt;
         private System.Windows.Forms.TextBox oneFourTxt;
-        private System.Windows.Forms.TextBox oneThreetxt;
+        private System.Windows.Forms.TextBox oneThreeTxt;
         private System.Windows.Forms.TextBox oneTwoTxt;
         private System.Windows.Forms.Button submitWordButton;
     }
