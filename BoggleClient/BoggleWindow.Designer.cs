@@ -46,7 +46,7 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.oneOneTxt = new System.Windows.Forms.TextBox();
             this.BoggleLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -87,7 +87,7 @@
             this.panel1.Controls.Add(this.textBox4);
             this.panel1.Controls.Add(this.textBox3);
             this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.oneOneTxt);
             this.panel1.Location = new System.Drawing.Point(422, 242);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(510, 491);
@@ -228,14 +228,19 @@
             this.textBox2.Size = new System.Drawing.Size(100, 100);
             this.textBox2.TabIndex = 1;
             // 
-            // textBox1
+            // oneOneTxt
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(45, 37);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 100);
-            this.textBox1.TabIndex = 0;
+            this.oneOneTxt.AccessibleName = "oneOneTxt";
+            this.oneOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.oneOneTxt.Location = new System.Drawing.Point(45, 37);
+            this.oneOneTxt.Multiline = true;
+            this.oneOneTxt.Name = "oneOneTxt";
+            this.oneOneTxt.ReadOnly = true;
+            this.oneOneTxt.Size = new System.Drawing.Size(100, 100);
+            this.oneOneTxt.TabIndex = 0;
+            this.oneOneTxt.Text = "QU";
+            this.oneOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.oneOneTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneOneTxt_MouseDown);
             // 
             // BoggleLabel
             // 
@@ -248,7 +253,7 @@
             this.BoggleLabel.TabIndex = 2;
             this.BoggleLabel.Text = "Boggle";
             // 
-            // Form1
+            // BoggleWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -257,7 +262,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "BoggleWindow";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -288,7 +293,7 @@
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox oneOneTxt;
         private System.Windows.Forms.Label BoggleLabel;
     }
 }

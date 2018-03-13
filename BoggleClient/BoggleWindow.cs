@@ -16,5 +16,16 @@ namespace BoggleClient
         {
             InitializeComponent();
         }
+
+        public void echo()
+        {
+            this.oneOneTxt.AppendText("test");
+        }
+
+        private void oneOneTxt_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.oneOneTxt.Text = "TEst1";
+
+        }
     }
 }
