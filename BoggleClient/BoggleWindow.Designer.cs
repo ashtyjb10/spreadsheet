@@ -31,23 +31,24 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox16 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.oneOneTxt = new System.Windows.Forms.TextBox();
             this.BoggleLabel = new System.Windows.Forms.Label();
+            this.oneTwoTxt = new System.Windows.Forms.TextBox();
+            this.oneThreetxt = new System.Windows.Forms.TextBox();
+            this.oneFourTxt = new System.Windows.Forms.TextBox();
+            this.twoOneTxt = new System.Windows.Forms.TextBox();
+            this.twoTwoTxt = new System.Windows.Forms.TextBox();
+            this.twoThreeTxt = new System.Windows.Forms.TextBox();
+            this.twoFourTxt = new System.Windows.Forms.TextBox();
+            this.threeOneTxt = new System.Windows.Forms.TextBox();
+            this.threeTwoTxt = new System.Windows.Forms.TextBox();
+            this.threeThreeTxt = new System.Windows.Forms.TextBox();
+            this.threeFourTxt = new System.Windows.Forms.TextBox();
+            this.fourOneTxt = new System.Windows.Forms.TextBox();
+            this.fourTwoTxt = new System.Windows.Forms.TextBox();
+            this.fourThreeTxt = new System.Windows.Forms.TextBox();
+            this.fourFourTxt = new System.Windows.Forms.TextBox();
+            this.submitWordButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -72,167 +73,34 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Turquoise;
-            this.panel1.Controls.Add(this.textBox16);
-            this.panel1.Controls.Add(this.textBox15);
-            this.panel1.Controls.Add(this.textBox14);
-            this.panel1.Controls.Add(this.textBox13);
-            this.panel1.Controls.Add(this.textBox12);
-            this.panel1.Controls.Add(this.textBox11);
-            this.panel1.Controls.Add(this.textBox10);
-            this.panel1.Controls.Add(this.textBox9);
-            this.panel1.Controls.Add(this.textBox8);
-            this.panel1.Controls.Add(this.textBox7);
-            this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Controls.Add(this.textBox5);
-            this.panel1.Controls.Add(this.textBox4);
-            this.panel1.Controls.Add(this.textBox3);
-            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.submitWordButton);
+            this.panel1.Controls.Add(this.fourFourTxt);
+            this.panel1.Controls.Add(this.fourThreeTxt);
+            this.panel1.Controls.Add(this.fourTwoTxt);
+            this.panel1.Controls.Add(this.fourOneTxt);
+            this.panel1.Controls.Add(this.threeFourTxt);
+            this.panel1.Controls.Add(this.threeThreeTxt);
+            this.panel1.Controls.Add(this.threeTwoTxt);
+            this.panel1.Controls.Add(this.threeOneTxt);
+            this.panel1.Controls.Add(this.twoFourTxt);
+            this.panel1.Controls.Add(this.twoThreeTxt);
+            this.panel1.Controls.Add(this.twoTwoTxt);
+            this.panel1.Controls.Add(this.twoOneTxt);
+            this.panel1.Controls.Add(this.oneFourTxt);
+            this.panel1.Controls.Add(this.oneThreetxt);
+            this.panel1.Controls.Add(this.oneTwoTxt);
             this.panel1.Controls.Add(this.oneOneTxt);
-            this.panel1.Location = new System.Drawing.Point(422, 242);
+            this.panel1.Location = new System.Drawing.Point(308, 242);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(510, 491);
+            this.panel1.Size = new System.Drawing.Size(730, 580);
             this.panel1.TabIndex = 1;
-            // 
-            // textBox16
-            // 
-            this.textBox16.Enabled = false;
-            this.textBox16.Location = new System.Drawing.Point(363, 355);
-            this.textBox16.Multiline = true;
-            this.textBox16.Name = "textBox16";
-            this.textBox16.Size = new System.Drawing.Size(100, 100);
-            this.textBox16.TabIndex = 15;
-            // 
-            // textBox15
-            // 
-            this.textBox15.Enabled = false;
-            this.textBox15.Location = new System.Drawing.Point(257, 355);
-            this.textBox15.Multiline = true;
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(100, 100);
-            this.textBox15.TabIndex = 14;
-            // 
-            // textBox14
-            // 
-            this.textBox14.Enabled = false;
-            this.textBox14.Location = new System.Drawing.Point(151, 355);
-            this.textBox14.Multiline = true;
-            this.textBox14.Name = "textBox14";
-            this.textBox14.Size = new System.Drawing.Size(100, 100);
-            this.textBox14.TabIndex = 13;
-            // 
-            // textBox13
-            // 
-            this.textBox13.Enabled = false;
-            this.textBox13.Location = new System.Drawing.Point(45, 355);
-            this.textBox13.Multiline = true;
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(100, 100);
-            this.textBox13.TabIndex = 12;
-            // 
-            // textBox12
-            // 
-            this.textBox12.Enabled = false;
-            this.textBox12.Location = new System.Drawing.Point(363, 249);
-            this.textBox12.Multiline = true;
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(100, 100);
-            this.textBox12.TabIndex = 11;
-            // 
-            // textBox11
-            // 
-            this.textBox11.Enabled = false;
-            this.textBox11.Location = new System.Drawing.Point(257, 249);
-            this.textBox11.Multiline = true;
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(100, 100);
-            this.textBox11.TabIndex = 10;
-            // 
-            // textBox10
-            // 
-            this.textBox10.Enabled = false;
-            this.textBox10.Location = new System.Drawing.Point(151, 249);
-            this.textBox10.Multiline = true;
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(100, 100);
-            this.textBox10.TabIndex = 9;
-            // 
-            // textBox9
-            // 
-            this.textBox9.Enabled = false;
-            this.textBox9.Location = new System.Drawing.Point(45, 249);
-            this.textBox9.Multiline = true;
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(100, 100);
-            this.textBox9.TabIndex = 8;
-            // 
-            // textBox8
-            // 
-            this.textBox8.Enabled = false;
-            this.textBox8.Location = new System.Drawing.Point(363, 143);
-            this.textBox8.Multiline = true;
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(100, 100);
-            this.textBox8.TabIndex = 7;
-            // 
-            // textBox7
-            // 
-            this.textBox7.Enabled = false;
-            this.textBox7.Location = new System.Drawing.Point(257, 143);
-            this.textBox7.Multiline = true;
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(100, 100);
-            this.textBox7.TabIndex = 6;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Enabled = false;
-            this.textBox6.Location = new System.Drawing.Point(151, 143);
-            this.textBox6.Multiline = true;
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 100);
-            this.textBox6.TabIndex = 5;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Enabled = false;
-            this.textBox5.Location = new System.Drawing.Point(45, 143);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 100);
-            this.textBox5.TabIndex = 4;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(363, 37);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 100);
-            this.textBox4.TabIndex = 3;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(257, 37);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 100);
-            this.textBox3.TabIndex = 2;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(151, 37);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 100);
-            this.textBox2.TabIndex = 1;
             // 
             // oneOneTxt
             // 
-            this.oneOneTxt.AccessibleName = "oneOneTxt";
+            this.oneOneTxt.AccessibleName = "";
+            this.oneOneTxt.BackColor = System.Drawing.Color.White;
             this.oneOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oneOneTxt.Location = new System.Drawing.Point(45, 37);
+            this.oneOneTxt.Location = new System.Drawing.Point(149, 25);
             this.oneOneTxt.Multiline = true;
             this.oneOneTxt.Name = "oneOneTxt";
             this.oneOneTxt.ReadOnly = true;
@@ -252,6 +120,225 @@
             this.BoggleLabel.Size = new System.Drawing.Size(272, 85);
             this.BoggleLabel.TabIndex = 2;
             this.BoggleLabel.Text = "Boggle";
+            // 
+            // oneTwoTxt
+            // 
+            this.oneTwoTxt.AccessibleName = "";
+            this.oneTwoTxt.BackColor = System.Drawing.Color.White;
+            this.oneTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.oneTwoTxt.Location = new System.Drawing.Point(255, 25);
+            this.oneTwoTxt.Multiline = true;
+            this.oneTwoTxt.Name = "oneTwoTxt";
+            this.oneTwoTxt.ReadOnly = true;
+            this.oneTwoTxt.Size = new System.Drawing.Size(100, 100);
+            this.oneTwoTxt.TabIndex = 16;
+            this.oneTwoTxt.Text = "QU";
+            this.oneTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.oneTwoTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneTwoTxt_MouseDown);
+            // 
+            // oneThreetxt
+            // 
+            this.oneThreetxt.AccessibleName = "";
+            this.oneThreetxt.BackColor = System.Drawing.Color.White;
+            this.oneThreetxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.oneThreetxt.Location = new System.Drawing.Point(361, 25);
+            this.oneThreetxt.Multiline = true;
+            this.oneThreetxt.Name = "oneThreetxt";
+            this.oneThreetxt.ReadOnly = true;
+            this.oneThreetxt.Size = new System.Drawing.Size(100, 100);
+            this.oneThreetxt.TabIndex = 3;
+            this.oneThreetxt.Text = "QU";
+            this.oneThreetxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // oneFourTxt
+            // 
+            this.oneFourTxt.AccessibleName = "";
+            this.oneFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.oneFourTxt.Location = new System.Drawing.Point(467, 25);
+            this.oneFourTxt.Multiline = true;
+            this.oneFourTxt.Name = "oneFourTxt";
+            this.oneFourTxt.ReadOnly = true;
+            this.oneFourTxt.Size = new System.Drawing.Size(100, 100);
+            this.oneFourTxt.TabIndex = 17;
+            this.oneFourTxt.Text = "QU";
+            this.oneFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // twoOneTxt
+            // 
+            this.twoOneTxt.AccessibleName = "";
+            this.twoOneTxt.BackColor = System.Drawing.Color.White;
+            this.twoOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twoOneTxt.Location = new System.Drawing.Point(149, 131);
+            this.twoOneTxt.Multiline = true;
+            this.twoOneTxt.Name = "twoOneTxt";
+            this.twoOneTxt.ReadOnly = true;
+            this.twoOneTxt.Size = new System.Drawing.Size(100, 100);
+            this.twoOneTxt.TabIndex = 18;
+            this.twoOneTxt.Text = "QU";
+            this.twoOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // twoTwoTxt
+            // 
+            this.twoTwoTxt.AccessibleName = "";
+            this.twoTwoTxt.BackColor = System.Drawing.Color.White;
+            this.twoTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twoTwoTxt.Location = new System.Drawing.Point(255, 131);
+            this.twoTwoTxt.Multiline = true;
+            this.twoTwoTxt.Name = "twoTwoTxt";
+            this.twoTwoTxt.ReadOnly = true;
+            this.twoTwoTxt.Size = new System.Drawing.Size(100, 100);
+            this.twoTwoTxt.TabIndex = 19;
+            this.twoTwoTxt.Text = "QU";
+            this.twoTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // twoThreeTxt
+            // 
+            this.twoThreeTxt.AccessibleName = "";
+            this.twoThreeTxt.BackColor = System.Drawing.Color.White;
+            this.twoThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twoThreeTxt.Location = new System.Drawing.Point(361, 131);
+            this.twoThreeTxt.Multiline = true;
+            this.twoThreeTxt.Name = "twoThreeTxt";
+            this.twoThreeTxt.ReadOnly = true;
+            this.twoThreeTxt.Size = new System.Drawing.Size(100, 100);
+            this.twoThreeTxt.TabIndex = 20;
+            this.twoThreeTxt.Text = "QU";
+            this.twoThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // twoFourTxt
+            // 
+            this.twoFourTxt.AccessibleName = "";
+            this.twoFourTxt.BackColor = System.Drawing.Color.White;
+            this.twoFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twoFourTxt.Location = new System.Drawing.Point(467, 131);
+            this.twoFourTxt.Multiline = true;
+            this.twoFourTxt.Name = "twoFourTxt";
+            this.twoFourTxt.ReadOnly = true;
+            this.twoFourTxt.Size = new System.Drawing.Size(100, 100);
+            this.twoFourTxt.TabIndex = 21;
+            this.twoFourTxt.Text = "QU";
+            this.twoFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // threeOneTxt
+            // 
+            this.threeOneTxt.AccessibleName = "";
+            this.threeOneTxt.BackColor = System.Drawing.Color.White;
+            this.threeOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.threeOneTxt.Location = new System.Drawing.Point(149, 237);
+            this.threeOneTxt.Multiline = true;
+            this.threeOneTxt.Name = "threeOneTxt";
+            this.threeOneTxt.ReadOnly = true;
+            this.threeOneTxt.Size = new System.Drawing.Size(100, 100);
+            this.threeOneTxt.TabIndex = 3;
+            this.threeOneTxt.Text = "QU";
+            this.threeOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // threeTwoTxt
+            // 
+            this.threeTwoTxt.AccessibleName = "";
+            this.threeTwoTxt.BackColor = System.Drawing.Color.White;
+            this.threeTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.threeTwoTxt.Location = new System.Drawing.Point(255, 237);
+            this.threeTwoTxt.Multiline = true;
+            this.threeTwoTxt.Name = "threeTwoTxt";
+            this.threeTwoTxt.ReadOnly = true;
+            this.threeTwoTxt.Size = new System.Drawing.Size(100, 100);
+            this.threeTwoTxt.TabIndex = 22;
+            this.threeTwoTxt.Text = "QU";
+            this.threeTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // threeThreeTxt
+            // 
+            this.threeThreeTxt.AccessibleName = "";
+            this.threeThreeTxt.BackColor = System.Drawing.Color.White;
+            this.threeThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.threeThreeTxt.Location = new System.Drawing.Point(361, 237);
+            this.threeThreeTxt.Multiline = true;
+            this.threeThreeTxt.Name = "threeThreeTxt";
+            this.threeThreeTxt.ReadOnly = true;
+            this.threeThreeTxt.Size = new System.Drawing.Size(100, 100);
+            this.threeThreeTxt.TabIndex = 23;
+            this.threeThreeTxt.Text = "QU";
+            this.threeThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // threeFourTxt
+            // 
+            this.threeFourTxt.AccessibleName = "";
+            this.threeFourTxt.BackColor = System.Drawing.Color.White;
+            this.threeFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.threeFourTxt.Location = new System.Drawing.Point(467, 237);
+            this.threeFourTxt.Multiline = true;
+            this.threeFourTxt.Name = "threeFourTxt";
+            this.threeFourTxt.ReadOnly = true;
+            this.threeFourTxt.Size = new System.Drawing.Size(100, 100);
+            this.threeFourTxt.TabIndex = 24;
+            this.threeFourTxt.Text = "QU";
+            this.threeFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // fourOneTxt
+            // 
+            this.fourOneTxt.AccessibleName = "";
+            this.fourOneTxt.BackColor = System.Drawing.Color.White;
+            this.fourOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fourOneTxt.Location = new System.Drawing.Point(149, 343);
+            this.fourOneTxt.Multiline = true;
+            this.fourOneTxt.Name = "fourOneTxt";
+            this.fourOneTxt.ReadOnly = true;
+            this.fourOneTxt.Size = new System.Drawing.Size(100, 100);
+            this.fourOneTxt.TabIndex = 25;
+            this.fourOneTxt.Text = "QU";
+            this.fourOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // fourTwoTxt
+            // 
+            this.fourTwoTxt.AccessibleName = "";
+            this.fourTwoTxt.BackColor = System.Drawing.Color.White;
+            this.fourTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fourTwoTxt.Location = new System.Drawing.Point(255, 343);
+            this.fourTwoTxt.Multiline = true;
+            this.fourTwoTxt.Name = "fourTwoTxt";
+            this.fourTwoTxt.ReadOnly = true;
+            this.fourTwoTxt.Size = new System.Drawing.Size(100, 100);
+            this.fourTwoTxt.TabIndex = 26;
+            this.fourTwoTxt.Text = "QU";
+            this.fourTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // fourThreeTxt
+            // 
+            this.fourThreeTxt.AccessibleName = "";
+            this.fourThreeTxt.BackColor = System.Drawing.Color.White;
+            this.fourThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fourThreeTxt.Location = new System.Drawing.Point(361, 343);
+            this.fourThreeTxt.Multiline = true;
+            this.fourThreeTxt.Name = "fourThreeTxt";
+            this.fourThreeTxt.ReadOnly = true;
+            this.fourThreeTxt.Size = new System.Drawing.Size(100, 100);
+            this.fourThreeTxt.TabIndex = 27;
+            this.fourThreeTxt.Text = "QU";
+            this.fourThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // fourFourTxt
+            // 
+            this.fourFourTxt.AccessibleName = "";
+            this.fourFourTxt.BackColor = System.Drawing.Color.White;
+            this.fourFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fourFourTxt.Location = new System.Drawing.Point(467, 343);
+            this.fourFourTxt.Multiline = true;
+            this.fourFourTxt.Name = "fourFourTxt";
+            this.fourFourTxt.ReadOnly = true;
+            this.fourFourTxt.Size = new System.Drawing.Size(100, 100);
+            this.fourFourTxt.TabIndex = 28;
+            this.fourFourTxt.Text = "QU";
+            this.fourFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // submitWordButton
+            // 
+            this.submitWordButton.Location = new System.Drawing.Point(405, 468);
+            this.submitWordButton.Name = "submitWordButton";
+            this.submitWordButton.Size = new System.Drawing.Size(162, 40);
+            this.submitWordButton.TabIndex = 29;
+            this.submitWordButton.Text = "Submit Word";
+            this.submitWordButton.UseVisualStyleBackColor = true;
             // 
             // BoggleWindow
             // 
@@ -278,23 +365,24 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox textBox16;
-        private System.Windows.Forms.TextBox textBox15;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox oneOneTxt;
         private System.Windows.Forms.Label BoggleLabel;
+        private System.Windows.Forms.TextBox fourFourTxt;
+        private System.Windows.Forms.TextBox fourThreeTxt;
+        private System.Windows.Forms.TextBox fourTwoTxt;
+        private System.Windows.Forms.TextBox fourOneTxt;
+        private System.Windows.Forms.TextBox threeFourTxt;
+        private System.Windows.Forms.TextBox threeThreeTxt;
+        private System.Windows.Forms.TextBox threeTwoTxt;
+        private System.Windows.Forms.TextBox threeOneTxt;
+        private System.Windows.Forms.TextBox twoFourTxt;
+        private System.Windows.Forms.TextBox twoThreeTxt;
+        private System.Windows.Forms.TextBox twoTwoTxt;
+        private System.Windows.Forms.TextBox twoOneTxt;
+        private System.Windows.Forms.TextBox oneFourTxt;
+        private System.Windows.Forms.TextBox oneThreetxt;
+        private System.Windows.Forms.TextBox oneTwoTxt;
+        private System.Windows.Forms.Button submitWordButton;
     }
 }
 

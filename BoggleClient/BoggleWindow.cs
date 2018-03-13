@@ -24,8 +24,16 @@ namespace BoggleClient
 
         private void oneOneTxt_MouseDown(object sender, MouseEventArgs e)
         {
-            this.oneOneTxt.Text = "TEst1";
+            this.oneOneTxt.BackColor = Color.Red;
+        }
 
+        private void oneTwoTxt_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.oneTwoTxt.BackColor == Color.White)
+            {
+                this.oneTwoTxt.BackColor = Color.Red;
+
+            }
         }
     }
 }
