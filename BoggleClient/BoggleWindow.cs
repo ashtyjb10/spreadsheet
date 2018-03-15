@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+
+
 namespace BoggleClient
 {
     public partial class BoggleWindow : Form
@@ -15,6 +18,7 @@ namespace BoggleClient
         public BoggleWindow()
         {
             InitializeComponent();
+            
         }
 
         public void echo()
@@ -25,6 +29,8 @@ namespace BoggleClient
         private void oneOneTxt_MouseDown(object sender, MouseEventArgs e)
         {
             this.oneOneTxt.BackColor = Color.Red;
+            Controller s = new Controller();
+            s.Register("hey", "yes");
         }
 
         private void oneTwoTxt_MouseDown(object sender, MouseEventArgs e)
