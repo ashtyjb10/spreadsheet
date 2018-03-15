@@ -7,11 +7,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BoggleClient
 {
     class Controller
     {
+       
+        private IAnalysisView view;
         /// <summary>
         /// The token of the most recently registered user, or "0" if no user
         /// has ever registered
@@ -23,6 +26,11 @@ namespace BoggleClient
         /// </summary>
         private CancellationTokenSource tokenSource;
 
+        public Controller(IAnalysisView view)
+        {
+            this.view = view;
+            userToken = "0";
+        }
 
         /// <summary>
         /// Cancels the current operation (currently unimplemented)
@@ -34,34 +42,38 @@ namespace BoggleClient
 
         public async void Register(String domain, String nickname)
         {
-            using (HttpClient client = CreateClient())
+            try
             {
-                dynamic users = new ExpandoObject();
-                users.Nickname = nickname;
 
-                //cancel token
-                tokenSource = new CancellationTokenSource();
-                StringContent content = new StringContent(JsonConvert.SerializeObject(users), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync("users", content, tokenSource.Token);
 
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = CreateClient())
                 {
-                    String result = await response.Content.ReadAsStringAsync();
-                    object temp = JsonConvert.DeserializeObject(result);
-                  
-                     userToken = (string)JsonConvert.DeserializeObject(result);
-                    //userToken = (String) JsonConvert.DeserializeObject(result);
-                    Console.WriteLine(userToken);
-                }
-                else
-                {
-                    Console.WriteLine(response.StatusCode);
-                    //MessageBox.Show("Error registering: " + response.StatusCode + "\n" + response.ReasonPhrase);
-                }
+                    dynamic users = new ExpandoObject();
+                    users.Nickname = nickname;
 
+                    //cancel token
+                    tokenSource = new CancellationTokenSource();
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(users), Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync("users", content, tokenSource.Token);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        String result = await response.Content.ReadAsStringAsync();
+                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                        userToken = deserialized.UserToken;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error registering: " + response.StatusCode + "\n" + response.ReasonPhrase);
+                    }
+                }
             }
-
+            finally
+            {
+                view.EnableControls(true);
+            }
         }
+      
 
 
         private static HttpClient CreateClient()
