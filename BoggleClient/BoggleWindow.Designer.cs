@@ -81,7 +81,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1411, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(1494, 40);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -142,7 +142,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe MDL2 Assets", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(563, 419);
+            this.label1.Location = new System.Drawing.Point(563, 432);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(237, 32);
             this.label1.TabIndex = 32;
@@ -459,16 +459,16 @@
             // 
             this.button2.Location = new System.Drawing.Point(19, 239);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(130, 33);
+            this.button2.Size = new System.Drawing.Size(137, 46);
             this.button2.TabIndex = 1;
             this.button2.Text = "REGISTER";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(72, 278);
+            this.button3.Location = new System.Drawing.Point(85, 291);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(127, 31);
+            this.button3.Size = new System.Drawing.Size(134, 32);
             this.button3.TabIndex = 2;
             this.button3.Text = "CANCEL";
             this.button3.UseVisualStyleBackColor = true;
@@ -538,7 +538,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(1411, 897);
+            this.ClientSize = new System.Drawing.Size(1494, 853);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.BoggleLabel);

@@ -47,7 +47,10 @@ namespace BoggleClient
                 if (response.IsSuccessStatusCode)
                 {
                     String result = await response.Content.ReadAsStringAsync();
-                    //userToken = (string) JsonConvert.DeserializeObject(result);
+                    object temp = JsonConvert.DeserializeObject(result);
+                  
+                     userToken = (string)JsonConvert.DeserializeObject(result);
+                    //userToken = (String) JsonConvert.DeserializeObject(result);
                     Console.WriteLine(userToken);
                 }
                 else
