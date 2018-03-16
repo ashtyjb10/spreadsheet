@@ -29,6 +29,7 @@ namespace BoggleClient
 
         public event Action<string, string> RegisterUser;
         public event Action<string> DesiredGameDuration;
+        public event Action<string> ScoreWord;
 
         public void echo()
         {
@@ -725,6 +726,27 @@ namespace BoggleClient
         public void setTime(string timeRemaining)
         {
             TimeRemainingText.Text = timeRemaining;
+        }
+
+        private void submitWordButton_Click(object sender, EventArgs e)
+        {
+            //only if game is active.
+            ScoreWord(SubmitWordText.Text);
+            ResetBoard();
+        }
+        public void ViewActiveBox(bool visible)
+        {
+            GameActiveBox.Visible = visible;
+        }
+        public void ViewCompletedBox(bool visible)
+        {
+            GameCompleteBox.Visible = visible;
+            // what to do when game is completed??? we still wanna have access to the words played right?
+            GameBoard.Enabled = false;
+            wordsPlayedP1Txt.Enabled = true;
+            WordsPlayedP2Text.Enabled = true;
+
+
         }
     }
 }

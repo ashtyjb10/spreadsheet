@@ -25,10 +25,13 @@ namespace BoggleClient
 
         event Action<string, string> RegisterUser;
         event Action<string> DesiredGameDuration;
+        event Action<string> ScoreWord;
         void RegisteredUser();
         void GameJoined();
         void ViewPendingBox(bool visable);
         void setBoard(char[] boardArray);
+        void ViewActiveBox(bool visible);
+        void ViewCompletedBox(bool visible);
 
     }
 }

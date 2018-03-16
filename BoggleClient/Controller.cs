@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -49,6 +50,7 @@ namespace BoggleClient
             userToken = "0";
             view.RegisterUser += Register;
             view.DesiredGameDuration += JoinGame;
+            view.ScoreWord += PlayWord;
         }
 
         /// <summary>
@@ -155,11 +157,17 @@ namespace BoggleClient
                         String result = await response.Content.ReadAsStringAsync();
                         dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
                         string WordScore = deserialized.Word;
+                        GetGameStatus();
+                        UpdateBoardLong();
                         Console.WriteLine(WordScore);
                     }
                     else
                     {
-                        MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
+                        if (response.StatusCode == HttpStatusCode.Conflict)
+                        {
+                            GetGameStatus();
+                        }
+                        //MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
                     }
                 }
             }
@@ -180,7 +188,7 @@ namespace BoggleClient
 
                     //StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
                     //HttpResponseMessage response = await client.GetAsync("games/" + gameID);
-                    HttpResponseMessage response = await client.GetAsync("games/G2067"); //*****************************************************  add + gameID
+                    HttpResponseMessage response = await client.GetAsync("games/" + gameID); //*****************************************************  add + gameID
 
 
 
@@ -211,6 +219,8 @@ namespace BoggleClient
 
                                 if (gameState == "active")
                                 {
+                                    view.ViewPendingBox(false);
+                                    view.ViewActiveBox(true);
                                     dynamic player2 = deserialized.Player2;
                                     p2Nickname = player2.Nickname;
                                     p2Score = player2.Score;
@@ -220,6 +230,8 @@ namespace BoggleClient
                                 }
                                 else if (gameState == "completed")
                                 {
+                                    view.ViewActiveBox(false);
+                                    view.ViewCompletedBox(true);
                                     var wordsPlayedP1 =  player1.WordsPlayed;
                                     foreach (var obj in wordsPlayedP1)
                                     {
@@ -273,8 +285,12 @@ namespace BoggleClient
         /// </summary>
         private void UpdateBoardLong()
         {
-            //Update Board 
-            view.setBoard(gameBoard.ToArray());
+            //Update Board if not just pending.
+            if(gameBoard != null)
+            {
+                view.setBoard(gameBoard.ToArray());
+
+            }
 
             //Update player Names
             view.setUserNames(p1Nickname, p2Nickname);
