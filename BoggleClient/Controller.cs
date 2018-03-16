@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,10 @@ namespace BoggleClient
         private string gameID;
 
         private string gameState;
+        private string gameBoard;
+        private bool brief = false;
+        private string timeLimit;
+        private string timeLeft;
 
         /// <summary>
         /// for canceling the current opperation.
@@ -69,7 +74,6 @@ namespace BoggleClient
                         dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
                         userToken = deserialized.UserToken;
                         view.IsRegisteredUser = true;
-                        Console.WriteLine(userToken);
                         view.RegisteredUser();///*************************************
                     }
                     else
@@ -88,11 +92,12 @@ namespace BoggleClient
         {
             try
             {
-                using (HttpClient client = CreateClient( baseAddress, "games"))
+                using (HttpClient client = CreateClient( baseAddress, ""))
                 {
                     dynamic joinGameInfo = new ExpandoObject();
                     joinGameInfo.UserToken = userToken;
                     joinGameInfo.TimeLimit = gameDuration;
+
 
                     //cancel token
                     tokenSource = new CancellationTokenSource();
@@ -123,14 +128,55 @@ namespace BoggleClient
             }
         }
 
+        public async void PlayWord(String word)
+        {
+            try
+            {
+                using (HttpClient client = CreateClient(baseAddress, ""))
+                {
+                    dynamic characteristics = new ExpandoObject();
+                    characteristics.UserToken = userToken;
+                    characteristics.Word = word;
+
+                    //tokenSource = new CancellationTokenSource();
+
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PutAsync("games/" + gameID, content);
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        String result = await response.Content.ReadAsStringAsync();
+                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                        string WordScore = deserialized.Word;
+                        Console.WriteLine(WordScore);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
+                    }
+                }
+            }
+            finally
+            {
+
+            }
+        }
+
         public async void GetGameStatus()
         {
             try
             {
-                using (HttpClient client = CreateClient(baseAddress, "games/" + gameID))
+                using (HttpClient client = CreateClient(baseAddress, ""))
                 {
-                    // tokenSource = new CancellationTokenSource();
-                    HttpResponseMessage response = await client.GetAsync("games/" + gameID);
+
+                    tokenSource = new CancellationTokenSource();
+
+                    //StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
+                    //HttpResponseMessage response = await client.GetAsync("games/" + gameID);
+                    HttpResponseMessage response = await client.GetAsync("games/"+ gameID); //*****************************************************  add + gameID
+
+
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -142,10 +188,42 @@ namespace BoggleClient
                         {
                             view.ViewPendingBox(true);
                         }
+                        else
+                        {
+                            //game board is not pending, either active or completed.
+                            brief = true;
+                            if (brief)
+                            {
+                                gameBoard = deserialized.Board;
+                                timeLimit = deserialized.TimeLimit;
+                                timeLeft = deserialized.TimeLeft;
 
-                        Console.WriteLine(gameState);
+                                dynamic player1 = deserialized.Player1;
+                                string p1Nickname = player1.Nickname;
+                                string p1Score = player1.Score;
 
+                                if (gameState == "active")
+                                {
+                                    dynamic player2 = deserialized.Player2;
+                                    string p2Nickname = player2.Nickname;
+                                    string p2Score = player2.Score;
 
+                                    //change the game to active!
+                                }
+                                else if (gameState == "completed")
+                                {
+                                    
+                                }
+
+                            }
+                            else
+                            {
+                                //time left, player1 (score), player2(score)
+                            }
+
+                          
+                        }
+                
                     }
                     else
                     {
