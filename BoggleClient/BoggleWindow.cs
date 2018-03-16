@@ -566,148 +566,22 @@ namespace BoggleClient
         /// <param name="boardArray"></param>
         public void SetBoard(char[] boardArray)
         {
-            if (boardArray[0].ToString().ToUpper() == "Q")
+            int iterator = 0;
+            TextBox[] boxArray = new TextBox[] {letter1, letter2, letter3, letter4, letter5, letter6, letter7,
+                letter8, letter9, letter10, letter11, letter12, letter13, letter14, letter15, letter16};
+            
+            foreach(char setTo in boardArray)
             {
-                letter1.Text = "QU";
-            }
-            else
-            {
-                letter1.Text = boardArray[0].ToString();
-            }
-
-            if (boardArray[1].ToString().ToUpper() == "Q")
-            {
-                letter2.Text = "QU";
-            }
-            else
-            {
-                letter2.Text = boardArray[1].ToString();
-            }
-
-            if (boardArray[2].ToString().ToUpper() == "Q")
-            {
-                letter3.Text = "QU";
-            }
-            else
-            {
-                letter3.Text = boardArray[2].ToString();
-            }
-
-            if (boardArray[3].ToString().ToUpper() == "Q")
-            {
-                letter4.Text = "QU";
-            }
-            else
-            {
-                letter4.Text = boardArray[3].ToString();
-            }
-
-            if (boardArray[4].ToString().ToUpper() == "Q")
-            {
-                letter5.Text = "QU";
-            }
-            else
-            {
-                letter5.Text = boardArray[4].ToString();
-            }
-
-            if (boardArray[5].ToString().ToUpper() == "Q")
-            {
-                letter6.Text = "QU";
-            }
-            else
-            {
-                letter6.Text = boardArray[5].ToString();
-            }
-
-            if (boardArray[6].ToString().ToUpper() == "Q")
-            {
-                letter7.Text = "QU";
-            }
-            else
-            {
-                letter7.Text = boardArray[6].ToString();
-            }
-
-            if (boardArray[7].ToString().ToUpper() == "Q")
-            {
-                letter8.Text = "QU";
-            }
-            else
-            {
-                letter8.Text = boardArray[7].ToString();
-            }
-
-            if (boardArray[8].ToString().ToUpper() == "Q")
-            {
-                letter9.Text = "QU";
-            }
-            else
-            {
-                letter9.Text = boardArray[8].ToString();
-            }
-
-            if (boardArray[9].ToString().ToUpper() == "Q")
-            {
-                letter10.Text = "QU";
-            }
-            else
-            {
-                letter10.Text = boardArray[9].ToString();
-            }
-
-            if (boardArray[10].ToString().ToUpper() == "Q")
-            {
-                letter11.Text = "QU";
-            }
-            else
-            {
-                letter11.Text = boardArray[10].ToString();
-            }
-
-            if (boardArray[11].ToString().ToUpper() == "Q")
-            {
-                letter12.Text = "QU";
-            }
-            else
-            {
-                letter12.Text = boardArray[11].ToString();
-            }
-
-            if (boardArray[12].ToString().ToUpper() == "Q")
-            {
-                letter13.Text = "QU";
-            }
-            else
-            {
-                letter13.Text = boardArray[12].ToString();
-            }
-
-            if (boardArray[13].ToString().ToUpper() == "Q")
-            {
-                letter14.Text = "QU";
-            }
-            else
-            {
-                letter14.Text = boardArray[13].ToString();
-            }
-
-            if (boardArray[14].ToString().ToUpper() == "Q")
-            {
-                letter15.Text = "QU";
-            }
-            else
-            {
-                letter15.Text = boardArray[14].ToString();
-            }
-
-            if (boardArray[15].ToString().ToUpper() == "Q")
-            {
-                letter16.Text = "QU";
-            }
-            else
-            {
-                letter16.Text = boardArray[15].ToString();
+                if(setTo.ToString().ToUpper() == "Q")
+                {
+                    boxArray[iterator].Text = "QU";
+                }
+                else
+                {
+                    boxArray[iterator].Text = setTo.ToString().ToUpper();
+                }
+                iterator++;
+                
             }
         }
 
