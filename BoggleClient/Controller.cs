@@ -31,6 +31,12 @@ namespace BoggleClient
         private bool brief = false;
         private string timeLimit;
         private string timeLeft;
+        private string p1Nickname;
+        private string p1Score;
+        private string p2Nickname;
+        private string p2Score;
+        private HashSet<string> wordsFromP1 = new HashSet<string>();
+        private HashSet<string> wordsFromP2 = new HashSet<string>();
 
         /// <summary>
         /// for canceling the current opperation.
@@ -174,7 +180,7 @@ namespace BoggleClient
 
                     //StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
                     //HttpResponseMessage response = await client.GetAsync("games/" + gameID);
-                    HttpResponseMessage response = await client.GetAsync("games/G1563"); //*****************************************************  add + gameID
+                    HttpResponseMessage response = await client.GetAsync("games/G2067"); //*****************************************************  add + gameID
 
 
 
@@ -191,34 +197,54 @@ namespace BoggleClient
                         else
                         {
                             //game board is not pending, either active or completed.
-                            brief = true;
-                            if (brief)
+                            if (!brief)
                             {
                                 gameBoard = deserialized.Board;
                                 timeLimit = deserialized.TimeLimit;
                                 timeLeft = deserialized.TimeLeft;
 
+
                                 dynamic player1 = deserialized.Player1;
-                                string p1Nickname = player1.Nickname;
-                                string p1Score = player1.Score;
+                                 p1Nickname = player1.Nickname;
+                                 p1Score = player1.Score;
+
 
                                 if (gameState == "active")
                                 {
                                     dynamic player2 = deserialized.Player2;
-                                    string p2Nickname = player2.Nickname;
-                                    string p2Score = player2.Score;
+                                    p2Nickname = player2.Nickname;
+                                    p2Score = player2.Score;
 
                                     //change the game to active!
                                 }
                                 else if (gameState == "completed")
                                 {
-                                    
+                                    var wordsPlayedP1 =  player1.WordsPlayed;
+                                    foreach (var obj in wordsPlayedP1)
+                                    {
+                                        string wordScore = obj.Word + "... ";
+                                        wordScore += obj.Score;
+                                        wordsFromP1.Add(wordScore);
+                                    }
+                                    dynamic player2 = deserialized.Player2;
+                                    p2Nickname = player2.Nickname;
+                                    p2Score = player2.score;
+                                    var wordsPlayedP2 = player2.WordsPlayed;
+                                    foreach (var obj in wordsPlayedP2)
+                                    {
+                                        string wordScore = obj.Word + "... ";
+                                        wordScore += obj.Score;
+                                        wordsFromP2.Add(wordScore);
+                                    }
                                 }
-
+                                
                             }
                             else
                             {
                                 //time left, player1 (score), player2(score)
+                                timeLeft = deserialized.TimeLeft;
+                                p1Score = deserialized.Score;
+                                p2Score = deserialized.Score;
                             }
 
                           
