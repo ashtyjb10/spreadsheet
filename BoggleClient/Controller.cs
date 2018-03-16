@@ -130,7 +130,6 @@ namespace BoggleClient
                 using (HttpClient client = CreateClient(baseAddress, "games/" + gameID))
                 {
                     // tokenSource = new CancellationTokenSource();
-                    StringContent content = new StringContent("application/json");
                     HttpResponseMessage response = await client.GetAsync("games/" + gameID);
 
                     if (response.IsSuccessStatusCode)
