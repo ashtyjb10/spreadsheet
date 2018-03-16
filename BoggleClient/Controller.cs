@@ -109,7 +109,7 @@ namespace BoggleClient
                         String result = await response.Content.ReadAsStringAsync();
                         dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
                         gameID = deserialized.GameID;
-                        Console.WriteLine(gameID);
+                        //Console.WriteLine(gameID);
                         GetGameStatus();
                         view.GameJoined();
                     }
@@ -174,7 +174,7 @@ namespace BoggleClient
 
                     //StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
                     //HttpResponseMessage response = await client.GetAsync("games/" + gameID);
-                    HttpResponseMessage response = await client.GetAsync("games/"+ gameID); //*****************************************************  add + gameID
+                    HttpResponseMessage response = await client.GetAsync("games/G1563"); //*****************************************************  add + gameID
 
 
 
@@ -223,6 +223,8 @@ namespace BoggleClient
 
                           
                         }
+
+                        updateBoardLong();
                 
                     }
                     else
@@ -239,9 +241,18 @@ namespace BoggleClient
             }
         }
 
-
-
-
+        /// <summary>
+        /// Updates all the information in the window with what was taken from the server.
+        /// </summary>
+        private void updateBoardLong()
+        {
+            //Update Board 
+            view.setBoard(gameBoard.ToArray());
+            
+            //Update player Names
+            
+            //Update Player Scores
+        }
 
         private static HttpClient CreateClient(string baseAddress, string end)
         {

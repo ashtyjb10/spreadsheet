@@ -48,22 +48,22 @@
             this.WordsPlayedText = new System.Windows.Forms.TextBox();
             this.SubmitWordText = new System.Windows.Forms.TextBox();
             this.submitWordButton = new System.Windows.Forms.Button();
-            this.fourFourTxt = new System.Windows.Forms.TextBox();
-            this.fourThreeTxt = new System.Windows.Forms.TextBox();
-            this.fourTwoTxt = new System.Windows.Forms.TextBox();
-            this.fourOneTxt = new System.Windows.Forms.TextBox();
-            this.threeFourTxt = new System.Windows.Forms.TextBox();
-            this.threeThreeTxt = new System.Windows.Forms.TextBox();
-            this.threeTwoTxt = new System.Windows.Forms.TextBox();
-            this.threeOneTxt = new System.Windows.Forms.TextBox();
-            this.twoFourTxt = new System.Windows.Forms.TextBox();
-            this.twoThreeTxt = new System.Windows.Forms.TextBox();
-            this.twoTwoTxt = new System.Windows.Forms.TextBox();
-            this.twoOneTxt = new System.Windows.Forms.TextBox();
-            this.oneFourTxt = new System.Windows.Forms.TextBox();
-            this.oneThreeTxt = new System.Windows.Forms.TextBox();
-            this.oneTwoTxt = new System.Windows.Forms.TextBox();
-            this.oneOneTxt = new System.Windows.Forms.TextBox();
+            this.letter16 = new System.Windows.Forms.TextBox();
+            this.letter15 = new System.Windows.Forms.TextBox();
+            this.letter14 = new System.Windows.Forms.TextBox();
+            this.letter13 = new System.Windows.Forms.TextBox();
+            this.letter12 = new System.Windows.Forms.TextBox();
+            this.letter11 = new System.Windows.Forms.TextBox();
+            this.letter10 = new System.Windows.Forms.TextBox();
+            this.letter9 = new System.Windows.Forms.TextBox();
+            this.letter8 = new System.Windows.Forms.TextBox();
+            this.letter7 = new System.Windows.Forms.TextBox();
+            this.letter6 = new System.Windows.Forms.TextBox();
+            this.letter5 = new System.Windows.Forms.TextBox();
+            this.letter4 = new System.Windows.Forms.TextBox();
+            this.letter3 = new System.Windows.Forms.TextBox();
+            this.letter2 = new System.Windows.Forms.TextBox();
+            this.letter1 = new System.Windows.Forms.TextBox();
             this.BoggleLabel = new System.Windows.Forms.Label();
             this.RegistrationPanel = new System.Windows.Forms.Panel();
             this.UsernameText = new System.Windows.Forms.TextBox();
@@ -74,6 +74,7 @@
             this.RegisterButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.EnterGamePanel = new System.Windows.Forms.Panel();
+            this.CancelFindGame = new System.Windows.Forms.Button();
             this.FindGameButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.GameDurationTxt = new System.Windows.Forms.TextBox();
@@ -128,22 +129,22 @@
             this.GameBoard.Controls.Add(this.WordsPlayedText);
             this.GameBoard.Controls.Add(this.SubmitWordText);
             this.GameBoard.Controls.Add(this.submitWordButton);
-            this.GameBoard.Controls.Add(this.fourFourTxt);
-            this.GameBoard.Controls.Add(this.fourThreeTxt);
-            this.GameBoard.Controls.Add(this.fourTwoTxt);
-            this.GameBoard.Controls.Add(this.fourOneTxt);
-            this.GameBoard.Controls.Add(this.threeFourTxt);
-            this.GameBoard.Controls.Add(this.threeThreeTxt);
-            this.GameBoard.Controls.Add(this.threeTwoTxt);
-            this.GameBoard.Controls.Add(this.threeOneTxt);
-            this.GameBoard.Controls.Add(this.twoFourTxt);
-            this.GameBoard.Controls.Add(this.twoThreeTxt);
-            this.GameBoard.Controls.Add(this.twoTwoTxt);
-            this.GameBoard.Controls.Add(this.twoOneTxt);
-            this.GameBoard.Controls.Add(this.oneFourTxt);
-            this.GameBoard.Controls.Add(this.oneThreeTxt);
-            this.GameBoard.Controls.Add(this.oneTwoTxt);
-            this.GameBoard.Controls.Add(this.oneOneTxt);
+            this.GameBoard.Controls.Add(this.letter16);
+            this.GameBoard.Controls.Add(this.letter15);
+            this.GameBoard.Controls.Add(this.letter14);
+            this.GameBoard.Controls.Add(this.letter13);
+            this.GameBoard.Controls.Add(this.letter12);
+            this.GameBoard.Controls.Add(this.letter11);
+            this.GameBoard.Controls.Add(this.letter10);
+            this.GameBoard.Controls.Add(this.letter9);
+            this.GameBoard.Controls.Add(this.letter8);
+            this.GameBoard.Controls.Add(this.letter7);
+            this.GameBoard.Controls.Add(this.letter6);
+            this.GameBoard.Controls.Add(this.letter5);
+            this.GameBoard.Controls.Add(this.letter4);
+            this.GameBoard.Controls.Add(this.letter3);
+            this.GameBoard.Controls.Add(this.letter2);
+            this.GameBoard.Controls.Add(this.letter1);
             this.GameBoard.Enabled = false;
             this.GameBoard.Location = new System.Drawing.Point(153, 76);
             this.GameBoard.Margin = new System.Windows.Forms.Padding(2);
@@ -334,261 +335,261 @@
             this.submitWordButton.Text = "Submit Word";
             this.submitWordButton.UseVisualStyleBackColor = true;
             // 
-            // fourFourTxt
+            // letter16
             // 
-            this.fourFourTxt.AccessibleName = "";
-            this.fourFourTxt.BackColor = System.Drawing.Color.White;
-            this.fourFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourFourTxt.Location = new System.Drawing.Point(322, 214);
-            this.fourFourTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.fourFourTxt.Multiline = true;
-            this.fourFourTxt.Name = "fourFourTxt";
-            this.fourFourTxt.ReadOnly = true;
-            this.fourFourTxt.Size = new System.Drawing.Size(52, 54);
-            this.fourFourTxt.TabIndex = 28;
-            this.fourFourTxt.Text = "QU";
-            this.fourFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.fourFourTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourFourTxt_MouseDown);
+            this.letter16.AccessibleName = "";
+            this.letter16.BackColor = System.Drawing.Color.White;
+            this.letter16.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter16.Location = new System.Drawing.Point(322, 214);
+            this.letter16.Margin = new System.Windows.Forms.Padding(2);
+            this.letter16.Multiline = true;
+            this.letter16.Name = "letter16";
+            this.letter16.ReadOnly = true;
+            this.letter16.Size = new System.Drawing.Size(52, 54);
+            this.letter16.TabIndex = 28;
+            this.letter16.Text = "QU";
+            this.letter16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter16.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourFourTxt_MouseDown);
             // 
-            // fourThreeTxt
+            // letter15
             // 
-            this.fourThreeTxt.AccessibleName = "";
-            this.fourThreeTxt.BackColor = System.Drawing.Color.White;
-            this.fourThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourThreeTxt.Location = new System.Drawing.Point(268, 214);
-            this.fourThreeTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.fourThreeTxt.Multiline = true;
-            this.fourThreeTxt.Name = "fourThreeTxt";
-            this.fourThreeTxt.ReadOnly = true;
-            this.fourThreeTxt.Size = new System.Drawing.Size(52, 54);
-            this.fourThreeTxt.TabIndex = 27;
-            this.fourThreeTxt.Text = "QU";
-            this.fourThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.fourThreeTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourThreeTxt_MouseDown);
+            this.letter15.AccessibleName = "";
+            this.letter15.BackColor = System.Drawing.Color.White;
+            this.letter15.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter15.Location = new System.Drawing.Point(268, 214);
+            this.letter15.Margin = new System.Windows.Forms.Padding(2);
+            this.letter15.Multiline = true;
+            this.letter15.Name = "letter15";
+            this.letter15.ReadOnly = true;
+            this.letter15.Size = new System.Drawing.Size(52, 54);
+            this.letter15.TabIndex = 27;
+            this.letter15.Text = "QU";
+            this.letter15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter15.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourThreeTxt_MouseDown);
             // 
-            // fourTwoTxt
+            // letter14
             // 
-            this.fourTwoTxt.AccessibleName = "";
-            this.fourTwoTxt.BackColor = System.Drawing.Color.White;
-            this.fourTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourTwoTxt.Location = new System.Drawing.Point(216, 214);
-            this.fourTwoTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.fourTwoTxt.Multiline = true;
-            this.fourTwoTxt.Name = "fourTwoTxt";
-            this.fourTwoTxt.ReadOnly = true;
-            this.fourTwoTxt.Size = new System.Drawing.Size(52, 54);
-            this.fourTwoTxt.TabIndex = 26;
-            this.fourTwoTxt.Text = "QU";
-            this.fourTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.fourTwoTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourTwoTxt_MouseDown);
+            this.letter14.AccessibleName = "";
+            this.letter14.BackColor = System.Drawing.Color.White;
+            this.letter14.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter14.Location = new System.Drawing.Point(216, 214);
+            this.letter14.Margin = new System.Windows.Forms.Padding(2);
+            this.letter14.Multiline = true;
+            this.letter14.Name = "letter14";
+            this.letter14.ReadOnly = true;
+            this.letter14.Size = new System.Drawing.Size(52, 54);
+            this.letter14.TabIndex = 26;
+            this.letter14.Text = "QU";
+            this.letter14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter14.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourTwoTxt_MouseDown);
             // 
-            // fourOneTxt
+            // letter13
             // 
-            this.fourOneTxt.AccessibleName = "";
-            this.fourOneTxt.BackColor = System.Drawing.Color.White;
-            this.fourOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourOneTxt.Location = new System.Drawing.Point(162, 214);
-            this.fourOneTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.fourOneTxt.Multiline = true;
-            this.fourOneTxt.Name = "fourOneTxt";
-            this.fourOneTxt.ReadOnly = true;
-            this.fourOneTxt.Size = new System.Drawing.Size(52, 54);
-            this.fourOneTxt.TabIndex = 25;
-            this.fourOneTxt.Text = "QU";
-            this.fourOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.fourOneTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourOneTxt_MouseDown);
+            this.letter13.AccessibleName = "";
+            this.letter13.BackColor = System.Drawing.Color.White;
+            this.letter13.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter13.Location = new System.Drawing.Point(162, 214);
+            this.letter13.Margin = new System.Windows.Forms.Padding(2);
+            this.letter13.Multiline = true;
+            this.letter13.Name = "letter13";
+            this.letter13.ReadOnly = true;
+            this.letter13.Size = new System.Drawing.Size(52, 54);
+            this.letter13.TabIndex = 25;
+            this.letter13.Text = "QU";
+            this.letter13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter13.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourOneTxt_MouseDown);
             // 
-            // threeFourTxt
+            // letter12
             // 
-            this.threeFourTxt.AccessibleName = "";
-            this.threeFourTxt.BackColor = System.Drawing.Color.White;
-            this.threeFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeFourTxt.Location = new System.Drawing.Point(322, 158);
-            this.threeFourTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.threeFourTxt.Multiline = true;
-            this.threeFourTxt.Name = "threeFourTxt";
-            this.threeFourTxt.ReadOnly = true;
-            this.threeFourTxt.Size = new System.Drawing.Size(52, 54);
-            this.threeFourTxt.TabIndex = 24;
-            this.threeFourTxt.Text = "QU";
-            this.threeFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.threeFourTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeFourTxt_MouseDown);
+            this.letter12.AccessibleName = "";
+            this.letter12.BackColor = System.Drawing.Color.White;
+            this.letter12.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter12.Location = new System.Drawing.Point(322, 158);
+            this.letter12.Margin = new System.Windows.Forms.Padding(2);
+            this.letter12.Multiline = true;
+            this.letter12.Name = "letter12";
+            this.letter12.ReadOnly = true;
+            this.letter12.Size = new System.Drawing.Size(52, 54);
+            this.letter12.TabIndex = 24;
+            this.letter12.Text = "QU";
+            this.letter12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter12.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeFourTxt_MouseDown);
             // 
-            // threeThreeTxt
+            // letter11
             // 
-            this.threeThreeTxt.AccessibleName = "";
-            this.threeThreeTxt.BackColor = System.Drawing.Color.White;
-            this.threeThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeThreeTxt.Location = new System.Drawing.Point(268, 158);
-            this.threeThreeTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.threeThreeTxt.Multiline = true;
-            this.threeThreeTxt.Name = "threeThreeTxt";
-            this.threeThreeTxt.ReadOnly = true;
-            this.threeThreeTxt.Size = new System.Drawing.Size(52, 54);
-            this.threeThreeTxt.TabIndex = 23;
-            this.threeThreeTxt.Text = "QU";
-            this.threeThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.threeThreeTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeThreeTxt_MouseDown);
+            this.letter11.AccessibleName = "";
+            this.letter11.BackColor = System.Drawing.Color.White;
+            this.letter11.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter11.Location = new System.Drawing.Point(268, 158);
+            this.letter11.Margin = new System.Windows.Forms.Padding(2);
+            this.letter11.Multiline = true;
+            this.letter11.Name = "letter11";
+            this.letter11.ReadOnly = true;
+            this.letter11.Size = new System.Drawing.Size(52, 54);
+            this.letter11.TabIndex = 23;
+            this.letter11.Text = "QU";
+            this.letter11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter11.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeThreeTxt_MouseDown);
             // 
-            // threeTwoTxt
+            // letter10
             // 
-            this.threeTwoTxt.AccessibleName = "";
-            this.threeTwoTxt.BackColor = System.Drawing.Color.White;
-            this.threeTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeTwoTxt.Location = new System.Drawing.Point(216, 158);
-            this.threeTwoTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.threeTwoTxt.Multiline = true;
-            this.threeTwoTxt.Name = "threeTwoTxt";
-            this.threeTwoTxt.ReadOnly = true;
-            this.threeTwoTxt.Size = new System.Drawing.Size(52, 54);
-            this.threeTwoTxt.TabIndex = 22;
-            this.threeTwoTxt.Text = "QU";
-            this.threeTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.threeTwoTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeTwoTxt_MouseDown);
+            this.letter10.AccessibleName = "";
+            this.letter10.BackColor = System.Drawing.Color.White;
+            this.letter10.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter10.Location = new System.Drawing.Point(216, 158);
+            this.letter10.Margin = new System.Windows.Forms.Padding(2);
+            this.letter10.Multiline = true;
+            this.letter10.Name = "letter10";
+            this.letter10.ReadOnly = true;
+            this.letter10.Size = new System.Drawing.Size(52, 54);
+            this.letter10.TabIndex = 22;
+            this.letter10.Text = "QU";
+            this.letter10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeTwoTxt_MouseDown);
             // 
-            // threeOneTxt
+            // letter9
             // 
-            this.threeOneTxt.AccessibleName = "";
-            this.threeOneTxt.BackColor = System.Drawing.Color.White;
-            this.threeOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeOneTxt.Location = new System.Drawing.Point(162, 158);
-            this.threeOneTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.threeOneTxt.Multiline = true;
-            this.threeOneTxt.Name = "threeOneTxt";
-            this.threeOneTxt.ReadOnly = true;
-            this.threeOneTxt.Size = new System.Drawing.Size(52, 54);
-            this.threeOneTxt.TabIndex = 3;
-            this.threeOneTxt.Text = "QU";
-            this.threeOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.threeOneTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeOneTxt_MouseDown);
+            this.letter9.AccessibleName = "";
+            this.letter9.BackColor = System.Drawing.Color.White;
+            this.letter9.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter9.Location = new System.Drawing.Point(162, 158);
+            this.letter9.Margin = new System.Windows.Forms.Padding(2);
+            this.letter9.Multiline = true;
+            this.letter9.Name = "letter9";
+            this.letter9.ReadOnly = true;
+            this.letter9.Size = new System.Drawing.Size(52, 54);
+            this.letter9.TabIndex = 3;
+            this.letter9.Text = "QU";
+            this.letter9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter9.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeOneTxt_MouseDown);
             // 
-            // twoFourTxt
+            // letter8
             // 
-            this.twoFourTxt.AccessibleName = "";
-            this.twoFourTxt.BackColor = System.Drawing.Color.White;
-            this.twoFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.twoFourTxt.Location = new System.Drawing.Point(322, 103);
-            this.twoFourTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.twoFourTxt.Multiline = true;
-            this.twoFourTxt.Name = "twoFourTxt";
-            this.twoFourTxt.ReadOnly = true;
-            this.twoFourTxt.Size = new System.Drawing.Size(52, 54);
-            this.twoFourTxt.TabIndex = 21;
-            this.twoFourTxt.Text = "QU";
-            this.twoFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.twoFourTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoFourTxt_MouseDown);
+            this.letter8.AccessibleName = "";
+            this.letter8.BackColor = System.Drawing.Color.White;
+            this.letter8.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter8.Location = new System.Drawing.Point(322, 103);
+            this.letter8.Margin = new System.Windows.Forms.Padding(2);
+            this.letter8.Multiline = true;
+            this.letter8.Name = "letter8";
+            this.letter8.ReadOnly = true;
+            this.letter8.Size = new System.Drawing.Size(52, 54);
+            this.letter8.TabIndex = 21;
+            this.letter8.Text = "QU";
+            this.letter8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter8.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoFourTxt_MouseDown);
             // 
-            // twoThreeTxt
+            // letter7
             // 
-            this.twoThreeTxt.AccessibleName = "";
-            this.twoThreeTxt.BackColor = System.Drawing.Color.White;
-            this.twoThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.twoThreeTxt.Location = new System.Drawing.Point(268, 103);
-            this.twoThreeTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.twoThreeTxt.Multiline = true;
-            this.twoThreeTxt.Name = "twoThreeTxt";
-            this.twoThreeTxt.ReadOnly = true;
-            this.twoThreeTxt.Size = new System.Drawing.Size(52, 54);
-            this.twoThreeTxt.TabIndex = 20;
-            this.twoThreeTxt.Text = "QU";
-            this.twoThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.twoThreeTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoThreeTxt_MouseDown);
+            this.letter7.AccessibleName = "";
+            this.letter7.BackColor = System.Drawing.Color.White;
+            this.letter7.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter7.Location = new System.Drawing.Point(268, 103);
+            this.letter7.Margin = new System.Windows.Forms.Padding(2);
+            this.letter7.Multiline = true;
+            this.letter7.Name = "letter7";
+            this.letter7.ReadOnly = true;
+            this.letter7.Size = new System.Drawing.Size(52, 54);
+            this.letter7.TabIndex = 20;
+            this.letter7.Text = "QU";
+            this.letter7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter7.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoThreeTxt_MouseDown);
             // 
-            // twoTwoTxt
+            // letter6
             // 
-            this.twoTwoTxt.AccessibleName = "";
-            this.twoTwoTxt.BackColor = System.Drawing.Color.White;
-            this.twoTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.twoTwoTxt.Location = new System.Drawing.Point(216, 103);
-            this.twoTwoTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.twoTwoTxt.Multiline = true;
-            this.twoTwoTxt.Name = "twoTwoTxt";
-            this.twoTwoTxt.ReadOnly = true;
-            this.twoTwoTxt.Size = new System.Drawing.Size(52, 54);
-            this.twoTwoTxt.TabIndex = 19;
-            this.twoTwoTxt.Text = "QU";
-            this.twoTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.twoTwoTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoTwoTxt_MouseDown);
+            this.letter6.AccessibleName = "";
+            this.letter6.BackColor = System.Drawing.Color.White;
+            this.letter6.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter6.Location = new System.Drawing.Point(216, 103);
+            this.letter6.Margin = new System.Windows.Forms.Padding(2);
+            this.letter6.Multiline = true;
+            this.letter6.Name = "letter6";
+            this.letter6.ReadOnly = true;
+            this.letter6.Size = new System.Drawing.Size(52, 54);
+            this.letter6.TabIndex = 19;
+            this.letter6.Text = "QU";
+            this.letter6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoTwoTxt_MouseDown);
             // 
-            // twoOneTxt
+            // letter5
             // 
-            this.twoOneTxt.AccessibleName = "";
-            this.twoOneTxt.BackColor = System.Drawing.Color.White;
-            this.twoOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.twoOneTxt.Location = new System.Drawing.Point(162, 103);
-            this.twoOneTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.twoOneTxt.Multiline = true;
-            this.twoOneTxt.Name = "twoOneTxt";
-            this.twoOneTxt.ReadOnly = true;
-            this.twoOneTxt.Size = new System.Drawing.Size(52, 54);
-            this.twoOneTxt.TabIndex = 18;
-            this.twoOneTxt.Text = "QU";
-            this.twoOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.twoOneTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoOneTxt_MouseDown);
+            this.letter5.AccessibleName = "";
+            this.letter5.BackColor = System.Drawing.Color.White;
+            this.letter5.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter5.Location = new System.Drawing.Point(162, 103);
+            this.letter5.Margin = new System.Windows.Forms.Padding(2);
+            this.letter5.Multiline = true;
+            this.letter5.Name = "letter5";
+            this.letter5.ReadOnly = true;
+            this.letter5.Size = new System.Drawing.Size(52, 54);
+            this.letter5.TabIndex = 18;
+            this.letter5.Text = "QU";
+            this.letter5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoOneTxt_MouseDown);
             // 
-            // oneFourTxt
+            // letter4
             // 
-            this.oneFourTxt.AccessibleName = "";
-            this.oneFourTxt.BackColor = System.Drawing.Color.White;
-            this.oneFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oneFourTxt.Location = new System.Drawing.Point(322, 48);
-            this.oneFourTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.oneFourTxt.Multiline = true;
-            this.oneFourTxt.Name = "oneFourTxt";
-            this.oneFourTxt.ReadOnly = true;
-            this.oneFourTxt.Size = new System.Drawing.Size(52, 54);
-            this.oneFourTxt.TabIndex = 17;
-            this.oneFourTxt.Text = "QU";
-            this.oneFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.oneFourTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneFourTxt_MouseDown);
+            this.letter4.AccessibleName = "";
+            this.letter4.BackColor = System.Drawing.Color.White;
+            this.letter4.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter4.Location = new System.Drawing.Point(322, 48);
+            this.letter4.Margin = new System.Windows.Forms.Padding(2);
+            this.letter4.Multiline = true;
+            this.letter4.Name = "letter4";
+            this.letter4.ReadOnly = true;
+            this.letter4.Size = new System.Drawing.Size(52, 54);
+            this.letter4.TabIndex = 17;
+            this.letter4.Text = "QU";
+            this.letter4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneFourTxt_MouseDown);
             // 
-            // oneThreeTxt
+            // letter3
             // 
-            this.oneThreeTxt.AccessibleName = "";
-            this.oneThreeTxt.BackColor = System.Drawing.Color.White;
-            this.oneThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oneThreeTxt.Location = new System.Drawing.Point(268, 48);
-            this.oneThreeTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.oneThreeTxt.Multiline = true;
-            this.oneThreeTxt.Name = "oneThreeTxt";
-            this.oneThreeTxt.ReadOnly = true;
-            this.oneThreeTxt.Size = new System.Drawing.Size(52, 54);
-            this.oneThreeTxt.TabIndex = 3;
-            this.oneThreeTxt.Text = "QU";
-            this.oneThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.oneThreeTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneThreetxt_MouseDown);
+            this.letter3.AccessibleName = "";
+            this.letter3.BackColor = System.Drawing.Color.White;
+            this.letter3.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter3.Location = new System.Drawing.Point(268, 48);
+            this.letter3.Margin = new System.Windows.Forms.Padding(2);
+            this.letter3.Multiline = true;
+            this.letter3.Name = "letter3";
+            this.letter3.ReadOnly = true;
+            this.letter3.Size = new System.Drawing.Size(52, 54);
+            this.letter3.TabIndex = 3;
+            this.letter3.Text = "QU";
+            this.letter3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneThreetxt_MouseDown);
             // 
-            // oneTwoTxt
+            // letter2
             // 
-            this.oneTwoTxt.AccessibleName = "";
-            this.oneTwoTxt.BackColor = System.Drawing.Color.White;
-            this.oneTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oneTwoTxt.Location = new System.Drawing.Point(216, 48);
-            this.oneTwoTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.oneTwoTxt.Multiline = true;
-            this.oneTwoTxt.Name = "oneTwoTxt";
-            this.oneTwoTxt.ReadOnly = true;
-            this.oneTwoTxt.Size = new System.Drawing.Size(52, 54);
-            this.oneTwoTxt.TabIndex = 16;
-            this.oneTwoTxt.Text = "QU";
-            this.oneTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.oneTwoTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneTwoTxt_MouseDown);
+            this.letter2.AccessibleName = "";
+            this.letter2.BackColor = System.Drawing.Color.White;
+            this.letter2.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter2.Location = new System.Drawing.Point(216, 48);
+            this.letter2.Margin = new System.Windows.Forms.Padding(2);
+            this.letter2.Multiline = true;
+            this.letter2.Name = "letter2";
+            this.letter2.ReadOnly = true;
+            this.letter2.Size = new System.Drawing.Size(52, 54);
+            this.letter2.TabIndex = 16;
+            this.letter2.Text = "QU";
+            this.letter2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneTwoTxt_MouseDown);
             // 
-            // oneOneTxt
+            // letter1
             // 
-            this.oneOneTxt.AccessibleName = "";
-            this.oneOneTxt.BackColor = System.Drawing.Color.White;
-            this.oneOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.oneOneTxt.Location = new System.Drawing.Point(162, 48);
-            this.oneOneTxt.Margin = new System.Windows.Forms.Padding(2);
-            this.oneOneTxt.Multiline = true;
-            this.oneOneTxt.Name = "oneOneTxt";
-            this.oneOneTxt.ReadOnly = true;
-            this.oneOneTxt.Size = new System.Drawing.Size(52, 54);
-            this.oneOneTxt.TabIndex = 0;
-            this.oneOneTxt.Text = "QU";
-            this.oneOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.oneOneTxt.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneOneTxt_MouseDown);
+            this.letter1.AccessibleName = "";
+            this.letter1.BackColor = System.Drawing.Color.White;
+            this.letter1.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.letter1.Location = new System.Drawing.Point(162, 48);
+            this.letter1.Margin = new System.Windows.Forms.Padding(2);
+            this.letter1.Multiline = true;
+            this.letter1.Name = "letter1";
+            this.letter1.ReadOnly = true;
+            this.letter1.Size = new System.Drawing.Size(52, 54);
+            this.letter1.TabIndex = 0;
+            this.letter1.Text = "QU";
+            this.letter1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.letter1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneOneTxt_MouseDown);
             // 
             // BoggleLabel
             // 
@@ -692,6 +693,7 @@
             // EnterGamePanel
             // 
             this.EnterGamePanel.BackColor = System.Drawing.Color.Cyan;
+            this.EnterGamePanel.Controls.Add(this.CancelFindGame);
             this.EnterGamePanel.Controls.Add(this.FindGameButton);
             this.EnterGamePanel.Controls.Add(this.label7);
             this.EnterGamePanel.Controls.Add(this.GameDurationTxt);
@@ -703,9 +705,18 @@
             this.EnterGamePanel.Size = new System.Drawing.Size(129, 158);
             this.EnterGamePanel.TabIndex = 4;
             // 
+            // CancelFindGame
+            // 
+            this.CancelFindGame.Location = new System.Drawing.Point(27, 96);
+            this.CancelFindGame.Name = "CancelFindGame";
+            this.CancelFindGame.Size = new System.Drawing.Size(73, 27);
+            this.CancelFindGame.TabIndex = 4;
+            this.CancelFindGame.Text = "Cancel Find";
+            this.CancelFindGame.UseVisualStyleBackColor = true;
+            // 
             // FindGameButton
             // 
-            this.FindGameButton.Location = new System.Drawing.Point(27, 66);
+            this.FindGameButton.Location = new System.Drawing.Point(27, 71);
             this.FindGameButton.Margin = new System.Windows.Forms.Padding(2);
             this.FindGameButton.Name = "FindGameButton";
             this.FindGameButton.Size = new System.Drawing.Size(73, 20);
@@ -726,7 +737,7 @@
             // 
             // GameDurationTxt
             // 
-            this.GameDurationTxt.Location = new System.Drawing.Point(12, 46);
+            this.GameDurationTxt.Location = new System.Drawing.Point(18, 47);
             this.GameDurationTxt.Margin = new System.Windows.Forms.Padding(2);
             this.GameDurationTxt.Name = "GameDurationTxt";
             this.GameDurationTxt.Size = new System.Drawing.Size(96, 20);
@@ -736,10 +747,11 @@
             // 
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.White;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(30, 11);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 13);
+            this.label6.Size = new System.Drawing.Size(73, 13);
             this.label6.TabIndex = 0;
             this.label6.Text = "Enter Game";
             // 
@@ -776,23 +788,23 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.Panel GameBoard;
-        private System.Windows.Forms.TextBox oneOneTxt;
+        private System.Windows.Forms.TextBox letter1;
         private System.Windows.Forms.Label BoggleLabel;
-        private System.Windows.Forms.TextBox fourFourTxt;
-        private System.Windows.Forms.TextBox fourThreeTxt;
-        private System.Windows.Forms.TextBox fourTwoTxt;
-        private System.Windows.Forms.TextBox fourOneTxt;
-        private System.Windows.Forms.TextBox threeFourTxt;
-        private System.Windows.Forms.TextBox threeThreeTxt;
-        private System.Windows.Forms.TextBox threeTwoTxt;
-        private System.Windows.Forms.TextBox threeOneTxt;
-        private System.Windows.Forms.TextBox twoFourTxt;
-        private System.Windows.Forms.TextBox twoThreeTxt;
-        private System.Windows.Forms.TextBox twoTwoTxt;
-        private System.Windows.Forms.TextBox twoOneTxt;
-        private System.Windows.Forms.TextBox oneFourTxt;
-        private System.Windows.Forms.TextBox oneThreeTxt;
-        private System.Windows.Forms.TextBox oneTwoTxt;
+        private System.Windows.Forms.TextBox letter16;
+        private System.Windows.Forms.TextBox letter15;
+        private System.Windows.Forms.TextBox letter14;
+        private System.Windows.Forms.TextBox letter13;
+        private System.Windows.Forms.TextBox letter12;
+        private System.Windows.Forms.TextBox letter11;
+        private System.Windows.Forms.TextBox letter10;
+        private System.Windows.Forms.TextBox letter9;
+        private System.Windows.Forms.TextBox letter8;
+        private System.Windows.Forms.TextBox letter7;
+        private System.Windows.Forms.TextBox letter6;
+        private System.Windows.Forms.TextBox letter5;
+        private System.Windows.Forms.TextBox letter4;
+        private System.Windows.Forms.TextBox letter3;
+        private System.Windows.Forms.TextBox letter2;
         private System.Windows.Forms.Button submitWordButton;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.RichTextBox TimeRemainingText;
@@ -823,6 +835,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label GameJoinedLabel;
         private System.Windows.Forms.RichTextBox GameCompleteBox;
+        private System.Windows.Forms.Button CancelFindGame;
     }
 }
 

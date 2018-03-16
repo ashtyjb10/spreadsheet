@@ -25,6 +25,7 @@ namespace BoggleClient
         void RegisteredUser();
         void GameJoined();
         void ViewPendingBox(bool visable);
+        void setBoard(char[] boardArray);
 
     }
 }

@@ -32,7 +32,7 @@ namespace BoggleClient
 
         public void echo()
         {
-            this.oneOneTxt.AppendText("test");
+            this.letter1.AppendText("test");
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -125,7 +125,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void oneOneTxt_MouseDown(object sender, MouseEventArgs e)
         {
-            if (oneOneTxt.BackColor == Color.Red)
+            if (letter1.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -134,7 +134,7 @@ namespace BoggleClient
                 if (lastSelected == 0 || lastSelected == 2 || lastSelected == 5 || lastSelected == 6)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + oneOneTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter1.Text;
                     lastSelected = 1;
                 }
             }
@@ -149,7 +149,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void oneTwoTxt_MouseDown(object sender, MouseEventArgs e)
         {
-            if (oneTwoTxt.BackColor == Color.Red)
+            if (letter2.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -159,7 +159,7 @@ namespace BoggleClient
                     lastSelected == 6 || lastSelected == 7 )
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + oneTwoTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter2.Text;
                     lastSelected = 2;
                 }
 
@@ -175,7 +175,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void oneThreetxt_MouseDown(object sender, MouseEventArgs e)
         {
-            if (oneThreeTxt.BackColor == Color.Red)
+            if (letter3.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -185,7 +185,7 @@ namespace BoggleClient
                     lastSelected == 7 || lastSelected == 8)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + oneThreeTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter3.Text;
                     lastSelected = 3;
                 }
             }
@@ -200,7 +200,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void oneFourTxt_MouseDown(object sender, EventArgs e)
         {
-            if (oneFourTxt.BackColor == Color.Red)
+            if (letter4.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -209,7 +209,7 @@ namespace BoggleClient
                 if (lastSelected == 0 || lastSelected == 3 || lastSelected == 7 || lastSelected == 8)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + oneFourTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter4.Text;
                     lastSelected = 4;
                 }
             }
@@ -224,7 +224,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void twoOneTxt_MouseDown(object sender, EventArgs e)
         {
-            if (twoOneTxt.BackColor == Color.Red)
+            if (letter5.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -234,7 +234,7 @@ namespace BoggleClient
                     lastSelected == 9 || lastSelected == 10)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + twoOneTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter5.Text;
                     lastSelected = 5;
                 }
             }
@@ -249,7 +249,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void twoTwoTxt_MouseDown(object sender, EventArgs e)
         {
-            if (twoTwoTxt.BackColor == Color.Red)
+            if (letter6.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -259,7 +259,7 @@ namespace BoggleClient
                     lastSelected == 5 || lastSelected == 7 || lastSelected == 9 || lastSelected ==  10 || lastSelected == 11)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + twoTwoTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter6.Text;
                     lastSelected = 6;
                 }
             }
@@ -274,7 +274,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void twoThreeTxt_MouseDown(object sender, EventArgs e)
         {
-            if (twoThreeTxt.BackColor == Color.Red)
+            if (letter7.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -285,7 +285,7 @@ namespace BoggleClient
                     lastSelected == 12)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + twoThreeTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter7.Text;
                     lastSelected = 7;
                 }
             }
@@ -301,7 +301,7 @@ namespace BoggleClient
         private void twoFourTxt_MouseDown(object sender, EventArgs e)
         {
 
-            if (twoFourTxt.BackColor == Color.Red)
+            if (letter8.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -311,7 +311,7 @@ namespace BoggleClient
                     lastSelected == 11 || lastSelected == 12)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + twoFourTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter8.Text;
                     lastSelected = 8;
                 }
             }
@@ -326,7 +326,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void threeOneTxt_MouseDown(object sender, EventArgs e)
         {
-            if (threeOneTxt.BackColor == Color.Red)
+            if (letter9.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -336,7 +336,7 @@ namespace BoggleClient
                     lastSelected == 13 || lastSelected == 14)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + threeOneTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter9.Text;
                     lastSelected = 9;
                 }
             }
@@ -351,7 +351,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void threeTwoTxt_MouseDown(object sender, EventArgs e)
         {
-            if (threeTwoTxt.BackColor == Color.Red)
+            if (letter10.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -362,7 +362,7 @@ namespace BoggleClient
                     lastSelected == 15)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + threeTwoTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter10.Text;
                     lastSelected = 10;
                 }
             }
@@ -377,7 +377,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void threeThreeTxt_MouseDown(object sender, EventArgs e)
         {
-            if (threeThreeTxt.BackColor == Color.Red)
+            if (letter11.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -388,7 +388,7 @@ namespace BoggleClient
                     lastSelected == 16)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + threeThreeTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter11.Text;
                     lastSelected = 11;
                 }
 
@@ -404,7 +404,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void threeFourTxt_MouseDown(object sender, EventArgs e)
         {
-            if (threeFourTxt.BackColor == Color.Red)
+            if (letter12.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -414,7 +414,7 @@ namespace BoggleClient
                     lastSelected ==  15 || lastSelected == 16)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + threeFourTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter12.Text;
                     lastSelected = 12;
                 }
 
@@ -430,7 +430,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void fourOneTxt_MouseDown(object sender, EventArgs e)
         {
-            if (fourOneTxt.BackColor == Color.Red)
+            if (letter13.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -439,7 +439,7 @@ namespace BoggleClient
                 if (lastSelected == 0 || lastSelected == 9 || lastSelected == 10 || lastSelected == 14)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + fourOneTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter13.Text;
                     lastSelected = 13;
                 }
 
@@ -455,7 +455,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void fourTwoTxt_MouseDown(object sender, EventArgs e)
         {
-            if (fourTwoTxt.BackColor == Color.Red)
+            if (letter14.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -465,7 +465,7 @@ namespace BoggleClient
                    lastSelected == 13 || lastSelected == 15)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + fourTwoTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter14.Text;
                     lastSelected = 14;
                 }
                 
@@ -481,7 +481,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void fourThreeTxt_MouseDown(object sender, EventArgs e)
         {
-            if (fourThreeTxt.BackColor == Color.Red)
+            if (letter15.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -491,7 +491,7 @@ namespace BoggleClient
                     lastSelected == 14 || lastSelected == 16)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + fourThreeTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter15.Text;
                     lastSelected = 15;
                 }
 
@@ -507,7 +507,7 @@ namespace BoggleClient
         /// <param name="e"></param>
         private void fourFourTxt_MouseDown(object sender, EventArgs e)
         {
-            if (fourFourTxt.BackColor == Color.Red)
+            if (letter16.BackColor == Color.Red)
             {
                 ResetBoard();
             }
@@ -516,7 +516,7 @@ namespace BoggleClient
                 if (lastSelected == 0 || lastSelected == 11 || lastSelected == 12 || lastSelected == 15)
                 {
                     ChangeColorSelected((TextBox)sender);
-                    SubmitWordText.Text = SubmitWordText.Text + fourFourTxt.Text;
+                    SubmitWordText.Text = SubmitWordText.Text + letter16.Text;
                     lastSelected = 16;
                 }
 
@@ -529,22 +529,22 @@ namespace BoggleClient
         /// </summary>
         private void ResetBoard()
         {
-            oneOneTxt.BackColor = Color.White;
-            oneTwoTxt.BackColor = Color.White;
-            oneThreeTxt.BackColor = Color.White;
-            oneFourTxt.BackColor = Color.White;
-            twoOneTxt.BackColor = Color.White;
-            twoTwoTxt.BackColor = Color.White;
-            twoThreeTxt.BackColor = Color.White;
-            twoFourTxt.BackColor = Color.White;
-            threeOneTxt.BackColor = Color.White;
-            threeTwoTxt.BackColor = Color.White;
-            threeThreeTxt.BackColor = Color.White;
-            threeFourTxt.BackColor = Color.White;
-            fourOneTxt.BackColor = Color.White;
-            fourTwoTxt.BackColor = Color.White;
-            fourThreeTxt.BackColor = Color.White;
-            fourFourTxt.BackColor = Color.White;
+            letter1.BackColor = Color.White;
+            letter2.BackColor = Color.White;
+            letter3.BackColor = Color.White;
+            letter4.BackColor = Color.White;
+            letter5.BackColor = Color.White;
+            letter6.BackColor = Color.White;
+            letter7.BackColor = Color.White;
+            letter8.BackColor = Color.White;
+            letter9.BackColor = Color.White;
+            letter10.BackColor = Color.White;
+            letter11.BackColor = Color.White;
+            letter12.BackColor = Color.White;
+            letter13.BackColor = Color.White;
+            letter14.BackColor = Color.White;
+            letter15.BackColor = Color.White;
+            letter16.BackColor = Color.White;
             SubmitWordText.Text = "";
             lastSelected = 0;
 
@@ -557,6 +557,157 @@ namespace BoggleClient
         private void ChangeColorSelected(TextBox sender)
         {
             sender.BackColor = Color.Red;
+        }
+
+        /// <summary>
+        /// Sets the board to each letter in the board.  If the letter is Q, the letter is set to "QU"
+        /// </summary>
+        /// <param name="boardArray"></param>
+        public void setBoard(char[] boardArray)
+        {
+            if (boardArray[0].ToString().ToUpper() == "Q")
+            {
+                letter1.Text = "QU";
+            }
+            else
+            {
+                letter1.Text = boardArray[0].ToString();
+            }
+
+            if (boardArray[1].ToString().ToUpper() == "Q")
+            {
+                letter2.Text = "QU";
+            }
+            else
+            {
+                letter2.Text = boardArray[1].ToString();
+            }
+
+            if (boardArray[2].ToString().ToUpper() == "Q")
+            {
+                letter3.Text = "QU";
+            }
+            else
+            {
+                letter3.Text = boardArray[2].ToString();
+            }
+
+            if (boardArray[3].ToString().ToUpper() == "Q")
+            {
+                letter4.Text = "QU";
+            }
+            else
+            {
+                letter4.Text = boardArray[3].ToString();
+            }
+
+            if (boardArray[4].ToString().ToUpper() == "Q")
+            {
+                letter5.Text = "QU";
+            }
+            else
+            {
+                letter5.Text = boardArray[4].ToString();
+            }
+
+            if (boardArray[5].ToString().ToUpper() == "Q")
+            {
+                letter6.Text = "QU";
+            }
+            else
+            {
+                letter6.Text = boardArray[5].ToString();
+            }
+
+            if (boardArray[6].ToString().ToUpper() == "Q")
+            {
+                letter7.Text = "QU";
+            }
+            else
+            {
+                letter7.Text = boardArray[6].ToString();
+            }
+
+            if (boardArray[7].ToString().ToUpper() == "Q")
+            {
+                letter8.Text = "QU";
+            }
+            else
+            {
+                letter8.Text = boardArray[7].ToString();
+            }
+
+            if (boardArray[8].ToString().ToUpper() == "Q")
+            {
+                letter9.Text = "QU";
+            }
+            else
+            {
+                letter9.Text = boardArray[8].ToString();
+            }
+
+            if (boardArray[9].ToString().ToUpper() == "Q")
+            {
+                letter10.Text = "QU";
+            }
+            else
+            {
+                letter10.Text = boardArray[9].ToString();
+            }
+
+            if (boardArray[10].ToString().ToUpper() == "Q")
+            {
+                letter11.Text = "QU";
+            }
+            else
+            {
+                letter11.Text = boardArray[10].ToString();
+            }
+
+            if (boardArray[11].ToString().ToUpper() == "Q")
+            {
+                letter12.Text = "QU";
+            }
+            else
+            {
+                letter12.Text = boardArray[11].ToString();
+            }
+
+            if (boardArray[12].ToString().ToUpper() == "Q")
+            {
+                letter13.Text = "QU";
+            }
+            else
+            {
+                letter13.Text = boardArray[12].ToString();
+            }
+
+            if (boardArray[13].ToString().ToUpper() == "Q")
+            {
+                letter14.Text = "QU";
+            }
+            else
+            {
+                letter14.Text = boardArray[13].ToString();
+            }
+
+            if (boardArray[14].ToString().ToUpper() == "Q")
+            {
+                letter15.Text = "QU";
+            }
+            else
+            {
+                letter15.Text = boardArray[14].ToString();
+            }
+
+            if (boardArray[15].ToString().ToUpper() == "Q")
+            {
+                letter16.Text = "QU";
+            }
+            else
+            {
+                letter16.Text = boardArray[15].ToString();
+            }
         }
     }
 }
