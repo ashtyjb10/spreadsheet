@@ -742,11 +742,21 @@ namespace BoggleClient
         {
             GameCompleteBox.Visible = visible;
             // what to do when game is completed??? we still wanna have access to the words played right?
-            GameBoard.Enabled = false;
-            wordsPlayedP1Txt.Enabled = true;
-            WordsPlayedP2Text.Enabled = true;
+            //GameBoard.Enabled = false;
+            //wordsPlayedP1Txt.Enabled = true;
+           // WordsPlayedP2Text.Enabled = true;
 
-
+        }
+        public void displayWordsPlayed(HashSet<string> p1, HashSet<string> p2)
+        {
+            foreach (String word in p1)
+            {
+                wordsPlayedP1Txt.Text = word + "/n";
+            }
+            foreach (string word in p2)
+            {
+                WordsPlayedP2Text.Text = word + "\n";
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ namespace BoggleClient
         void setBoard(char[] boardArray);
         void ViewActiveBox(bool visible);
         void ViewCompletedBox(bool visible);
+        void displayWordsPlayed(HashSet<string> p1, HashSet<string> p2);
 
     }
 }

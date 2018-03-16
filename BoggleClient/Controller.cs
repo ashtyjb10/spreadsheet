@@ -165,6 +165,7 @@ namespace BoggleClient
                     {
                         if (response.StatusCode == HttpStatusCode.Conflict)
                         {
+                            gameState = "complete";
                             GetGameStatus();
                         }
                         //MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
@@ -302,6 +303,11 @@ namespace BoggleClient
             view.setTime(timeLimit);
 
             //Update words played
+            if (gameState == "complete")
+            {
+                view.displayWordsPlayed(wordsFromP1, wordsFromP2);
+            }
+            
 
 
         }
