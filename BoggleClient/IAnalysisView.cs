@@ -29,9 +29,11 @@ namespace BoggleClient
         void RegisteredUser();
         void GameJoined();
         void ViewPendingBox(bool visable);
-        void setBoard(char[] boardArray);
+        void SetBoard(char[] boardArray);
         void ViewActiveBox(bool visible);
         void ViewCompletedBox(bool visible);
+        void setPlayer1WordsPlayed(HashSet<string> wordsPlayed);
+        void setPlayer2WordsPlayed(HashSet<string> wordsPlayed);
 
     }
 }

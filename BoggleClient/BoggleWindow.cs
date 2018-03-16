@@ -564,7 +564,7 @@ namespace BoggleClient
         /// Sets the board to each letter in the board.  If the letter is Q, the letter is set to "QU"
         /// </summary>
         /// <param name="boardArray"></param>
-        public void setBoard(char[] boardArray)
+        public void SetBoard(char[] boardArray)
         {
             if (boardArray[0].ToString().ToUpper() == "Q")
             {
@@ -744,9 +744,29 @@ namespace BoggleClient
             // what to do when game is completed??? we still wanna have access to the words played right?
             GameBoard.Enabled = false;
             wordsPlayedP1Txt.Enabled = true;
-            WordsPlayedP2Text.Enabled = true;
+            wordsPlayedP2Txt.Enabled = true;
 
 
+        }
+
+        public void setPlayer1WordsPlayed(HashSet<string> wordsPlayed)
+        {
+            wordsPlayedP1Txt.Text = "";
+
+            foreach(string wordScore in wordsPlayed)
+            {
+                wordsPlayedP1Txt.Text = wordsPlayedP1Txt.Text + wordScore + " \r";
+            }
+        }
+
+        public void setPlayer2WordsPlayed(HashSet<string> wordsPlayed)
+        {
+            wordsPlayedP2Txt.Text = "";
+
+            foreach (string wordScore in wordsPlayed)
+            {
+                wordsPlayedP2Txt.Text = wordsPlayedP2Txt.Text + wordScore + " \r";
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace BoggleClient
         private string userToken;
 
         private string gameID;
-
+        private string clientNickname;
         private string gameState;
         private string gameBoard;
         private bool brief = false;
@@ -63,6 +63,7 @@ namespace BoggleClient
 
         public async void Register(String domain, String nickname)
         {
+            clientNickname = nickname;
             baseAddress = domain + "/BoggleService.svc/";
             try
             {
@@ -230,6 +231,7 @@ namespace BoggleClient
                                 }
                                 else if (gameState == "completed")
                                 {
+                                    Console.WriteLine("Complete");
                                     view.ViewActiveBox(false);
                                     view.ViewCompletedBox(true);
                                     var wordsPlayedP1 =  player1.WordsPlayed;
@@ -238,6 +240,8 @@ namespace BoggleClient
                                         string wordScore = obj.Word + "... ";
                                         wordScore += obj.Score;
                                         wordsFromP1.Add(wordScore);
+                                        
+                                        
                                     }
                                     dynamic player2 = deserialized.Player2;
                                     p2Nickname = player2.Nickname;
@@ -288,7 +292,7 @@ namespace BoggleClient
             //Update Board if not just pending.
             if(gameBoard != null)
             {
-                view.setBoard(gameBoard.ToArray());
+                view.SetBoard(gameBoard.ToArray());
 
             }
 
@@ -302,7 +306,23 @@ namespace BoggleClient
             view.setTime(timeLimit);
 
             //Update words played
-
+            if (gameState == "active")
+            {
+                if (clientNickname == p1Nickname)
+                {
+                   
+                    view.setPlayer2WordsPlayed(wordsFromP2);
+                }
+                else
+                {
+                    view.setPlayer1WordsPlayed(wordsFromP1);
+                }
+            }
+            else
+            {
+                view.setPlayer2WordsPlayed(wordsFromP2);
+                view.setPlayer1WordsPlayed(wordsFromP1);
+            }
 
         }
 
