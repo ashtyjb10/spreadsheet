@@ -80,7 +80,7 @@ namespace BoggleClient
                         dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
                         userToken = deserialized.UserToken;
                         view.IsRegisteredUser = true;
-                        view.RegisteredUser();///*************************************
+                        view.RegisteredUser();///******************
                     }
                     else
                     {
