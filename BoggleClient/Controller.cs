@@ -215,6 +215,7 @@ namespace BoggleClient
                                     p2Nickname = player2.Nickname;
                                     p2Score = player2.Score;
 
+
                                     //change the game to active!
                                 }
                                 else if (gameState == "completed")
@@ -228,7 +229,7 @@ namespace BoggleClient
                                     }
                                     dynamic player2 = deserialized.Player2;
                                     p2Nickname = player2.Nickname;
-                                    p2Score = player2.score;
+                                    p2Score = player2.Score;
                                     var wordsPlayedP2 = player2.WordsPlayed;
                                     foreach (var obj in wordsPlayedP2)
                                     {
@@ -250,7 +251,7 @@ namespace BoggleClient
                           
                         }
 
-                        updateBoardLong();
+                        UpdateBoardLong();
                 
                     }
                     else
@@ -270,14 +271,23 @@ namespace BoggleClient
         /// <summary>
         /// Updates all the information in the window with what was taken from the server.
         /// </summary>
-        private void updateBoardLong()
+        private void UpdateBoardLong()
         {
             //Update Board 
             view.setBoard(gameBoard.ToArray());
-            
+
             //Update player Names
-            
+            view.setUserNames(p1Nickname, p2Nickname);
+
             //Update Player Scores
+            view.setScores(p1Score, p2Score);
+
+            //Update time left
+            view.setTime(timeLimit);
+
+            //Update words played
+
+
         }
 
         private static HttpClient CreateClient(string baseAddress, string end)

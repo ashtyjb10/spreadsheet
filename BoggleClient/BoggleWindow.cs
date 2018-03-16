@@ -709,5 +709,22 @@ namespace BoggleClient
                 letter16.Text = boardArray[15].ToString();
             }
         }
+
+        public void setUserNames(string player1, string player2)
+        {
+            PlayerOneName.Text = player1;
+            PlayerTwoName.Text = player2;
+        }
+
+        public void setScores(string player1, string player2)
+        {
+            PlayerOneScoreBox.Text = player1;
+            PlayerTwoScoreBox.Text = player2;
+        }
+
+        public void setTime(string timeRemaining)
+        {
+            TimeRemainingText.Text = timeRemaining;
+        }
     }
 }

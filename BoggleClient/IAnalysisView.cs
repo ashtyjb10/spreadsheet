@@ -18,7 +18,10 @@ namespace BoggleClient
         string statsBoard { get; set; }
         string GameDuraton { get; set; }
 
+        void setUserNames(string player1, string player2);
         void EnableControls(bool enabled);
+        void setScores(string player1, string player2);
+        void setTime(string timeRemaining);
 
         event Action<string, string> RegisterUser;
         event Action<string> DesiredGameDuration;
