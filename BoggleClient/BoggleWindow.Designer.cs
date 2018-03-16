@@ -31,13 +31,11 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.GameBoard = new System.Windows.Forms.Panel();
-            this.QuitGame = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.TimeRemainingText = new System.Windows.Forms.RichTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.WordsPlayedText = new System.Windows.Forms.TextBox();
-            this.SubmitWordText = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.submitWordButton = new System.Windows.Forms.Button();
             this.fourFourTxt = new System.Windows.Forms.TextBox();
             this.fourThreeTxt = new System.Windows.Forms.TextBox();
@@ -56,19 +54,21 @@
             this.oneTwoTxt = new System.Windows.Forms.TextBox();
             this.oneOneTxt = new System.Windows.Forms.TextBox();
             this.BoggleLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.UsernameText = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.DomainText = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.CancelButton = new System.Windows.Forms.Button();
-            this.RegisterButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.StatsText = new System.Windows.Forms.RichTextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
-            this.GameBoard.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.SuspendLayout();
@@ -81,124 +81,94 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(3, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(712, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1411, 40);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 36);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(77, 36);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // GameBoard
+            // panel1
             // 
-            this.GameBoard.BackColor = System.Drawing.Color.Cyan;
-            this.GameBoard.Controls.Add(this.QuitGame);
-            this.GameBoard.Controls.Add(this.label2);
-            this.GameBoard.Controls.Add(this.TimeRemainingText);
-            this.GameBoard.Controls.Add(this.label1);
-            this.GameBoard.Controls.Add(this.WordsPlayedText);
-            this.GameBoard.Controls.Add(this.SubmitWordText);
-            this.GameBoard.Controls.Add(this.submitWordButton);
-            this.GameBoard.Controls.Add(this.fourFourTxt);
-            this.GameBoard.Controls.Add(this.fourThreeTxt);
-            this.GameBoard.Controls.Add(this.fourTwoTxt);
-            this.GameBoard.Controls.Add(this.fourOneTxt);
-            this.GameBoard.Controls.Add(this.threeFourTxt);
-            this.GameBoard.Controls.Add(this.threeThreeTxt);
-            this.GameBoard.Controls.Add(this.threeTwoTxt);
-            this.GameBoard.Controls.Add(this.threeOneTxt);
-            this.GameBoard.Controls.Add(this.twoFourTxt);
-            this.GameBoard.Controls.Add(this.twoThreeTxt);
-            this.GameBoard.Controls.Add(this.twoTwoTxt);
-            this.GameBoard.Controls.Add(this.twoOneTxt);
-            this.GameBoard.Controls.Add(this.oneFourTxt);
-            this.GameBoard.Controls.Add(this.oneThreeTxt);
-            this.GameBoard.Controls.Add(this.oneTwoTxt);
-            this.GameBoard.Controls.Add(this.oneOneTxt);
-            this.GameBoard.Enabled = false;
-            this.GameBoard.Location = new System.Drawing.Point(166, 102);
-            this.GameBoard.Margin = new System.Windows.Forms.Padding(2);
-            this.GameBoard.Name = "GameBoard";
-            this.GameBoard.Size = new System.Drawing.Size(442, 326);
-            this.GameBoard.TabIndex = 1;
+            this.panel1.BackColor = System.Drawing.Color.Cyan;
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.richTextBox1);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.submitWordButton);
+            this.panel1.Controls.Add(this.fourFourTxt);
+            this.panel1.Controls.Add(this.fourThreeTxt);
+            this.panel1.Controls.Add(this.fourTwoTxt);
+            this.panel1.Controls.Add(this.fourOneTxt);
+            this.panel1.Controls.Add(this.threeFourTxt);
+            this.panel1.Controls.Add(this.threeThreeTxt);
+            this.panel1.Controls.Add(this.threeTwoTxt);
+            this.panel1.Controls.Add(this.threeOneTxt);
+            this.panel1.Controls.Add(this.twoFourTxt);
+            this.panel1.Controls.Add(this.twoThreeTxt);
+            this.panel1.Controls.Add(this.twoTwoTxt);
+            this.panel1.Controls.Add(this.twoOneTxt);
+            this.panel1.Controls.Add(this.oneFourTxt);
+            this.panel1.Controls.Add(this.oneThreeTxt);
+            this.panel1.Controls.Add(this.oneTwoTxt);
+            this.panel1.Controls.Add(this.oneOneTxt);
+            this.panel1.Location = new System.Drawing.Point(333, 197);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(884, 627);
+            this.panel1.TabIndex = 1;
             // 
-            // QuitGame
+            // richTextBox1
             // 
-            this.QuitGame.Location = new System.Drawing.Point(285, 299);
-            this.QuitGame.Margin = new System.Windows.Forms.Padding(2);
-            this.QuitGame.Name = "QuitGame";
-            this.QuitGame.Size = new System.Drawing.Size(145, 21);
-            this.QuitGame.TabIndex = 35;
-            this.QuitGame.Text = "Quit Game";
-            this.QuitGame.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe MDL2 Assets", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(280, 7);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 14);
-            this.label2.TabIndex = 34;
-            this.label2.Text = "WORDS PLAYED";
-            // 
-            // TimeRemainingText
-            // 
-            this.TimeRemainingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TimeRemainingText.Location = new System.Drawing.Point(315, 243);
-            this.TimeRemainingText.Margin = new System.Windows.Forms.Padding(2);
-            this.TimeRemainingText.Name = "TimeRemainingText";
-            this.TimeRemainingText.ReadOnly = true;
-            this.TimeRemainingText.Size = new System.Drawing.Size(82, 52);
-            this.TimeRemainingText.TabIndex = 33;
-            this.TimeRemainingText.Text = "1:20";
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox1.Location = new System.Drawing.Point(640, 467);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(160, 96);
+            this.richTextBox1.TabIndex = 33;
+            this.richTextBox1.Text = "1:20";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe MDL2 Assets", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(292, 225);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(563, 419);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(127, 16);
+            this.label1.Size = new System.Drawing.Size(237, 32);
             this.label1.TabIndex = 32;
             this.label1.Text = "TIME REMAINING:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // WordsPlayedText
+            // textBox2
             // 
-            this.WordsPlayedText.Location = new System.Drawing.Point(263, 23);
-            this.WordsPlayedText.Margin = new System.Windows.Forms.Padding(2);
-            this.WordsPlayedText.Multiline = true;
-            this.WordsPlayedText.Name = "WordsPlayedText";
-            this.WordsPlayedText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.WordsPlayedText.Size = new System.Drawing.Size(134, 190);
-            this.WordsPlayedText.TabIndex = 31;
+            this.textBox2.Location = new System.Drawing.Point(526, 62);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox2.Size = new System.Drawing.Size(265, 361);
+            this.textBox2.TabIndex = 31;
             // 
-            // SubmitWordText
+            // textBox1
             // 
-            this.SubmitWordText.Location = new System.Drawing.Point(30, 248);
-            this.SubmitWordText.Margin = new System.Windows.Forms.Padding(2);
-            this.SubmitWordText.Name = "SubmitWordText";
-            this.SubmitWordText.Size = new System.Drawing.Size(150, 20);
-            this.SubmitWordText.TabIndex = 30;
+            this.textBox1.Location = new System.Drawing.Point(61, 477);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(297, 31);
+            this.textBox1.TabIndex = 30;
             // 
             // submitWordButton
             // 
-            this.submitWordButton.Location = new System.Drawing.Point(190, 248);
-            this.submitWordButton.Margin = new System.Windows.Forms.Padding(2);
+            this.submitWordButton.Location = new System.Drawing.Point(389, 472);
             this.submitWordButton.Name = "submitWordButton";
-            this.submitWordButton.Size = new System.Drawing.Size(81, 21);
+            this.submitWordButton.Size = new System.Drawing.Size(162, 40);
             this.submitWordButton.TabIndex = 29;
             this.submitWordButton.Text = "Submit Word";
             this.submitWordButton.UseVisualStyleBackColor = true;
@@ -208,12 +178,11 @@
             this.fourFourTxt.AccessibleName = "";
             this.fourFourTxt.BackColor = System.Drawing.Color.White;
             this.fourFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourFourTxt.Location = new System.Drawing.Point(190, 183);
-            this.fourFourTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.fourFourTxt.Location = new System.Drawing.Point(379, 351);
             this.fourFourTxt.Multiline = true;
             this.fourFourTxt.Name = "fourFourTxt";
             this.fourFourTxt.ReadOnly = true;
-            this.fourFourTxt.Size = new System.Drawing.Size(52, 54);
+            this.fourFourTxt.Size = new System.Drawing.Size(100, 100);
             this.fourFourTxt.TabIndex = 28;
             this.fourFourTxt.Text = "QU";
             this.fourFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -223,12 +192,11 @@
             this.fourThreeTxt.AccessibleName = "";
             this.fourThreeTxt.BackColor = System.Drawing.Color.White;
             this.fourThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourThreeTxt.Location = new System.Drawing.Point(136, 183);
-            this.fourThreeTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.fourThreeTxt.Location = new System.Drawing.Point(273, 351);
             this.fourThreeTxt.Multiline = true;
             this.fourThreeTxt.Name = "fourThreeTxt";
             this.fourThreeTxt.ReadOnly = true;
-            this.fourThreeTxt.Size = new System.Drawing.Size(52, 54);
+            this.fourThreeTxt.Size = new System.Drawing.Size(100, 100);
             this.fourThreeTxt.TabIndex = 27;
             this.fourThreeTxt.Text = "QU";
             this.fourThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -238,12 +206,11 @@
             this.fourTwoTxt.AccessibleName = "";
             this.fourTwoTxt.BackColor = System.Drawing.Color.White;
             this.fourTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourTwoTxt.Location = new System.Drawing.Point(84, 183);
-            this.fourTwoTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.fourTwoTxt.Location = new System.Drawing.Point(167, 351);
             this.fourTwoTxt.Multiline = true;
             this.fourTwoTxt.Name = "fourTwoTxt";
             this.fourTwoTxt.ReadOnly = true;
-            this.fourTwoTxt.Size = new System.Drawing.Size(52, 54);
+            this.fourTwoTxt.Size = new System.Drawing.Size(100, 100);
             this.fourTwoTxt.TabIndex = 26;
             this.fourTwoTxt.Text = "QU";
             this.fourTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -253,12 +220,11 @@
             this.fourOneTxt.AccessibleName = "";
             this.fourOneTxt.BackColor = System.Drawing.Color.White;
             this.fourOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fourOneTxt.Location = new System.Drawing.Point(30, 183);
-            this.fourOneTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.fourOneTxt.Location = new System.Drawing.Point(61, 351);
             this.fourOneTxt.Multiline = true;
             this.fourOneTxt.Name = "fourOneTxt";
             this.fourOneTxt.ReadOnly = true;
-            this.fourOneTxt.Size = new System.Drawing.Size(52, 54);
+            this.fourOneTxt.Size = new System.Drawing.Size(100, 100);
             this.fourOneTxt.TabIndex = 25;
             this.fourOneTxt.Text = "QU";
             this.fourOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -268,12 +234,11 @@
             this.threeFourTxt.AccessibleName = "";
             this.threeFourTxt.BackColor = System.Drawing.Color.White;
             this.threeFourTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeFourTxt.Location = new System.Drawing.Point(190, 127);
-            this.threeFourTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.threeFourTxt.Location = new System.Drawing.Point(379, 245);
             this.threeFourTxt.Multiline = true;
             this.threeFourTxt.Name = "threeFourTxt";
             this.threeFourTxt.ReadOnly = true;
-            this.threeFourTxt.Size = new System.Drawing.Size(52, 54);
+            this.threeFourTxt.Size = new System.Drawing.Size(100, 100);
             this.threeFourTxt.TabIndex = 24;
             this.threeFourTxt.Text = "QU";
             this.threeFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -283,12 +248,11 @@
             this.threeThreeTxt.AccessibleName = "";
             this.threeThreeTxt.BackColor = System.Drawing.Color.White;
             this.threeThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeThreeTxt.Location = new System.Drawing.Point(136, 127);
-            this.threeThreeTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.threeThreeTxt.Location = new System.Drawing.Point(273, 245);
             this.threeThreeTxt.Multiline = true;
             this.threeThreeTxt.Name = "threeThreeTxt";
             this.threeThreeTxt.ReadOnly = true;
-            this.threeThreeTxt.Size = new System.Drawing.Size(52, 54);
+            this.threeThreeTxt.Size = new System.Drawing.Size(100, 100);
             this.threeThreeTxt.TabIndex = 23;
             this.threeThreeTxt.Text = "QU";
             this.threeThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -298,12 +262,11 @@
             this.threeTwoTxt.AccessibleName = "";
             this.threeTwoTxt.BackColor = System.Drawing.Color.White;
             this.threeTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.threeTwoTxt.Location = new System.Drawing.Point(84, 127);
-            this.threeTwoTxt.Margin = new System.Windows.Forms.Padding(2);
+            this.threeTwoTxt.Location = new System.Drawing.Point(167, 245);
             this.threeTwoTxt.Multiline = true;
             this.threeTwoTxt.Name = "threeTwoTxt";
             this.threeTwoTxt.ReadOnly = true;
-            this.threeTwoTxt.Size = new System.Drawing.Size(52, 54);
+            this.threeTwoTxt.Size = new System.Drawing.Size(100, 100);
             this.threeTwoTxt.TabIndex = 22;
             this.threeTwoTxt.Text = "QU";
             this.threeTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -318,7 +281,7 @@
             this.threeOneTxt.Multiline = true;
             this.threeOneTxt.Name = "threeOneTxt";
             this.threeOneTxt.ReadOnly = true;
-            this.threeOneTxt.Size = new System.Drawing.Size(52, 54);
+            this.threeOneTxt.Size = new System.Drawing.Size(100, 100);
             this.threeOneTxt.TabIndex = 3;
             this.threeOneTxt.Text = "QU";
             this.threeOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -333,7 +296,7 @@
             this.twoFourTxt.Multiline = true;
             this.twoFourTxt.Name = "twoFourTxt";
             this.twoFourTxt.ReadOnly = true;
-            this.twoFourTxt.Size = new System.Drawing.Size(52, 54);
+            this.twoFourTxt.Size = new System.Drawing.Size(100, 100);
             this.twoFourTxt.TabIndex = 21;
             this.twoFourTxt.Text = "QU";
             this.twoFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -348,7 +311,7 @@
             this.twoThreeTxt.Multiline = true;
             this.twoThreeTxt.Name = "twoThreeTxt";
             this.twoThreeTxt.ReadOnly = true;
-            this.twoThreeTxt.Size = new System.Drawing.Size(52, 54);
+            this.twoThreeTxt.Size = new System.Drawing.Size(100, 100);
             this.twoThreeTxt.TabIndex = 20;
             this.twoThreeTxt.Text = "QU";
             this.twoThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -356,14 +319,14 @@
             // twoTwoTxt
             // 
             this.twoTwoTxt.AccessibleName = "";
-            this.twoTwoTxt.BackColor = System.Drawing.Color.White;
+            this.twoTwoTxt.BackColor = System.Drawing.Color.Chocolate;
             this.twoTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.twoTwoTxt.Location = new System.Drawing.Point(84, 72);
             this.twoTwoTxt.Margin = new System.Windows.Forms.Padding(2);
             this.twoTwoTxt.Multiline = true;
             this.twoTwoTxt.Name = "twoTwoTxt";
             this.twoTwoTxt.ReadOnly = true;
-            this.twoTwoTxt.Size = new System.Drawing.Size(52, 54);
+            this.twoTwoTxt.Size = new System.Drawing.Size(100, 100);
             this.twoTwoTxt.TabIndex = 19;
             this.twoTwoTxt.Text = "QU";
             this.twoTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -371,14 +334,14 @@
             // twoOneTxt
             // 
             this.twoOneTxt.AccessibleName = "";
-            this.twoOneTxt.BackColor = System.Drawing.Color.White;
+            this.twoOneTxt.BackColor = System.Drawing.Color.Tomato;
             this.twoOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.twoOneTxt.Location = new System.Drawing.Point(30, 72);
             this.twoOneTxt.Margin = new System.Windows.Forms.Padding(2);
             this.twoOneTxt.Multiline = true;
             this.twoOneTxt.Name = "twoOneTxt";
             this.twoOneTxt.ReadOnly = true;
-            this.twoOneTxt.Size = new System.Drawing.Size(52, 54);
+            this.twoOneTxt.Size = new System.Drawing.Size(100, 100);
             this.twoOneTxt.TabIndex = 18;
             this.twoOneTxt.Text = "QU";
             this.twoOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -392,7 +355,7 @@
             this.oneFourTxt.Multiline = true;
             this.oneFourTxt.Name = "oneFourTxt";
             this.oneFourTxt.ReadOnly = true;
-            this.oneFourTxt.Size = new System.Drawing.Size(52, 54);
+            this.oneFourTxt.Size = new System.Drawing.Size(100, 100);
             this.oneFourTxt.TabIndex = 17;
             this.oneFourTxt.Text = "QU";
             this.oneFourTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -400,14 +363,14 @@
             // oneThreeTxt
             // 
             this.oneThreeTxt.AccessibleName = "";
-            this.oneThreeTxt.BackColor = System.Drawing.Color.White;
+            this.oneThreeTxt.BackColor = System.Drawing.Color.RosyBrown;
             this.oneThreeTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.oneThreeTxt.Location = new System.Drawing.Point(136, 17);
             this.oneThreeTxt.Margin = new System.Windows.Forms.Padding(2);
             this.oneThreeTxt.Multiline = true;
             this.oneThreeTxt.Name = "oneThreeTxt";
             this.oneThreeTxt.ReadOnly = true;
-            this.oneThreeTxt.Size = new System.Drawing.Size(52, 54);
+            this.oneThreeTxt.Size = new System.Drawing.Size(100, 100);
             this.oneThreeTxt.TabIndex = 3;
             this.oneThreeTxt.Text = "QU";
             this.oneThreeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -416,14 +379,14 @@
             // oneTwoTxt
             // 
             this.oneTwoTxt.AccessibleName = "";
-            this.oneTwoTxt.BackColor = System.Drawing.Color.White;
+            this.oneTwoTxt.BackColor = System.Drawing.Color.DarkOrange;
             this.oneTwoTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.oneTwoTxt.Location = new System.Drawing.Point(84, 17);
             this.oneTwoTxt.Margin = new System.Windows.Forms.Padding(2);
             this.oneTwoTxt.Multiline = true;
             this.oneTwoTxt.Name = "oneTwoTxt";
             this.oneTwoTxt.ReadOnly = true;
-            this.oneTwoTxt.Size = new System.Drawing.Size(52, 54);
+            this.oneTwoTxt.Size = new System.Drawing.Size(100, 100);
             this.oneTwoTxt.TabIndex = 16;
             this.oneTwoTxt.Text = "QU";
             this.oneTwoTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -432,14 +395,14 @@
             // oneOneTxt
             // 
             this.oneOneTxt.AccessibleName = "";
-            this.oneOneTxt.BackColor = System.Drawing.Color.White;
+            this.oneOneTxt.BackColor = System.Drawing.Color.DarkKhaki;
             this.oneOneTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.oneOneTxt.Location = new System.Drawing.Point(30, 17);
             this.oneOneTxt.Margin = new System.Windows.Forms.Padding(2);
             this.oneOneTxt.Multiline = true;
             this.oneOneTxt.Name = "oneOneTxt";
             this.oneOneTxt.ReadOnly = true;
-            this.oneOneTxt.Size = new System.Drawing.Size(52, 54);
+            this.oneOneTxt.Size = new System.Drawing.Size(100, 100);
             this.oneOneTxt.TabIndex = 0;
             this.oneOneTxt.Text = "QU";
             this.oneOneTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -448,12 +411,12 @@
             // BoggleLabel
             // 
             this.BoggleLabel.AutoSize = true;
-            this.BoggleLabel.BackColor = System.Drawing.Color.Gray;
+            this.BoggleLabel.BackColor = System.Drawing.Color.OrangeRed;
             this.BoggleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BoggleLabel.Location = new System.Drawing.Point(327, 44);
             this.BoggleLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.BoggleLabel.Name = "BoggleLabel";
-            this.BoggleLabel.Size = new System.Drawing.Size(138, 44);
+            this.BoggleLabel.Size = new System.Drawing.Size(272, 85);
             this.BoggleLabel.TabIndex = 2;
             this.BoggleLabel.Text = "Boggle";
             // 
@@ -462,18 +425,26 @@
             this.panel2.BackColor = System.Drawing.Color.Cyan;
             this.panel2.Controls.Add(this.UsernameText);
             this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.DomainText);
+            this.panel2.Controls.Add(this.textBox3);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.CancelButton);
-            this.panel2.Controls.Add(this.RegisterButton);
+            this.panel2.Controls.Add(this.button3);
+            this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.label3);
-            this.panel2.Location = new System.Drawing.Point(14, 30);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2);
+            this.panel2.Location = new System.Drawing.Point(27, 58);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(121, 174);
+            this.panel2.Size = new System.Drawing.Size(242, 335);
             this.panel2.TabIndex = 3;
             // 
-            // UsernameText
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(569, 569);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(230, 40);
+            this.button1.TabIndex = 35;
+            this.button1.Text = "Cancel Current Game";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // label3
             // 
             this.UsernameText.Location = new System.Drawing.Point(12, 95);
             this.UsernameText.Margin = new System.Windows.Forms.Padding(2);
@@ -481,7 +452,7 @@
             this.UsernameText.Size = new System.Drawing.Size(100, 20);
             this.UsernameText.TabIndex = 6;
             // 
-            // label5
+            // button2
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(10, 80);
@@ -491,7 +462,7 @@
             this.label5.TabIndex = 5;
             this.label5.Text = "USERNAME:";
             // 
-            // DomainText
+            // button3
             // 
             this.DomainText.Location = new System.Drawing.Point(10, 58);
             this.DomainText.Margin = new System.Windows.Forms.Padding(2);
@@ -505,11 +476,11 @@
             this.label4.Location = new System.Drawing.Point(7, 38);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(87, 13);
+            this.label4.Size = new System.Drawing.Size(168, 25);
             this.label4.TabIndex = 3;
             this.label4.Text = "DOMAIN NAME:";
             // 
-            // CancelButton
+            // textBox3
             // 
             this.CancelButton.Enabled = false;
             this.CancelButton.Location = new System.Drawing.Point(27, 144);
@@ -521,7 +492,7 @@
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // RegisterButton
+            // label5
             // 
             this.RegisterButton.Location = new System.Drawing.Point(27, 118);
             this.RegisterButton.Margin = new System.Windows.Forms.Padding(2);
@@ -532,7 +503,7 @@
             this.RegisterButton.UseVisualStyleBackColor = true;
             this.RegisterButton.Click += new System.EventHandler(this.RegisterButton_Click);
             // 
-            // label3
+            // textBox4
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.White;
@@ -544,15 +515,38 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "REGISTRATION";
             // 
-            // panel3
+            // EnterGamePanel
+            // 
+            this.EnterGamePanel.BackColor = System.Drawing.Color.Cyan;
+            this.EnterGamePanel.Controls.Add(this.FindGameButton);
+            this.EnterGamePanel.Controls.Add(this.label7);
+            this.EnterGamePanel.Controls.Add(this.GameDurationTxt);
+            this.EnterGamePanel.Controls.Add(this.label6);
+            this.EnterGamePanel.Enabled = false;
+            this.EnterGamePanel.Location = new System.Drawing.Point(28, 404);
+            this.EnterGamePanel.Margin = new System.Windows.Forms.Padding(4);
+            this.EnterGamePanel.Name = "EnterGamePanel";
+            this.EnterGamePanel.Size = new System.Drawing.Size(258, 304);
+            this.EnterGamePanel.TabIndex = 4;
+            // 
+            // FindGameButton
+            // 
+            this.FindGameButton.Location = new System.Drawing.Point(54, 126);
+            this.FindGameButton.Name = "FindGameButton";
+            this.FindGameButton.Size = new System.Drawing.Size(146, 39);
+            this.FindGameButton.TabIndex = 3;
+            this.FindGameButton.Text = "Find Game";
+            this.FindGameButton.UseVisualStyleBackColor = true;
+            this.FindGameButton.Click += new System.EventHandler(this.FindGameButton_Click);
+            // 
+            // label7
             // 
             this.panel3.BackColor = System.Drawing.Color.Cyan;
             this.panel3.Controls.Add(this.StatsText);
             this.panel3.Controls.Add(this.label6);
-            this.panel3.Location = new System.Drawing.Point(14, 220);
-            this.panel3.Margin = new System.Windows.Forms.Padding(2);
+            this.panel3.Location = new System.Drawing.Point(27, 423);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(121, 209);
+            this.panel3.Size = new System.Drawing.Size(242, 401);
             this.panel3.TabIndex = 4;
             // 
             // StatsText
@@ -573,18 +567,39 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(45, 13);
             this.label6.TabIndex = 0;
-            this.label6.Text = "STATS:";
+            this.label6.Text = "Enter Game";
+            // 
+            // GameCompleteBox
+            // 
+            this.GameCompleteBox.BackColor = System.Drawing.Color.Lime;
+            this.GameCompleteBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GameCompleteBox.Location = new System.Drawing.Point(784, 582);
+            this.GameCompleteBox.Name = "GameCompleteBox";
+            this.GameCompleteBox.ReadOnly = true;
+            this.GameCompleteBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.GameCompleteBox.Size = new System.Drawing.Size(225, 39);
+            this.GameCompleteBox.TabIndex = 45;
+            this.GameCompleteBox.Text = "Game Complete";
+            this.GameCompleteBox.Visible = false;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Location = new System.Drawing.Point(19, 64);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(200, 273);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = "";
             // 
             // BoggleWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(712, 506);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.BoggleLabel);
-            this.Controls.Add(this.GameBoard);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -607,7 +622,7 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.Panel GameBoard;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox oneOneTxt;
         private System.Windows.Forms.Label BoggleLabel;
         private System.Windows.Forms.TextBox fourFourTxt;
@@ -627,7 +642,7 @@
         private System.Windows.Forms.TextBox oneTwoTxt;
         private System.Windows.Forms.Button submitWordButton;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.RichTextBox TimeRemainingText;
+        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox WordsPlayedText;
         private System.Windows.Forms.TextBox SubmitWordText;
@@ -636,14 +651,27 @@
         private System.Windows.Forms.Button QuitGame;
         private System.Windows.Forms.TextBox UsernameText;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox DomainText;
+        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.Button RegisterButton;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.RichTextBox StatsText;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.RichTextBox PlayerTwoScoreBox;
+        private System.Windows.Forms.RichTextBox PlayerOneScoreBox;
+        private System.Windows.Forms.Label PlayerTwoName;
+        private System.Windows.Forms.Label PlayerOneName;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button FindGameButton;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox GameDurationTxt;
+        private System.Windows.Forms.RichTextBox GameActiveBox;
+        private System.Windows.Forms.RichTextBox GamePendingBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label GameJoinedLabel;
+        private System.Windows.Forms.RichTextBox GameCompleteBox;
     }
 }
 
