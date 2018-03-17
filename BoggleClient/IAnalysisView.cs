@@ -23,6 +23,8 @@ namespace BoggleClient
         void RegisteredUser();
         void GameJoined();
         void JoinGameCanceled();
+        void InvalidUserToken();
+        void GameIdInvalid();
         void ViewPendingBox(bool visable);
         void SetBoard(char[] boardArray);
         void ViewActiveBox(bool visible);

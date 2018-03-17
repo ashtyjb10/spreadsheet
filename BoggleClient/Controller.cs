@@ -99,35 +99,36 @@ namespace BoggleClient
         {
             clientNickname = nickname;
             baseAddress = domain + "/BoggleService.svc/";
-            try
+            using (HttpClient client = CreateClient(baseAddress, "users"))
             {
-                using (HttpClient client = CreateClient(baseAddress, "users"))
+                dynamic users = new ExpandoObject();
+                users.Nickname = nickname;
+
+                //cancel token
+                tokenSource = new CancellationTokenSource();
+                StringContent content = new StringContent(JsonConvert.SerializeObject(users), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync("users", content, tokenSource.Token);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    dynamic users = new ExpandoObject();
-                    users.Nickname = nickname;
-
-                    //cancel token
-                    tokenSource = new CancellationTokenSource();
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(users), Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PostAsync("users", content, tokenSource.Token);
-
-                    if (response.IsSuccessStatusCode)
+                    String result = await response.Content.ReadAsStringAsync();
+                    dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                    userToken = deserialized.UserToken;
+                    view.IsRegisteredUser = true;
+                    view.RegisteredUser();
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
                     {
-                        String result = await response.Content.ReadAsStringAsync();
-                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
-                        userToken = deserialized.UserToken;
-                        view.IsRegisteredUser = true;
-                        view.RegisteredUser();///***************
+                        MessageBox.Show("Error: 404 not found try another domain name.", "Not Found", MessageBoxButtons.OK);
                     }
                     else
                     {
-                        MessageBox.Show("Error registering: " + response.StatusCode + "\n" + response.ReasonPhrase);
+                        MessageBox.Show("Error registering Username either null or longer than 50 characters: ", "Registraion Error",
+                            MessageBoxButtons.OK);
                     }
                 }
-            }
-            finally
-            {
-                // view.EnableControls(true);
             }
         }
 
@@ -138,74 +139,71 @@ namespace BoggleClient
         /// <param name="gameDuration"></param>
         public async void JoinGame(String gameDuration)
         {
-            try
-            {
-                using (HttpClient client = CreateClient(baseAddress, ""))
-                {
-                    dynamic joinGameInfo = new ExpandoObject();
-                    joinGameInfo.UserToken = userToken;
-                    joinGameInfo.TimeLimit = gameDuration;
-                    
-                    //cancel token
-                    tokenSource = new CancellationTokenSource();
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PostAsync("games", content, tokenSource.Token);
 
-                    if (response.IsSuccessStatusCode)
+            using (HttpClient client = CreateClient(baseAddress, ""))
+            {
+                dynamic joinGameInfo = new ExpandoObject();
+                joinGameInfo.UserToken = userToken;
+                joinGameInfo.TimeLimit = gameDuration;
+
+                //cancel token
+                tokenSource = new CancellationTokenSource();
+                StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync("games", content, tokenSource.Token);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    String result = await response.Content.ReadAsStringAsync();
+                    dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                    gameID = deserialized.GameID;
+                    //Console.WriteLine(gameID);
+                    GetGameStatus();
+                    view.GameJoined();
+                    wordsFromP1 = new HashSet<string>();
+                    wordsFromP2 = new HashSet<string>();
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
                     {
-                        String result = await response.Content.ReadAsStringAsync();
-                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
-                        gameID = deserialized.GameID;
-                        //Console.WriteLine(gameID);
-                        GetGameStatus();
-                        view.GameJoined();
-                        wordsFromP1 = new HashSet<string>();
-                        wordsFromP2 = new HashSet<string>();
+                        view.timerEnabled = false;
+                        MessageBox.Show("Error: please provide a time within the parameters 4< parameter > 121",
+                            "Invalid Time", MessageBoxButtons.OK);
+
                     }
                     else
                     {
-                        //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
                         view.timerEnabled = false;
-
-                        //if 403 show bad time
-                        MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
-                        //if 409 send back to reg window.
-
+                        view.InvalidUserToken();
+                        MessageBox.Show("Error: User Token Invalid please sign in again.", "Invalid User Token",
+                            MessageBoxButtons.OK);
                     }
+                    //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
+                    //view.timerEnabled = false;
+
+                    //if 403 show bad time
+                    // MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
+                    //if 409 send back to reg window.
+
                 }
-            }
-            catch
-            {
-
-            }
-
-            finally
-            {
-
             }
         }
 
         public async void HandleCancelJoin()
         {
-            try
+            using (HttpClient client = CreateClient(baseAddress, ""))
             {
-                using (HttpClient client = CreateClient(baseAddress, ""))
+                dynamic characteristics = new ExpandoObject();
+                characteristics.UserToken = userToken;
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PutAsync("games", content);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    dynamic characteristics = new ExpandoObject();
-                    characteristics.UserToken = userToken;
-
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PutAsync("games", content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show("Cancel Game Succeeded!", "Cancel Game", MessageBoxButtons.OK);
-                        view.JoinGameCanceled();
-                    }
+                    MessageBox.Show("Cancel Game Succeeded!", "Cancel Game", MessageBoxButtons.OK);
+                    view.JoinGameCanceled();
                 }
-            }
-            finally
-            {
             }
 
         }
@@ -217,43 +215,38 @@ namespace BoggleClient
         /// <param name="word"></param>
         public async void PlayWord(String word)
         {
-            try
+
+            using (HttpClient client = CreateClient(baseAddress, ""))
             {
-                using (HttpClient client = CreateClient(baseAddress, ""))
+                dynamic characteristics = new ExpandoObject();
+                characteristics.UserToken = userToken;
+                characteristics.Word = word;
+
+                //tokenSource = new CancellationTokenSource();
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PutAsync("games/" + gameID, content);
+
+
+                if (response.IsSuccessStatusCode)
                 {
-                    dynamic characteristics = new ExpandoObject();
-                    characteristics.UserToken = userToken;
-                    characteristics.Word = word;
-
-                    //tokenSource = new CancellationTokenSource();
-
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.PutAsync("games/" + gameID, content);
-
-
-                    if (response.IsSuccessStatusCode)
+                    String result = await response.Content.ReadAsStringAsync();
+                    dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                    string WordScore = deserialized.Word;
+                    GetGameStatus();
+                    UpdateBoardLong();
+                    Console.WriteLine(WordScore);
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Conflict)
                     {
-                        String result = await response.Content.ReadAsStringAsync();
-                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
-                        string WordScore = deserialized.Word;
                         GetGameStatus();
-                        UpdateBoardLong();
-                        Console.WriteLine(WordScore);
                     }
-                    else
-                    {
-                        if (response.StatusCode == HttpStatusCode.Conflict)
-                        {
-                            GetGameStatus();
-                        }
-                        //MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
-                    }
+                    //MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
                 }
             }
-            finally
-            {
 
-            }
         }
 
         /// <summary>
@@ -262,100 +255,98 @@ namespace BoggleClient
         /// </summary>
         public async void GetGameStatus()
         {
-            try
+
+            using (HttpClient client = CreateClient(baseAddress, ""))
             {
-                using (HttpClient client = CreateClient(baseAddress, ""))
+                tokenSource = new CancellationTokenSource();
+
+
+                HttpResponseMessage response = await client.GetAsync("games/" + gameID);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    tokenSource = new CancellationTokenSource();
+                    String result = await response.Content.ReadAsStringAsync();
+                    dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
 
-                    //StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
-                    //HttpResponseMessage response = await client.GetAsync("games/" + gameID);
-                    HttpResponseMessage response = await client.GetAsync("games/" + gameID); //*****************************************************  add + gameID
-                    
-                    if (response.IsSuccessStatusCode)
+                    gameState = deserialized.GameState;
+                    if (gameState == "pending")
                     {
-                        String result = await response.Content.ReadAsStringAsync();
-                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                        view.ViewPendingBox(true);
 
-                        gameState = deserialized.GameState;
-                        if (gameState == "pending")
-                        {
-                            view.ViewPendingBox(true);
-                            
-                            
-                        }
-                        else
-                        {
-                            //game board is not pending, either active or completed.
-                            if (!brief)
-                            {
-                                gameBoard = deserialized.Board;
-                                timeLimit = deserialized.TimeLimit;
-                                timeLeft = deserialized.TimeLeft;
-
-
-                                dynamic player1 = deserialized.Player1;
-                                 p1Nickname = player1.Nickname;
-                                 p1Score = player1.Score;
-
-                                //If the game is active, the scores of the players is updates.
-                                if (gameState == "active")
-                                {
-                                    view.ViewPendingBox(false);
-                                    view.ViewActiveBox(true);
-                                    dynamic player2 = deserialized.Player2;
-                                    p2Nickname = player2.Nickname;
-                                    p2Score = player2.Score;
-
-
-                                    //change the game to active!
-                                }
-                                //If the game is complete, the words of both players is displayed.
-                                else if (gameState == "completed")
-                                {
-                                    view.ViewActiveBox(false);
-                                    view.ViewCompletedBox(true);
-                                    var wordsPlayedP1 =  player1.WordsPlayed;
-                                    foreach (var obj in wordsPlayedP1)
-                                    {
-                                        string wordScore = obj.Word + "... ";
-                                        wordScore += obj.Score;
-                                        wordsFromP1.Add(wordScore);
-                                    }
-                                    dynamic player2 = deserialized.Player2;
-                                    p2Nickname = player2.Nickname;
-                                    p2Score = player2.Score;
-                                    var wordsPlayedP2 = player2.WordsPlayed;
-                                    foreach (var obj in wordsPlayedP2)
-                                    {
-                                        string wordScore = obj.Word + "... ";
-                                        wordScore += obj.Score;
-                                        wordsFromP2.Add(wordScore);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //time left, player1 (score), player2(score)
-                                timeLeft = deserialized.TimeLeft;
-                                p1Score = deserialized.Score;
-                                p2Score = deserialized.Score;
-                            }
-                        }
-                        //Ensures that the board is updated with each call.
-                        UpdateBoardLong();
                     }
                     else
                     {
-                        MessageBox.Show("Error getting game info " + response.StatusCode + "\n" + response.ReasonPhrase);
+                        //game board is not pending, either active or completed.
+                        if (!brief)
+                        {
+                            gameBoard = deserialized.Board;
+                            timeLimit = deserialized.TimeLimit;
+                            timeLeft = deserialized.TimeLeft;
 
+
+                            dynamic player1 = deserialized.Player1;
+                            p1Nickname = player1.Nickname;
+                            p1Score = player1.Score;
+
+                            //If the game is active, the scores of the players is updates.
+                            if (gameState == "active")
+                            {
+                                view.ViewPendingBox(false);
+                                view.ViewActiveBox(true);
+                                dynamic player2 = deserialized.Player2;
+                                p2Nickname = player2.Nickname;
+                                p2Score = player2.Score;
+
+
+                                //change the game to active!
+                            }
+                            //If the game is complete, the words of both players is displayed.
+                            else if (gameState == "completed")
+                            {
+                                Console.WriteLine("Complete");
+                                view.ViewActiveBox(false);
+                                view.ViewCompletedBox(true);
+                                var wordsPlayedP1 = player1.WordsPlayed;
+                                foreach (var obj in wordsPlayedP1)
+                                {
+                                    string wordScore = obj.Word + "... ";
+                                    wordScore += obj.Score;
+                                    wordsFromP1.Add(wordScore);
+
+
+                                }
+                                dynamic player2 = deserialized.Player2;
+                                p2Nickname = player2.Nickname;
+                                p2Score = player2.Score;
+                                var wordsPlayedP2 = player2.WordsPlayed;
+                                foreach (var obj in wordsPlayedP2)
+                                {
+                                    string wordScore = obj.Word + "... ";
+                                    wordScore += obj.Score;
+                                    wordsFromP2.Add(wordScore);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //time left, player1 (score), player2(score)
+                            timeLeft = deserialized.TimeLeft;
+                            p1Score = deserialized.Score;
+                            p2Score = deserialized.Score;
+                        }
                     }
+                    //Ensures that the board is updated with each call.
+                    UpdateBoardLong();
+                }
+                else
+                {
+                    view.timerEnabled = false;
+                    MessageBox.Show("Game Id Invalid please quit and join a new game!", "Game Id Invalid", MessageBoxButtons.OK);
+                    view.GameIdInvalid();
+
                 }
             }
-            finally
-            {
 
-            }
         }
 
         /// <summary>

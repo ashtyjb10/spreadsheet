@@ -109,6 +109,7 @@ namespace BoggleClient
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
+
         }
 
         private void FindGameButton_Click(object sender, EventArgs e)
@@ -663,6 +664,20 @@ namespace BoggleClient
             EnterGamePanel.Enabled = true;
             updateTimer.Enabled = false;
             ResetBoard();
+        }
+        public void InvalidUserToken()
+        {
+            EnterGamePanel.Enabled = false;
+            RegistrationPanel.Enabled = true;
+            UsernameText.Text = "";
+        }
+        public void GameIdInvalid()
+        {
+            RegistrationPanel.Enabled = true;
+            GameDurationTxt.Text = "";
+            EnterGamePanel.Enabled = false;
+            GameBoard.Enabled = false;
+
         }
 
         public event Action CancelJoinGame;
