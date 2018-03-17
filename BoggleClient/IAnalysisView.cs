@@ -18,6 +18,7 @@ namespace BoggleClient
         event Action<string> ScoreWord;
         event Action TickingTimer;
         event Action CancelJoinGame;
+        event Action CancelRegisterButtonPressed;
         event Action QuitGameClicked;
 
         void RegisteredUser();
@@ -25,6 +26,7 @@ namespace BoggleClient
         void JoinGameCanceled();
         void InvalidUserToken();
         void GameIdInvalid();
+        void RegistrationCanceled();
         void ViewPendingBox(bool visable);
         void SetBoard(char[] boardArray);
         void ViewActiveBox(bool visible);

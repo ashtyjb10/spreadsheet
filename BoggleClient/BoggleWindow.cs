@@ -87,8 +87,13 @@ namespace BoggleClient
             {
                 RegisterUser(DomainText.Text, UsernameText.Text);
             }
+            
+        }
 
+        public void RegistrationCanceled()
+        {
             CancelButton.Enabled = false;
+            UsernameText.Text = "";
         }
 
         /// <summary>
@@ -133,9 +138,9 @@ namespace BoggleClient
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-
+            CancelRegisterButtonPressed();
         }
-
+        public event Action CancelRegisterButtonPressed;
         private void FindGameButton_Click(object sender, EventArgs e)
         {
             if (GameDurationTxt.Text == "")
