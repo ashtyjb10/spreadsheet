@@ -9,14 +9,7 @@ namespace BoggleClient
     public interface IAnalysisView
     {
         bool IsRegisteredUser { get; set; }
-        string NickName { get;  set; }
-        string baseAddress { get; set; }
-        string wordToSubmit { get; set; }
-        string timeRemaining { get; set; }
-        string score { get; set; }
-        string board { get; set; }
-        string statsBoard { get; set; }
-        string GameDuraton { get; set; }
+       
 
         
 

@@ -12,13 +12,7 @@ namespace BoggleClient
 {
     public partial class BoggleWindow : Form, IAnalysisView
     {
-        public string NickName { get => NickName; set => NickName = value; }
-        public string baseAddress { get => baseAddress; set => baseAddress = value; }
-        public string wordToSubmit { get => wordToSubmit; set => wordToSubmit = value; }
-        public string timeRemaining { get => timeRemaining; set => timeRemaining = value; }
-        public string score { get => score; set => score = value; }
-        public string board { get => board; set => board = value; }
-        public string statsBoard { get => statsBoard; set => statsBoard = value; }
+        
 
         private int lastSelected = 0;
         private Timer updateTimer = new Timer();
