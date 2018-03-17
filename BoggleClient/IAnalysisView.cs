@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BoggleClient
 {
+    /// <summary>
+    /// Interface for the BoggleWindow to be manipulated by the Controller.
+    /// </summary>
     public interface IAnalysisView
     {
         bool IsRegisteredUser { get; set; }

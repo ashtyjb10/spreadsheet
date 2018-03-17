@@ -128,7 +128,7 @@ namespace BoggleClient
         }
 
         /// <summary>
-        /// 
+        /// View pending box is made visible
         /// </summary>
         /// <param name="visible"></param>
         public void ViewPendingBox(bool visible)
@@ -136,6 +136,11 @@ namespace BoggleClient
             GamePendingBox.Visible = visible;
         }
 
+        /// <summary>
+        /// Prompts the controller to handle the cancelation of a registration.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CancelButton_Click(object sender, EventArgs e)
         {
             CancelRegisterButtonPressed();
@@ -165,8 +170,6 @@ namespace BoggleClient
         /// </summary>
         public bool IsRegisteredUser { get; set; }
         public string GameDuraton { get; set; }
-
-
         public bool timerEnabled { get => updateTimer.Enabled; set => updateTimer.Enabled = value; }
 
         /// <summary>

@@ -55,6 +55,7 @@ namespace BoggleClient
             view.TickingTimer += HandleTickingTimer;
             view.CancelJoinGame += HandleCancelJoin;
             view.QuitGameClicked += HandleQuitGameClicked;
+            view.CancelRegisterButtonPressed += Cancel;
         }
 
         private void HandleQuitGameClicked()
