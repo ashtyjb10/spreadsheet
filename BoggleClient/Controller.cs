@@ -58,11 +58,18 @@ namespace BoggleClient
             view.CancelRegisterButtonPressed += Cancel;
         }
 
+
+        /// <summary>
+        /// resets the window for a quit!
+        /// </summary>
         private void HandleQuitGameClicked()
         {
             NewGameReset();
         }
 
+        /// <summary>
+        /// Reset the values for all of the global variables.
+        /// </summary>
         private void NewGameReset()
         {
             p1Nickname = "Player 1";
@@ -84,7 +91,7 @@ namespace BoggleClient
         }
 
         /// <summary>
-        /// Cancels the current operation (currently unimplemented)
+        /// Cancels the current operation 
         /// </summary>
         private void Cancel()
         {
@@ -116,6 +123,7 @@ namespace BoggleClient
 
                     if (response.IsSuccessStatusCode)
                     {
+                        //get the stored data
                         String result = await response.Content.ReadAsStringAsync();
                         dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
                         userToken = deserialized.UserToken;
@@ -124,12 +132,14 @@ namespace BoggleClient
                     }
                     else
                     {
+                        //404 error
                         if (response.StatusCode == HttpStatusCode.NotFound)
                         {
                             MessageBox.Show("Error: 404 not found try another domain name.", "Not Found", MessageBoxButtons.OK);
                         }
                         else
                         {
+                            //any other error reset the Regester panel.
                             MessageBox.Show("Error registering Username either null or longer than 50 characters: ", "Registraion Error",
                                 MessageBoxButtons.OK);
                         }
@@ -137,6 +147,7 @@ namespace BoggleClient
                 }
                 catch (TaskCanceledException)
                 {
+                    //if cancel button pressed.
                     MessageBox.Show("Cancel Succeeded!", "Cancel Register", MessageBoxButtons.OK);
                     view.RegistrationCanceled();
                 }
@@ -189,17 +200,14 @@ namespace BoggleClient
                         MessageBox.Show("Error: User Token Invalid please sign in again.", "Invalid User Token",
                             MessageBoxButtons.OK);
                     }
-                    //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
-                    //view.timerEnabled = false;
-
-                    //if 403 show bad time
-                    // MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
-                    //if 409 send back to reg window.
 
                 }
             }
         }
 
+        /// <summary>
+        /// If the cancel button is pressed after a game has been joined it goes here to reset!
+        /// </summary>
         public async void HandleCancelJoin()
         {
             using (HttpClient client = CreateClient(baseAddress, ""))
