@@ -53,9 +53,25 @@ namespace BoggleClient
             view.ScoreWord += PlayWord;
             view.TickingTimer += HandleTickingTimer;
             view.CancelJoinGame += HandleCancelJoin;
+            view.QuitGameClicked += HandleQuitGameClicked;
         }
 
-        
+        private void HandleQuitGameClicked()
+        {
+            NewGameReset();
+        }
+
+        private void NewGameReset()
+        {
+            p1Nickname = "Player 1";
+            p2Nickname = "Player 2";
+            p1Score = "0";
+            p2Score = "0";
+            timeLeft = "000";
+            gameState = null;
+            gameBoard = "----------------";
+           
+        }
 
         /// <summary>
         /// Handles the timer ticking to check the server.

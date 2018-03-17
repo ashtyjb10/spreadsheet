@@ -150,7 +150,7 @@ namespace BoggleClient
         {
             if (letter1.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -174,7 +174,7 @@ namespace BoggleClient
         {
             if (letter2.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -200,7 +200,7 @@ namespace BoggleClient
         {
             if (letter3.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -225,7 +225,7 @@ namespace BoggleClient
         {
             if (letter4.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -249,7 +249,7 @@ namespace BoggleClient
         {
             if (letter5.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -274,7 +274,7 @@ namespace BoggleClient
         {
             if (letter6.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -299,7 +299,7 @@ namespace BoggleClient
         {
             if (letter7.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -326,7 +326,7 @@ namespace BoggleClient
 
             if (letter8.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -351,7 +351,7 @@ namespace BoggleClient
         {
             if (letter9.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -376,7 +376,7 @@ namespace BoggleClient
         {
             if (letter10.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -402,7 +402,7 @@ namespace BoggleClient
         {
             if (letter11.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -429,7 +429,7 @@ namespace BoggleClient
         {
             if (letter12.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -455,7 +455,7 @@ namespace BoggleClient
         {
             if (letter13.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -480,7 +480,7 @@ namespace BoggleClient
         {
             if (letter14.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -506,7 +506,7 @@ namespace BoggleClient
         {
             if (letter15.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -532,7 +532,7 @@ namespace BoggleClient
         {
             if (letter16.BackColor == Color.Red)
             {
-                ResetBoard();
+                ResetLetterBoard();
             }
             else
             {
@@ -550,7 +550,7 @@ namespace BoggleClient
         /// Clears the board of all selected letters.  Resets the submit word box and
         /// sets the last selected box to 0.
         /// </summary>
-        private void ResetBoard()
+        private void ResetLetterBoard()
         {
             foreach(TextBox box in this.boxArray)
             {
@@ -614,7 +614,7 @@ namespace BoggleClient
         {
             //only if game is active.
             ScoreWord(SubmitWordText.Text);
-            ResetBoard();
+            ResetLetterBoard();
         }
         public void ViewActiveBox(bool visible)
         {
@@ -629,7 +629,7 @@ namespace BoggleClient
             wordsPlayedP2Txt.Enabled = true;
             EnterGamePanel.Enabled = true;
             updateTimer.Enabled = false;
-            ResetBoard();
+            ResetLetterBoard();
             
            
 
@@ -655,15 +655,14 @@ namespace BoggleClient
             }
         }
 
-        private void CancelFindGame_Click(object sender, EventArgs e)
-        {
-            CancelJoinGame();
-        }
+      
         public void JoinGameCanceled()
         {
             GamePendingBox.Visible = false;
             GameBoard.Enabled = false;
             EnterGamePanel.Enabled = true;
+            updateTimer.Enabled = false;
+            ResetBoard();
         }
 
         public event Action CancelJoinGame;
@@ -674,7 +673,42 @@ namespace BoggleClient
             EnterGamePanel.Enabled = false;
             RegistrationPanel.Enabled = true;
             updateTimer.Enabled = false;
-            TimeRemainingText.Text = "";
+            ResetBoard();
+            MessageBox.Show("Game has been quit!", "Quit Game", MessageBoxButtons.OK);
+        }
+
+        public event Action QuitGameClicked;
+
+        private void ResetBoard()
+        {
+            PlayerOneName.Text = "Player1";
+            PlayerTwoName.Text = "Player2";
+            PlayerOneScoreBox.Text = "0";
+            PlayerTwoScoreBox.Text = "0";
+            TimeRemainingText.Text = "000";
+            GamePendingBox.Visible = false;
+            GameActiveBox.Visible = false;
+            GameCompleteBox.Visible = false;
+            GameJoinedLabel.Visible = false;
+            ResetLetterBoard();
+            QuitGameClicked();
+
+        }
+
+        private void CancelFindGame_Click_1(object sender, EventArgs e)
+        {
+            CancelJoinGame();
+        }
+
+        private void helpMePlayBoggleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To use this Boggle Client you must first provide the domain name of a Boggle Server!" + "\r" +
+                "If you dont have one, try this!  http://ice.eng.utah.edu" + "\r" + "When you have been registered with the server " +
+                "you must enter the desired length of the game, between 5 seconds and 120 seconds." + "\r" + "You will be thrown into the game, but dont panic! " +
+                "Use the board to connect any words you can see, either above, to the sides or corners of each tile.  If you make a mistake, simply click on a selected tile" +
+                "and the current word will be erased.  When you have a word, click submit word and you will be given points according to the word you gave!" + "\r" +
+                "Watch the time and get as many words as you can!  If you have to quit early, use the quit button.  If you have a problem connecting or registering, use the cancel buttons " +
+                "to quit the process." +"\r" + "Happy Boggle-ing!", "Teach Me How To Boggle! " + MessageBoxButtons.OK);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BoggleClient
+﻿using System;
+
+namespace BoggleClient
 {
     partial class BoggleWindow
     {
@@ -79,6 +81,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.GameDurationTxt = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.helpMePlayBoggleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.GameBoard.SuspendLayout();
             this.RegistrationPanel.SuspendLayout();
@@ -106,6 +109,8 @@
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpMePlayBoggleToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
             this.helpToolStripMenuItem.Text = "Help";
@@ -155,14 +160,14 @@
             // 
             // CancelFindGame
             // 
-            this.CancelFindGame.Location = new System.Drawing.Point(283, 303);
+            this.CancelFindGame.Location = new System.Drawing.Point(296, 294);
             this.CancelFindGame.Margin = new System.Windows.Forms.Padding(2);
             this.CancelFindGame.Name = "CancelFindGame";
-            this.CancelFindGame.Size = new System.Drawing.Size(83, 22);
+            this.CancelFindGame.Size = new System.Drawing.Size(78, 31);
             this.CancelFindGame.TabIndex = 4;
             this.CancelFindGame.Text = "Cancel Find";
             this.CancelFindGame.UseVisualStyleBackColor = true;
-            this.CancelFindGame.Click += new System.EventHandler(this.CancelFindGame_Click);
+            this.CancelFindGame.Click += new System.EventHandler(this.CancelFindGame_Click_1);
             // 
             // GameCompleteBox
             // 
@@ -287,7 +292,7 @@
             // 
             // QuitGame
             // 
-            this.QuitGame.Location = new System.Drawing.Point(173, 303);
+            this.QuitGame.Location = new System.Drawing.Point(211, 299);
             this.QuitGame.Margin = new System.Windows.Forms.Padding(1);
             this.QuitGame.Name = "QuitGame";
             this.QuitGame.Size = new System.Drawing.Size(82, 21);
@@ -333,7 +338,7 @@
             // 
             // SubmitWordText
             // 
-            this.SubmitWordText.Location = new System.Drawing.Point(216, 272);
+            this.SubmitWordText.Location = new System.Drawing.Point(224, 271);
             this.SubmitWordText.Margin = new System.Windows.Forms.Padding(1);
             this.SubmitWordText.Name = "SubmitWordText";
             this.SubmitWordText.ReadOnly = true;
@@ -342,7 +347,7 @@
             // 
             // submitWordButton
             // 
-            this.submitWordButton.Location = new System.Drawing.Point(125, 271);
+            this.submitWordButton.Location = new System.Drawing.Point(133, 271);
             this.submitWordButton.Margin = new System.Windows.Forms.Padding(1);
             this.submitWordButton.Name = "submitWordButton";
             this.submitWordButton.Size = new System.Drawing.Size(81, 21);
@@ -761,6 +766,13 @@
             this.label6.TabIndex = 0;
             this.label6.Text = "Enter Game";
             // 
+            // helpMePlayBoggleToolStripMenuItem
+            // 
+            this.helpMePlayBoggleToolStripMenuItem.Name = "helpMePlayBoggleToolStripMenuItem";
+            this.helpMePlayBoggleToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.helpMePlayBoggleToolStripMenuItem.Text = "Help Me Play Boggle!";
+            this.helpMePlayBoggleToolStripMenuItem.Click += new System.EventHandler(this.helpMePlayBoggleToolStripMenuItem_Click);
+            // 
             // BoggleWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -842,6 +854,7 @@
         private System.Windows.Forms.Label GameJoinedLabel;
         private System.Windows.Forms.RichTextBox GameCompleteBox;
         private System.Windows.Forms.Button CancelFindGame;
+        private System.Windows.Forms.ToolStripMenuItem helpMePlayBoggleToolStripMenuItem;
     }
 }
 
