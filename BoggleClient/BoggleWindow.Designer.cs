@@ -113,6 +113,7 @@
             // GameBoard
             // 
             this.GameBoard.BackColor = System.Drawing.Color.Cyan;
+            this.GameBoard.Controls.Add(this.CancelFindGame);
             this.GameBoard.Controls.Add(this.GameCompleteBox);
             this.GameBoard.Controls.Add(this.GameJoinedLabel);
             this.GameBoard.Controls.Add(this.GameActiveBox);
@@ -275,7 +276,7 @@
             // 
             // QuitGame
             // 
-            this.QuitGame.Location = new System.Drawing.Point(290, 299);
+            this.QuitGame.Location = new System.Drawing.Point(133, 305);
             this.QuitGame.Margin = new System.Windows.Forms.Padding(2);
             this.QuitGame.Name = "QuitGame";
             this.QuitGame.Size = new System.Drawing.Size(82, 21);
@@ -320,7 +321,7 @@
             // 
             // SubmitWordText
             // 
-            this.SubmitWordText.Location = new System.Drawing.Point(192, 279);
+            this.SubmitWordText.Location = new System.Drawing.Point(221, 278);
             this.SubmitWordText.Margin = new System.Windows.Forms.Padding(2);
             this.SubmitWordText.Name = "SubmitWordText";
             this.SubmitWordText.ReadOnly = true;
@@ -329,7 +330,7 @@
             // 
             // submitWordButton
             // 
-            this.submitWordButton.Location = new System.Drawing.Point(164, 299);
+            this.submitWordButton.Location = new System.Drawing.Point(133, 278);
             this.submitWordButton.Margin = new System.Windows.Forms.Padding(2);
             this.submitWordButton.Name = "submitWordButton";
             this.submitWordButton.Size = new System.Drawing.Size(81, 21);
@@ -696,7 +697,6 @@
             // EnterGamePanel
             // 
             this.EnterGamePanel.BackColor = System.Drawing.Color.Cyan;
-            this.EnterGamePanel.Controls.Add(this.CancelFindGame);
             this.EnterGamePanel.Controls.Add(this.FindGameButton);
             this.EnterGamePanel.Controls.Add(this.label7);
             this.EnterGamePanel.Controls.Add(this.GameDurationTxt);
@@ -710,9 +710,9 @@
             // 
             // CancelFindGame
             // 
-            this.CancelFindGame.Location = new System.Drawing.Point(27, 96);
+            this.CancelFindGame.Location = new System.Drawing.Point(259, 302);
             this.CancelFindGame.Name = "CancelFindGame";
-            this.CancelFindGame.Size = new System.Drawing.Size(73, 27);
+            this.CancelFindGame.Size = new System.Drawing.Size(73, 24);
             this.CancelFindGame.TabIndex = 4;
             this.CancelFindGame.Text = "Cancel Find";
             this.CancelFindGame.UseVisualStyleBackColor = true;

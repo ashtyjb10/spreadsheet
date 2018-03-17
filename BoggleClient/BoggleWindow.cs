@@ -16,9 +16,13 @@ namespace BoggleClient
 
         private int lastSelected = 0;
         private Timer updateTimer = new Timer();
+        private TextBox[] boxArray;
         public BoggleWindow()
         {
             InitializeComponent();
+
+            boxArray = new TextBox[] {letter1, letter2, letter3, letter4, letter5, letter6, letter7,
+                letter8, letter9, letter10, letter11, letter12, letter13, letter14, letter15, letter16};
 
             //Update timer.
             updateTimer.Interval = 1000;
@@ -28,7 +32,6 @@ namespace BoggleClient
             //Check status timer.
             Timer checkStatusTimer = new Timer();
             checkStatusTimer.Interval = 1000;
-            
             checkStatusTimer.Enabled = true;
         }
 
@@ -547,22 +550,10 @@ namespace BoggleClient
         /// </summary>
         private void ResetBoard()
         {
-            letter1.BackColor = Color.White;
-            letter2.BackColor = Color.White;
-            letter3.BackColor = Color.White;
-            letter4.BackColor = Color.White;
-            letter5.BackColor = Color.White;
-            letter6.BackColor = Color.White;
-            letter7.BackColor = Color.White;
-            letter8.BackColor = Color.White;
-            letter9.BackColor = Color.White;
-            letter10.BackColor = Color.White;
-            letter11.BackColor = Color.White;
-            letter12.BackColor = Color.White;
-            letter13.BackColor = Color.White;
-            letter14.BackColor = Color.White;
-            letter15.BackColor = Color.White;
-            letter16.BackColor = Color.White;
+            foreach(TextBox box in this.boxArray)
+            {
+                box.BackColor = Color.White;
+            }
             SubmitWordText.Text = "";
             lastSelected = 0;
 
@@ -584,8 +575,6 @@ namespace BoggleClient
         public void SetBoard(char[] boardArray)
         {
             int iterator = 0;
-            TextBox[] boxArray = new TextBox[] {letter1, letter2, letter3, letter4, letter5, letter6, letter7,
-                letter8, letter9, letter10, letter11, letter12, letter13, letter14, letter15, letter16};
             
             foreach(char setTo in boardArray)
             {
@@ -638,6 +627,7 @@ namespace BoggleClient
             wordsPlayedP2Txt.Enabled = true;
             EnterGamePanel.Enabled = true;
             updateTimer.Enabled = false;
+            ResetBoard();
            
 
         }

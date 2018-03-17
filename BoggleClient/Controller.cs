@@ -15,16 +15,14 @@ namespace BoggleClient
 {
     class Controller
     {
-       
         private IAnalysisView view;
-
         private string baseAddress;
+       
         /// <summary>
         /// The token of the most recently registered user, or "0" if no user
         /// has ever registered
         /// </summary>
         private string userToken;
-
         private string gameID;
         private string clientNickname;
         private string gameState;
@@ -44,6 +42,10 @@ namespace BoggleClient
         /// </summary>
         private CancellationTokenSource tokenSource;
 
+        /// <summary>
+        /// Constructor creates the handles for events.
+        /// </summary>
+        /// <param name="view"></param>
         public Controller(IAnalysisView view)
         {
             this.view = view;
@@ -54,6 +56,9 @@ namespace BoggleClient
             view.tickingTimer += handleTickingTimer;
         }
 
+        /// <summary>
+        /// Handles the timer ticking to check the server.
+        /// </summary>
         private void handleTickingTimer()
         {
             GetGameStatus();
@@ -67,6 +72,12 @@ namespace BoggleClient
             tokenSource.Cancel();
         }
 
+        /// <summary>
+        /// Registers a user with the server given a domain name and a valid nickname.  A user token is returned
+        /// and used to identify the user.
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="nickname"></param>
         public async void Register(String domain, String nickname)
         {
             clientNickname = nickname;
@@ -103,6 +114,11 @@ namespace BoggleClient
             }
         }
 
+        /// <summary>
+        /// Joins a pending game on the server using information passed in by the user of nickname, and game duration.
+        /// Clears all words from both players.  A game ID is given to be used to update the game status.
+        /// </summary>
+        /// <param name="gameDuration"></param>
         public async void JoinGame(String gameDuration)
         {
             try
@@ -112,8 +128,7 @@ namespace BoggleClient
                     dynamic joinGameInfo = new ExpandoObject();
                     joinGameInfo.UserToken = userToken;
                     joinGameInfo.TimeLimit = gameDuration;
-
-
+                    
                     //cancel token
                     tokenSource = new CancellationTokenSource();
                     StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
@@ -135,12 +150,8 @@ namespace BoggleClient
                         //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
                         view.timerEnabled = false;
                         MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
-                        
                     }
-
-
                 }
-
             }
             finally
             {
@@ -148,6 +159,11 @@ namespace BoggleClient
             }
         }
 
+        /// <summary>
+        /// Submits a word from the user to the server.  When the word is submitted, a score for the word is passed back and
+        /// the score of the player is updated.
+        /// </summary>
+        /// <param name="word"></param>
         public async void PlayWord(String word)
         {
             try
@@ -189,21 +205,22 @@ namespace BoggleClient
             }
         }
 
+        /// <summary>
+        /// Used to update the status of the game.  Status inclides time remaining, player scores, and state of the game.
+        /// Calles the update method for the board after all the information is received from the server.
+        /// </summary>
         public async void GetGameStatus()
         {
             try
             {
                 using (HttpClient client = CreateClient(baseAddress, ""))
                 {
-
                     tokenSource = new CancellationTokenSource();
 
                     //StringContent content = new StringContent(JsonConvert.SerializeObject(joinGameInfo), Encoding.UTF8, "application/json");
                     //HttpResponseMessage response = await client.GetAsync("games/" + gameID);
                     HttpResponseMessage response = await client.GetAsync("games/" + gameID); //*****************************************************  add + gameID
-
-
-
+                    
                     if (response.IsSuccessStatusCode)
                     {
                         String result = await response.Content.ReadAsStringAsync();
@@ -213,6 +230,8 @@ namespace BoggleClient
                         if (gameState == "pending")
                         {
                             view.ViewPendingBox(true);
+                            view.
+                            
                         }
                         else
                         {
@@ -228,7 +247,7 @@ namespace BoggleClient
                                  p1Nickname = player1.Nickname;
                                  p1Score = player1.Score;
 
-
+                                //If the game is active, the scores of the players is updates.
                                 if (gameState == "active")
                                 {
                                     view.ViewPendingBox(false);
@@ -240,6 +259,7 @@ namespace BoggleClient
 
                                     //change the game to active!
                                 }
+                                //If the game is complete, the words of both players is displayed.
                                 else if (gameState == "completed")
                                 {
                                     Console.WriteLine("Complete");
@@ -265,7 +285,6 @@ namespace BoggleClient
                                         wordsFromP2.Add(wordScore);
                                     }
                                 }
-                                
                             }
                             else
                             {
@@ -274,19 +293,15 @@ namespace BoggleClient
                                 p1Score = deserialized.Score;
                                 p2Score = deserialized.Score;
                             }
-
-                          
                         }
-
+                        //Ensures that the board is updated with each call.
                         UpdateBoardLong();
-                
                     }
                     else
                     {
                         MessageBox.Show("Error getting game info " + response.StatusCode + "\n" + response.ReasonPhrase);
 
                     }
-
                 }
             }
             finally
@@ -304,7 +319,6 @@ namespace BoggleClient
             if(gameBoard != null)
             {
                 view.SetBoard(gameBoard.ToArray());
-
             }
 
             //Update player Names

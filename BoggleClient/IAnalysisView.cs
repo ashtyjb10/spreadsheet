@@ -9,16 +9,10 @@ namespace BoggleClient
     public interface IAnalysisView
     {
         bool IsRegisteredUser { get; set; }
-       
-
-        
-
         bool timerEnabled { get; set; }
         void setUserNames(string player1, string player2);
-        void EnableControls(bool enabled);
         void setScores(string player1, string player2);
         void setTime(string timeRemaining);
-
         event Action<string, string> RegisterUser;
         event Action<string> DesiredGameDuration;
         event Action<string> ScoreWord;
@@ -31,6 +25,7 @@ namespace BoggleClient
         void ViewCompletedBox(bool visible);
         void setPlayer1WordsPlayed(HashSet<string> wordsPlayed);
         void setPlayer2WordsPlayed(HashSet<string> wordsPlayed);
+        
 
     }
 }
