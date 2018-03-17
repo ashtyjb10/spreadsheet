@@ -661,5 +661,12 @@ namespace BoggleClient
                 wordsPlayedP2Txt.Text = wordsPlayedP2Txt.Text + wordScore + Environment.NewLine;
             }
         }
+
+        private void CancelFindGame_Click(object sender, EventArgs e)
+        {
+            CancelJoinGame();
+        }
+
+        event Action CancelJoinGame;
     }
 }
