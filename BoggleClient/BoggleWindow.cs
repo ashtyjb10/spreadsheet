@@ -109,6 +109,7 @@ namespace BoggleClient
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
+
         }
 
         private void FindGameButton_Click(object sender, EventArgs e)

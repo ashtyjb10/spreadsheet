@@ -324,7 +324,7 @@ namespace BoggleClient
                 {
                     view.timerEnabled = false;
                     MessageBox.Show("Game Id Invalid please quit and join a new game!", "Game Id Invalid", MessageBoxButtons.OK);
-                    GameIdInvalid();
+                    view.GameIdInvalid();
 
                 }
             }
