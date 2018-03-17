@@ -13,10 +13,17 @@ namespace BoggleClient
     public partial class BoggleWindow : Form, IAnalysisView
     {
         
-
+        /// <summary>
+        /// Private global variables
+        /// </summary>
         private int lastSelected = 0;
         private Timer updateTimer = new Timer();
         private TextBox[] boxArray;
+        private int gameFirstActive = 0;
+
+        /// <summary>
+        /// Constructor that sets up the timer and each of the letter boxes to be updated.
+        /// </summary>
         public BoggleWindow()
         {
             InitializeComponent();
@@ -35,31 +42,38 @@ namespace BoggleClient
             checkStatusTimer.Enabled = true;
         }
 
+        /// <summary>
+        /// Prompts the timer ticking in the controller.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timerTick(object sender, EventArgs e)
         {
             TickingTimer();
         }
 
+        /// <summary>
+        /// Actions to be triggered.
+        /// </summary>
         public event Action<string, string> RegisterUser;
         public event Action<string> DesiredGameDuration;
         public event Action<string> ScoreWord;
         public event Action TickingTimer;
+        public event Action CancelJoinGame;
+        public event Action QuitGameClicked;
 
+        
         public void echo()
         {
             this.letter1.AppendText("test");
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        public void EnableControls(bool enabled)
-        {
-           
-        }
-
+        /// <summary>
+        /// Registers a user with the server provided there is correct information.  If the information is
+        /// incorrect a proper message is displayed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegisterButton_Click(object sender, EventArgs e)
         {
             IsRegisteredUser = false;
@@ -77,6 +91,9 @@ namespace BoggleClient
             CancelButton.Enabled = false;
         }
 
+        /// <summary>
+        /// Promprs the registration of the user in the controller.
+        /// </summary>
         public void RegisteredUser()
         {
             if (IsRegisteredUser)
@@ -92,6 +109,9 @@ namespace BoggleClient
 
         }
 
+        /// <summary>
+        /// Prompts the joinning of a game.
+        /// </summary>
         public void GameJoined()
         {
             EnterGamePanel.Enabled = false;
@@ -102,6 +122,10 @@ namespace BoggleClient
             //GameActiveBox.Visible = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="visible"></param>
         public void ViewPendingBox(bool visible)
         {
             GamePendingBox.Visible = visible;
@@ -594,33 +618,68 @@ namespace BoggleClient
             }
         }
 
+        /// <summary>
+        /// Sets the usernames of each player in the game.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         public void setUserNames(string player1, string player2)
         {
             PlayerOneName.Text = player1;
             PlayerTwoName.Text = player2;
         }
 
+        /// <summary>
+        /// Sets the scores of each player in the game.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         public void setScores(string player1, string player2)
         {
             PlayerOneScoreBox.Text = player1;
             PlayerTwoScoreBox.Text = player2;
         }
 
+        /// <summary>
+        /// Sets the time remaining in the game.
+        /// </summary>
+        /// <param name="timeRemaining"></param>
         public void setTime(string timeRemaining)
         {
             TimeRemainingText.Text = timeRemaining;
         }
 
+        /// <summary>
+        /// Sumbits a word to the server and resets the letter board for new input.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void submitWordButton_Click(object sender, EventArgs e)
         {
             //only if game is active.
             ScoreWord(SubmitWordText.Text);
             ResetLetterBoard();
         }
+
+        /// <summary>
+        /// Sets the active box visible.  If this is the first itteration of an active baord, the 
+        /// letter board is cleared.
+        /// </summary>
+        /// <param name="visible"></param>
         public void ViewActiveBox(bool visible)
         {
             GameActiveBox.Visible = visible;
+            if(gameFirstActive <= 0)
+            {
+                ResetLetterBoard();
+            }
         }
+
+        /// <summary>
+        /// Shows the completed game box.  Sets the windows of the words that palyers played to be enabled
+        /// to scroll through, stops the timer from prompting the server for updates and updating the board.
+        /// </summary>
+        /// <param name="visible"></param>
         public void ViewCompletedBox(bool visible)
         {
             GameCompleteBox.Visible = visible;
@@ -631,11 +690,12 @@ namespace BoggleClient
             EnterGamePanel.Enabled = true;
             updateTimer.Enabled = false;
             ResetLetterBoard();
-            
-           
-
         }
 
+        /// <summary>
+        /// Sets the player 1 words played at the end of the game.
+        /// </summary>
+        /// <param name="wordsPlayed"></param>
         public void setPlayer1WordsPlayed(HashSet<string> wordsPlayed)
         {
             wordsPlayedP1Txt.Text = "";
@@ -646,6 +706,10 @@ namespace BoggleClient
             }
         }
 
+        /// <summary>
+        /// Sets the player two words played at the end of the game.
+        /// </summary>
+        /// <param name="wordsPlayed"></param>
         public void setPlayer2WordsPlayed(HashSet<string> wordsPlayed)
         {
             wordsPlayedP2Txt.Text = "";
@@ -656,7 +720,10 @@ namespace BoggleClient
             }
         }
 
-      
+        /// <summary>
+        /// Leaves a pending game before it begins.  Resets the letter board.  Time is disabled to stop prompting
+        /// the server.
+        /// </summary>
         public void JoinGameCanceled()
         {
             GamePendingBox.Visible = false;
@@ -665,23 +732,32 @@ namespace BoggleClient
             updateTimer.Enabled = false;
             ResetBoard();
         }
+        /// <summary>
+        /// Handles the invalid user token.
+        /// </summary>
         public void InvalidUserToken()
         {
             EnterGamePanel.Enabled = false;
             RegistrationPanel.Enabled = true;
             UsernameText.Text = "";
         }
+        /// <summary>
+        /// Handles the game invalid token
+        /// </summary>
         public void GameIdInvalid()
         {
             RegistrationPanel.Enabled = true;
             GameDurationTxt.Text = "";
             EnterGamePanel.Enabled = false;
             GameBoard.Enabled = false;
-
         }
-
-        public event Action CancelJoinGame;
-
+        
+        /// <summary>
+        /// Quits an active game before the game is completed.  Resets the entire game board to default settings.
+        /// shows a message that the game has been quit.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuitGame_Click(object sender, EventArgs e)
         {
             GameBoard.Enabled = false;
@@ -692,8 +768,10 @@ namespace BoggleClient
             MessageBox.Show("Game has been quit!", "Quit Game", MessageBoxButtons.OK);
         }
 
-        public event Action QuitGameClicked;
-
+        
+        /// <summary>
+        /// Resets the entire game board back to defaul settings.
+        /// </summary>
         private void ResetBoard()
         {
             PlayerOneName.Text = "Player1";
@@ -710,11 +788,21 @@ namespace BoggleClient
 
         }
 
+        /// <summary>
+        /// Prompts the cancel action handler in the controller to handle the cancel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CancelFindGame_Click_1(object sender, EventArgs e)
         {
             CancelJoinGame();
         }
 
+        /// <summary>
+        /// Help window used to teach the user how to use the client and play boggle.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void helpMePlayBoggleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("To use this Boggle Client you must first provide the domain name of a Boggle Server!" + "\r" +

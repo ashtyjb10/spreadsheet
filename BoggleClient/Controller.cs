@@ -291,6 +291,7 @@ namespace BoggleClient
                             //If the game is active, the scores of the players is updates.
                             if (gameState == "active")
                             {
+                                
                                 view.ViewPendingBox(false);
                                 view.ViewActiveBox(true);
                                 dynamic player2 = deserialized.Player2;

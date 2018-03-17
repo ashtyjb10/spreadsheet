@@ -322,7 +322,6 @@ namespace BoggleClient
             this.label1.Size = new System.Drawing.Size(127, 16);
             this.label1.TabIndex = 32;
             this.label1.Text = "TIME REMAINING:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // wordsPlayedP2Txt
             // 
