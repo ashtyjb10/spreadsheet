@@ -16,7 +16,7 @@ namespace BoggleClient
         event Action<string, string> RegisterUser;
         event Action<string> DesiredGameDuration;
         event Action<string> ScoreWord;
-        event Action tickingTimer;
+        event Action TickingTimer;
         event Action CancelJoinGame;
 
         void RegisteredUser();

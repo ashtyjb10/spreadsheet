@@ -51,14 +51,16 @@ namespace BoggleClient
             view.RegisterUser += Register;
             view.DesiredGameDuration += JoinGame;
             view.ScoreWord += PlayWord;
-            view.tickingTimer += handleTickingTimer;
-            view.CancelJoinGame += handleCancelJoin;
+            view.TickingTimer += HandleTickingTimer;
+            view.CancelJoinGame += HandleCancelJoin;
         }
+
+        
 
         /// <summary>
         /// Handles the timer ticking to check the server.
         /// </summary>
-        private void handleTickingTimer()
+        private void HandleTickingTimer()
         {
             GetGameStatus();
         }
@@ -167,7 +169,7 @@ namespace BoggleClient
             }
         }
 
-        public async void handleCancelJoin()
+        public async void HandleCancelJoin()
         {
             try
             {
@@ -294,7 +296,6 @@ namespace BoggleClient
                                 //If the game is complete, the words of both players is displayed.
                                 else if (gameState == "completed")
                                 {
-                                    Console.WriteLine("Complete");
                                     view.ViewActiveBox(false);
                                     view.ViewCompletedBox(true);
                                     var wordsPlayedP1 =  player1.WordsPlayed;
@@ -303,8 +304,6 @@ namespace BoggleClient
                                         string wordScore = obj.Word + "... ";
                                         wordScore += obj.Score;
                                         wordsFromP1.Add(wordScore);
-                                        
-                                        
                                     }
                                     dynamic player2 = deserialized.Player2;
                                     p2Nickname = player2.Nickname;
@@ -365,8 +364,6 @@ namespace BoggleClient
             //Update words played
             view.setPlayer2WordsPlayed(wordsFromP2);
             view.setPlayer1WordsPlayed(wordsFromP1);
-            
-
         }
 
         private static HttpClient CreateClient(string baseAddress, string end)

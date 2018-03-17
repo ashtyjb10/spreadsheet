@@ -37,13 +37,13 @@ namespace BoggleClient
 
         private void timerTick(object sender, EventArgs e)
         {
-            tickingTimer();
+            TickingTimer();
         }
 
         public event Action<string, string> RegisterUser;
         public event Action<string> DesiredGameDuration;
         public event Action<string> ScoreWord;
-        public event Action tickingTimer;
+        public event Action TickingTimer;
 
         public void echo()
         {
@@ -661,5 +661,14 @@ namespace BoggleClient
         }
 
         public event Action CancelJoinGame;
+
+        private void QuitGame_Click(object sender, EventArgs e)
+        {
+            GameBoard.Enabled = false;
+            EnterGamePanel.Enabled = false;
+            RegistrationPanel.Enabled = true;
+            updateTimer.Enabled = false;
+            TimeRemainingText.Text = "";
+        }
     }
 }
