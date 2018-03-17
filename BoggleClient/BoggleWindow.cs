@@ -124,6 +124,8 @@ namespace BoggleClient
                 updateTimer.Enabled = true;
                 updateTimer.Start();
                 GameCompleteBox.Visible = false;
+                PlayerOneScoreBox.Text = "";
+                PlayerTwoScoreBox.Text = "";
             }
             // GameDuraton = 
         }
@@ -628,6 +630,7 @@ namespace BoggleClient
             EnterGamePanel.Enabled = true;
             updateTimer.Enabled = false;
             ResetBoard();
+            
            
 
         }
@@ -657,6 +660,6 @@ namespace BoggleClient
             CancelJoinGame();
         }
 
-        event Action CancelJoinGame;
+        public event Action CancelJoinGame;
     }
 }

@@ -262,7 +262,7 @@ namespace BoggleClient
                         if (gameState == "pending")
                         {
                             view.ViewPendingBox(true);
-                            view.
+                            
                             
                         }
                         else
