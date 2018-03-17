@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BoggleClient
@@ -53,6 +54,7 @@ namespace BoggleClient
             view.ScoreWord += PlayWord;
             view.tickingTimer += handleTickingTimer;
             view.CancelJoinGame += handleCancelJoin;
+            view.CancelRegisterButtonPressed += Cancel;
         }
 
         /// <summary>
@@ -79,37 +81,46 @@ namespace BoggleClient
         /// <param name="nickname"></param>
         public async void Register(String domain, String nickname)
         {
+            
             clientNickname = nickname;
             baseAddress = domain + "/BoggleService.svc/";
             using (HttpClient client = CreateClient(baseAddress, "users"))
             {
-                dynamic users = new ExpandoObject();
-                users.Nickname = nickname;
-
-                //cancel token
-                tokenSource = new CancellationTokenSource();
-                StringContent content = new StringContent(JsonConvert.SerializeObject(users), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync("users", content, tokenSource.Token);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    String result = await response.Content.ReadAsStringAsync();
-                    dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
-                    userToken = deserialized.UserToken;
-                    view.IsRegisteredUser = true;
-                    view.RegisteredUser();
-                }
-                else
-                {
-                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    dynamic users = new ExpandoObject();
+                    users.Nickname = nickname;
+
+                    //cancel token
+                    tokenSource = new CancellationTokenSource();
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(users), Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync("users", content, tokenSource.Token);
+
+                    if (response.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("Error: 404 not found try another domain name.", "Not Found", MessageBoxButtons.OK);
+                        String result = await response.Content.ReadAsStringAsync();
+                        dynamic deserialized = JsonConvert.DeserializeObject<object>(result);
+                        userToken = deserialized.UserToken;
+                        view.IsRegisteredUser = true;
+                        view.RegisteredUser();
                     }
                     else
                     {
-                        MessageBox.Show("Error registering Username either null or longer than 50 characters: ", "Registraion Error",
-                            MessageBoxButtons.OK);
+                        if (response.StatusCode == HttpStatusCode.NotFound)
+                        {
+                            MessageBox.Show("Error: 404 not found try another domain name.", "Not Found", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error registering Username either null or longer than 50 characters: ", "Registraion Error",
+                                MessageBoxButtons.OK);
+                        }
                     }
+                }
+                catch (TaskCanceledException)
+                {
+                    MessageBox.Show("Cancel Succeeded!", "Cancel Register", MessageBoxButtons.OK);
+                    view.RegistrationCanceled();
                 }
             }
         }
