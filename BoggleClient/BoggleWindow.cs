@@ -681,6 +681,7 @@ namespace BoggleClient
             {
                 ResetLetterBoard();
             }
+            gameFirstActive++;
         }
 
         /// <summary>
