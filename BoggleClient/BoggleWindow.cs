@@ -659,6 +659,12 @@ namespace BoggleClient
         {
             CancelJoinGame();
         }
+        public void JoinGameCanceled()
+        {
+            GamePendingBox.Visible = false;
+            GameBoard.Enabled = false;
+            EnterGamePanel.Enabled = true;
+        }
 
         public event Action CancelJoinGame;
 

@@ -183,7 +183,8 @@ namespace BoggleClient
 
                     if (response.IsSuccessStatusCode)
                     {
-                        Console.WriteLine("yelp!");
+                        MessageBox.Show("Cancel Game Succeeded!", "Cancel Game", MessageBoxButtons.OK);
+                        view.JoinGameCanceled();
                     }
                 }
             }
