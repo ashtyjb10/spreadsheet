@@ -58,11 +58,18 @@ namespace BoggleClient
             view.CancelRegisterButtonPressed += Cancel;
         }
 
+
+        /// <summary>
+        /// Handle quit game.
+        /// </summary>
         private void HandleQuitGameClicked()
         {
             NewGameReset();
         }
 
+        /// <summary>
+        /// reset global variables.
+        /// </summary>
         private void NewGameReset()
         {
             p1Nickname = "Player 1";
@@ -252,9 +259,16 @@ namespace BoggleClient
                 {
                     if (response.StatusCode == HttpStatusCode.Conflict)
                     {
+                        MessageBox.Show("Word cannot be played game is not active.", "Cannot Play Word", MessageBoxButtons.OK);
                         GetGameStatus();
                     }
-                    //MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
+                    else
+                    {
+                        //if the word is not acceptable.
+                        MessageBox.Show("If Word is null or empty or longer than 30 characters when " +
+                            "trimmed, or if GameID or UserToken is invalid. If error persists quit game and start a new."
+                            , "Error Playing word", MessageBoxButtons.OK);
+                    }
                 }
             }
 
