@@ -5,10 +5,8 @@ using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BoggleClient
@@ -54,6 +52,7 @@ namespace BoggleClient
             view.DesiredGameDuration += JoinGame;
             view.ScoreWord += PlayWord;
             view.tickingTimer += handleTickingTimer;
+            view.CancelJoinGame += handleCancelJoin;
         }
 
         /// <summary>
@@ -110,7 +109,7 @@ namespace BoggleClient
             }
             finally
             {
-               // view.EnableControls(true);
+                // view.EnableControls(true);
             }
         }
 
@@ -123,7 +122,7 @@ namespace BoggleClient
         {
             try
             {
-                using (HttpClient client = CreateClient( baseAddress, ""))
+                using (HttpClient client = CreateClient(baseAddress, ""))
                 {
                     dynamic joinGameInfo = new ExpandoObject();
                     joinGameInfo.UserToken = userToken;
@@ -149,14 +148,47 @@ namespace BoggleClient
                     {
                         //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
                         view.timerEnabled = false;
+
+                        //if 403 show bad time
                         MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
+                        //if 409 send back to reg window.
+
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
+            finally
+            {
+
+            }
+        }
+
+        public async void handleCancelJoin()
+        {
+            try
+            {
+                using (HttpClient client = CreateClient(baseAddress, ""))
+                {
+                    dynamic characteristics = new ExpandoObject();
+                    characteristics.UserToken = userToken;
+
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PutAsync("games", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("yelp!");
                     }
                 }
             }
             finally
             {
-
             }
+
         }
 
         /// <summary>
