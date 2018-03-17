@@ -199,7 +199,10 @@ namespace BoggleClient
                 }
             }
         }
-
+        /// <summary>
+        /// Handle cancel token for the join button being pressed.  If the cancel button is pressed,
+        /// the game goes here to reset.
+        /// </summary>
         public async void HandleCancelJoin()
         {
             using (HttpClient client = CreateClient(baseAddress, ""))
@@ -233,11 +236,8 @@ namespace BoggleClient
                 characteristics.UserToken = userToken;
                 characteristics.Word = word;
 
-                //tokenSource = new CancellationTokenSource();
-
                 StringContent content = new StringContent(JsonConvert.SerializeObject(characteristics), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PutAsync("games/" + gameID, content);
-
 
                 if (response.IsSuccessStatusCode)
                 {
