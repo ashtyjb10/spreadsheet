@@ -665,6 +665,20 @@ namespace BoggleClient
             GameBoard.Enabled = false;
             EnterGamePanel.Enabled = true;
         }
+        public void InvalidUserToken()
+        {
+            EnterGamePanel.Enabled = false;
+            RegistrationPanel.Enabled = true;
+            UsernameText.Text = "";
+        }
+        public void GameIdInvalid()
+        {
+            RegistrationPanel.Enabled = true;
+            GameDurationTxt.Text = "";
+            EnterGamePanel.Enabled = false;
+            GameBoard.Enabled = false;
+
+        }
 
         public event Action CancelJoinGame;
     }
