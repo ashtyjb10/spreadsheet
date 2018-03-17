@@ -290,9 +290,9 @@
             this.TimeRemainingText.Margin = new System.Windows.Forms.Padding(2);
             this.TimeRemainingText.Name = "TimeRemainingText";
             this.TimeRemainingText.ReadOnly = true;
-            this.TimeRemainingText.Size = new System.Drawing.Size(82, 52);
+            this.TimeRemainingText.Size = new System.Drawing.Size(93, 52);
             this.TimeRemainingText.TabIndex = 33;
-            this.TimeRemainingText.Text = "1:20";
+            this.TimeRemainingText.Text = "000";
             // 
             // label1
             // 
@@ -306,13 +306,13 @@
             this.label1.Text = "TIME REMAINING:";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // WordsPlayedP2Text
+            // wordsPlayedP2Txt
             // 
             this.wordsPlayedP2Txt.AcceptsReturn = true;
             this.wordsPlayedP2Txt.Location = new System.Drawing.Point(392, 63);
             this.wordsPlayedP2Txt.Margin = new System.Windows.Forms.Padding(2);
             this.wordsPlayedP2Txt.Multiline = true;
-            this.wordsPlayedP2Txt.Name = "WordsPlayedP2Text";
+            this.wordsPlayedP2Txt.Name = "wordsPlayedP2Txt";
             this.wordsPlayedP2Txt.ReadOnly = true;
             this.wordsPlayedP2Txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.wordsPlayedP2Txt.Size = new System.Drawing.Size(134, 165);
@@ -350,7 +350,7 @@
             this.letter16.ReadOnly = true;
             this.letter16.Size = new System.Drawing.Size(52, 54);
             this.letter16.TabIndex = 28;
-            this.letter16.Text = "QU";
+            this.letter16.Text = "-";
             this.letter16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter16.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourFourTxt_MouseDown);
             // 
@@ -366,7 +366,7 @@
             this.letter15.ReadOnly = true;
             this.letter15.Size = new System.Drawing.Size(52, 54);
             this.letter15.TabIndex = 27;
-            this.letter15.Text = "QU";
+            this.letter15.Text = "-";
             this.letter15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter15.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourThreeTxt_MouseDown);
             // 
@@ -382,7 +382,7 @@
             this.letter14.ReadOnly = true;
             this.letter14.Size = new System.Drawing.Size(52, 54);
             this.letter14.TabIndex = 26;
-            this.letter14.Text = "QU";
+            this.letter14.Text = "-";
             this.letter14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter14.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourTwoTxt_MouseDown);
             // 
@@ -398,7 +398,7 @@
             this.letter13.ReadOnly = true;
             this.letter13.Size = new System.Drawing.Size(52, 54);
             this.letter13.TabIndex = 25;
-            this.letter13.Text = "QU";
+            this.letter13.Text = "-";
             this.letter13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter13.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fourOneTxt_MouseDown);
             // 
@@ -414,7 +414,7 @@
             this.letter12.ReadOnly = true;
             this.letter12.Size = new System.Drawing.Size(52, 54);
             this.letter12.TabIndex = 24;
-            this.letter12.Text = "QU";
+            this.letter12.Text = "-";
             this.letter12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter12.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeFourTxt_MouseDown);
             // 
@@ -430,7 +430,7 @@
             this.letter11.ReadOnly = true;
             this.letter11.Size = new System.Drawing.Size(52, 54);
             this.letter11.TabIndex = 23;
-            this.letter11.Text = "QU";
+            this.letter11.Text = "-";
             this.letter11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter11.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeThreeTxt_MouseDown);
             // 
@@ -446,7 +446,7 @@
             this.letter10.ReadOnly = true;
             this.letter10.Size = new System.Drawing.Size(52, 54);
             this.letter10.TabIndex = 22;
-            this.letter10.Text = "QU";
+            this.letter10.Text = "-";
             this.letter10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter10.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeTwoTxt_MouseDown);
             // 
@@ -462,7 +462,7 @@
             this.letter9.ReadOnly = true;
             this.letter9.Size = new System.Drawing.Size(52, 54);
             this.letter9.TabIndex = 3;
-            this.letter9.Text = "QU";
+            this.letter9.Text = "-";
             this.letter9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter9.MouseDown += new System.Windows.Forms.MouseEventHandler(this.threeOneTxt_MouseDown);
             // 
@@ -478,7 +478,7 @@
             this.letter8.ReadOnly = true;
             this.letter8.Size = new System.Drawing.Size(52, 54);
             this.letter8.TabIndex = 21;
-            this.letter8.Text = "QU";
+            this.letter8.Text = "-";
             this.letter8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter8.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoFourTxt_MouseDown);
             // 
@@ -494,7 +494,7 @@
             this.letter7.ReadOnly = true;
             this.letter7.Size = new System.Drawing.Size(52, 54);
             this.letter7.TabIndex = 20;
-            this.letter7.Text = "QU";
+            this.letter7.Text = "-";
             this.letter7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter7.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoThreeTxt_MouseDown);
             // 
@@ -510,7 +510,7 @@
             this.letter6.ReadOnly = true;
             this.letter6.Size = new System.Drawing.Size(52, 54);
             this.letter6.TabIndex = 19;
-            this.letter6.Text = "QU";
+            this.letter6.Text = "-";
             this.letter6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoTwoTxt_MouseDown);
             // 
@@ -526,7 +526,7 @@
             this.letter5.ReadOnly = true;
             this.letter5.Size = new System.Drawing.Size(52, 54);
             this.letter5.TabIndex = 18;
-            this.letter5.Text = "QU";
+            this.letter5.Text = "-";
             this.letter5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.twoOneTxt_MouseDown);
             // 
@@ -542,7 +542,7 @@
             this.letter4.ReadOnly = true;
             this.letter4.Size = new System.Drawing.Size(52, 54);
             this.letter4.TabIndex = 17;
-            this.letter4.Text = "QU";
+            this.letter4.Text = "-";
             this.letter4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneFourTxt_MouseDown);
             // 
@@ -558,7 +558,7 @@
             this.letter3.ReadOnly = true;
             this.letter3.Size = new System.Drawing.Size(52, 54);
             this.letter3.TabIndex = 3;
-            this.letter3.Text = "QU";
+            this.letter3.Text = "-";
             this.letter3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneThreetxt_MouseDown);
             // 
@@ -574,7 +574,7 @@
             this.letter2.ReadOnly = true;
             this.letter2.Size = new System.Drawing.Size(52, 54);
             this.letter2.TabIndex = 16;
-            this.letter2.Text = "QU";
+            this.letter2.Text = "-";
             this.letter2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneTwoTxt_MouseDown);
             // 
@@ -590,7 +590,7 @@
             this.letter1.ReadOnly = true;
             this.letter1.Size = new System.Drawing.Size(52, 54);
             this.letter1.TabIndex = 0;
-            this.letter1.Text = "QU";
+            this.letter1.Text = "-";
             this.letter1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.letter1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.oneOneTxt_MouseDown);
             // 

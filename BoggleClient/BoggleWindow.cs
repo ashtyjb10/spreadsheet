@@ -21,15 +21,32 @@ namespace BoggleClient
         public string statsBoard { get => statsBoard; set => statsBoard = value; }
 
         private int lastSelected = 0;
-
+        private Timer updateTimer = new Timer();
         public BoggleWindow()
         {
             InitializeComponent();
+
+            //Update timer.
+            updateTimer.Interval = 1000;
+            updateTimer.Tick += new EventHandler(timerTick);
+            
+            
+            //Check status timer.
+            Timer checkStatusTimer = new Timer();
+            checkStatusTimer.Interval = 1000;
+            
+            checkStatusTimer.Enabled = true;
+        }
+
+        private void timerTick(object sender, EventArgs e)
+        {
+            tickingTimer();
         }
 
         public event Action<string, string> RegisterUser;
         public event Action<string> DesiredGameDuration;
         public event Action<string> ScoreWord;
+        public event Action tickingTimer;
 
         public void echo()
         {
@@ -107,6 +124,9 @@ namespace BoggleClient
             else
             {
                 DesiredGameDuration(GameDurationTxt.Text);
+                updateTimer.Enabled = true;
+                updateTimer.Start();
+                GameCompleteBox.Visible = false;
             }
             // GameDuraton = 
         }
@@ -116,6 +136,9 @@ namespace BoggleClient
         /// </summary>
         public bool IsRegisteredUser { get; set; }
         public string GameDuraton { get; set; }
+
+
+        public bool timerEnabled { get => updateTimer.Enabled; set => updateTimer.Enabled = value; }
 
         /// <summary>
         /// When the box is clicked, visibily shows that box has been selected and makes the text
@@ -619,7 +642,9 @@ namespace BoggleClient
             GameBoard.Enabled = false;
             wordsPlayedP1Txt.Enabled = true;
             wordsPlayedP2Txt.Enabled = true;
-
+            EnterGamePanel.Enabled = true;
+            updateTimer.Enabled = false;
+           
 
         }
 
@@ -629,7 +654,7 @@ namespace BoggleClient
 
             foreach(string wordScore in wordsPlayed)
             {
-                wordsPlayedP1Txt.Text = wordsPlayedP1Txt.Text + wordScore + " \r";
+                wordsPlayedP1Txt.Text = wordsPlayedP1Txt.Text + wordScore + Environment.NewLine;
             }
         }
 
@@ -639,7 +664,7 @@ namespace BoggleClient
 
             foreach (string wordScore in wordsPlayed)
             {
-                wordsPlayedP2Txt.Text = wordsPlayedP2Txt.Text + wordScore + " \r";
+                wordsPlayedP2Txt.Text = wordsPlayedP2Txt.Text + wordScore + Environment.NewLine;
             }
         }
     }

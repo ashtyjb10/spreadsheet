@@ -18,6 +18,9 @@ namespace BoggleClient
         string statsBoard { get; set; }
         string GameDuraton { get; set; }
 
+        
+
+        bool timerEnabled { get; set; }
         void setUserNames(string player1, string player2);
         void EnableControls(bool enabled);
         void setScores(string player1, string player2);
@@ -26,6 +29,7 @@ namespace BoggleClient
         event Action<string, string> RegisterUser;
         event Action<string> DesiredGameDuration;
         event Action<string> ScoreWord;
+        event Action tickingTimer;
         void RegisteredUser();
         void GameJoined();
         void ViewPendingBox(bool visable);

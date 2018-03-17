@@ -51,6 +51,12 @@ namespace BoggleClient
             view.RegisterUser += Register;
             view.DesiredGameDuration += JoinGame;
             view.ScoreWord += PlayWord;
+            view.tickingTimer += handleTickingTimer;
+        }
+
+        private void handleTickingTimer()
+        {
+            GetGameStatus();
         }
 
         /// <summary>
@@ -121,10 +127,15 @@ namespace BoggleClient
                         //Console.WriteLine(gameID);
                         GetGameStatus();
                         view.GameJoined();
+                        wordsFromP1 = new HashSet<string>();
+                        wordsFromP2 = new HashSet<string>();
                     }
                     else
                     {
+                        //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
+                        view.timerEnabled = false;
                         MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
+                        
                     }
 
 
@@ -303,26 +314,12 @@ namespace BoggleClient
             view.setScores(p1Score, p2Score);
 
             //Update time left
-            view.setTime(timeLimit);
+            view.setTime(timeLeft);
 
             //Update words played
-            if (gameState == "active")
-            {
-                if (clientNickname == p1Nickname)
-                {
-                   
-                    view.setPlayer2WordsPlayed(wordsFromP2);
-                }
-                else
-                {
-                    view.setPlayer1WordsPlayed(wordsFromP1);
-                }
-            }
-            else
-            {
-                view.setPlayer2WordsPlayed(wordsFromP2);
-                view.setPlayer1WordsPlayed(wordsFromP1);
-            }
+            view.setPlayer2WordsPlayed(wordsFromP2);
+            view.setPlayer1WordsPlayed(wordsFromP1);
+            
 
         }
 
