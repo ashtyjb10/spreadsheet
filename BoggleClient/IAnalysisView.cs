@@ -9,15 +9,11 @@ namespace BoggleClient
     public interface IAnalysisView
     {
         bool IsRegisteredUser { get; set; }
-        string NickName { get;  set; }
-        string baseAddress { get; set; }
-        string wordToSubmit { get; set; }
-        string timeRemaining { get; set; }
-        string score { get; set; }
-        string board { get; set; }
-        string statsBoard { get; set; }
-        string GameDuraton { get; set; }
+       
 
+        
+
+        bool timerEnabled { get; set; }
         void setUserNames(string player1, string player2);
         void EnableControls(bool enabled);
         void setScores(string player1, string player2);
@@ -26,13 +22,15 @@ namespace BoggleClient
         event Action<string, string> RegisterUser;
         event Action<string> DesiredGameDuration;
         event Action<string> ScoreWord;
+        event Action tickingTimer;
         void RegisteredUser();
         void GameJoined();
         void ViewPendingBox(bool visable);
-        void setBoard(char[] boardArray);
+        void SetBoard(char[] boardArray);
         void ViewActiveBox(bool visible);
         void ViewCompletedBox(bool visible);
-        void displayWordsPlayed(HashSet<string> p1, HashSet<string> p2);
+        void setPlayer1WordsPlayed(HashSet<string> wordsPlayed);
+        void setPlayer2WordsPlayed(HashSet<string> wordsPlayed);
 
     }
 }

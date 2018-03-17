@@ -12,24 +12,35 @@ namespace BoggleClient
 {
     public partial class BoggleWindow : Form, IAnalysisView
     {
-        public string NickName { get => NickName; set => NickName = value; }
-        public string baseAddress { get => baseAddress; set => baseAddress = value; }
-        public string wordToSubmit { get => wordToSubmit; set => wordToSubmit = value; }
-        public string timeRemaining { get => timeRemaining; set => timeRemaining = value; }
-        public string score { get => score; set => score = value; }
-        public string board { get => board; set => board = value; }
-        public string statsBoard { get => statsBoard; set => statsBoard = value; }
+        
 
         private int lastSelected = 0;
-
+        private Timer updateTimer = new Timer();
         public BoggleWindow()
         {
             InitializeComponent();
+
+            //Update timer.
+            updateTimer.Interval = 1000;
+            updateTimer.Tick += new EventHandler(timerTick);
+            
+            
+            //Check status timer.
+            Timer checkStatusTimer = new Timer();
+            checkStatusTimer.Interval = 1000;
+            
+            checkStatusTimer.Enabled = true;
+        }
+
+        private void timerTick(object sender, EventArgs e)
+        {
+            tickingTimer();
         }
 
         public event Action<string, string> RegisterUser;
         public event Action<string> DesiredGameDuration;
         public event Action<string> ScoreWord;
+        public event Action tickingTimer;
 
         public void echo()
         {
@@ -107,6 +118,9 @@ namespace BoggleClient
             else
             {
                 DesiredGameDuration(GameDurationTxt.Text);
+                updateTimer.Enabled = true;
+                updateTimer.Start();
+                GameCompleteBox.Visible = false;
             }
             // GameDuraton = 
         }
@@ -116,6 +130,9 @@ namespace BoggleClient
         /// </summary>
         public bool IsRegisteredUser { get; set; }
         public string GameDuraton { get; set; }
+
+
+        public bool timerEnabled { get => updateTimer.Enabled; set => updateTimer.Enabled = value; }
 
         /// <summary>
         /// When the box is clicked, visibily shows that box has been selected and makes the text
@@ -564,150 +581,24 @@ namespace BoggleClient
         /// Sets the board to each letter in the board.  If the letter is Q, the letter is set to "QU"
         /// </summary>
         /// <param name="boardArray"></param>
-        public void setBoard(char[] boardArray)
+        public void SetBoard(char[] boardArray)
         {
-            if (boardArray[0].ToString().ToUpper() == "Q")
+            int iterator = 0;
+            TextBox[] boxArray = new TextBox[] {letter1, letter2, letter3, letter4, letter5, letter6, letter7,
+                letter8, letter9, letter10, letter11, letter12, letter13, letter14, letter15, letter16};
+            
+            foreach(char setTo in boardArray)
             {
-                letter1.Text = "QU";
-            }
-            else
-            {
-                letter1.Text = boardArray[0].ToString();
-            }
-
-            if (boardArray[1].ToString().ToUpper() == "Q")
-            {
-                letter2.Text = "QU";
-            }
-            else
-            {
-                letter2.Text = boardArray[1].ToString();
-            }
-
-            if (boardArray[2].ToString().ToUpper() == "Q")
-            {
-                letter3.Text = "QU";
-            }
-            else
-            {
-                letter3.Text = boardArray[2].ToString();
-            }
-
-            if (boardArray[3].ToString().ToUpper() == "Q")
-            {
-                letter4.Text = "QU";
-            }
-            else
-            {
-                letter4.Text = boardArray[3].ToString();
-            }
-
-            if (boardArray[4].ToString().ToUpper() == "Q")
-            {
-                letter5.Text = "QU";
-            }
-            else
-            {
-                letter5.Text = boardArray[4].ToString();
-            }
-
-            if (boardArray[5].ToString().ToUpper() == "Q")
-            {
-                letter6.Text = "QU";
-            }
-            else
-            {
-                letter6.Text = boardArray[5].ToString();
-            }
-
-            if (boardArray[6].ToString().ToUpper() == "Q")
-            {
-                letter7.Text = "QU";
-            }
-            else
-            {
-                letter7.Text = boardArray[6].ToString();
-            }
-
-            if (boardArray[7].ToString().ToUpper() == "Q")
-            {
-                letter8.Text = "QU";
-            }
-            else
-            {
-                letter8.Text = boardArray[7].ToString();
-            }
-
-            if (boardArray[8].ToString().ToUpper() == "Q")
-            {
-                letter9.Text = "QU";
-            }
-            else
-            {
-                letter9.Text = boardArray[8].ToString();
-            }
-
-            if (boardArray[9].ToString().ToUpper() == "Q")
-            {
-                letter10.Text = "QU";
-            }
-            else
-            {
-                letter10.Text = boardArray[9].ToString();
-            }
-
-            if (boardArray[10].ToString().ToUpper() == "Q")
-            {
-                letter11.Text = "QU";
-            }
-            else
-            {
-                letter11.Text = boardArray[10].ToString();
-            }
-
-            if (boardArray[11].ToString().ToUpper() == "Q")
-            {
-                letter12.Text = "QU";
-            }
-            else
-            {
-                letter12.Text = boardArray[11].ToString();
-            }
-
-            if (boardArray[12].ToString().ToUpper() == "Q")
-            {
-                letter13.Text = "QU";
-            }
-            else
-            {
-                letter13.Text = boardArray[12].ToString();
-            }
-
-            if (boardArray[13].ToString().ToUpper() == "Q")
-            {
-                letter14.Text = "QU";
-            }
-            else
-            {
-                letter14.Text = boardArray[13].ToString();
-            }
-
-            if (boardArray[14].ToString().ToUpper() == "Q")
-            {
-                letter15.Text = "QU";
-            }
-            else
-            {
-                letter15.Text = boardArray[14].ToString();
-            }
-
-            if (boardArray[15].ToString().ToUpper() == "Q")
-            {
-                letter16.Text = "QU";
-            }
-            else
-            {
-                letter16.Text = boardArray[15].ToString();
+                if(setTo.ToString().ToUpper() == "Q")
+                {
+                    boxArray[iterator].Text = "QU";
+                }
+                else
+                {
+                    boxArray[iterator].Text = setTo.ToString().ToUpper();
+                }
+                iterator++;
+                
             }
         }
 
@@ -742,20 +633,32 @@ namespace BoggleClient
         {
             GameCompleteBox.Visible = visible;
             // what to do when game is completed??? we still wanna have access to the words played right?
-            //GameBoard.Enabled = false;
-            //wordsPlayedP1Txt.Enabled = true;
-           // WordsPlayedP2Text.Enabled = true;
+            GameBoard.Enabled = false;
+            wordsPlayedP1Txt.Enabled = true;
+            wordsPlayedP2Txt.Enabled = true;
+            EnterGamePanel.Enabled = true;
+            updateTimer.Enabled = false;
+           
 
         }
-        public void displayWordsPlayed(HashSet<string> p1, HashSet<string> p2)
+
+        public void setPlayer1WordsPlayed(HashSet<string> wordsPlayed)
         {
-            foreach (String word in p1)
+            wordsPlayedP1Txt.Text = "";
+
+            foreach(string wordScore in wordsPlayed)
             {
-                wordsPlayedP1Txt.Text = word + "/n";
+                wordsPlayedP1Txt.Text = wordsPlayedP1Txt.Text + wordScore + Environment.NewLine;
             }
-            foreach (string word in p2)
+        }
+
+        public void setPlayer2WordsPlayed(HashSet<string> wordsPlayed)
+        {
+            wordsPlayedP2Txt.Text = "";
+
+            foreach (string wordScore in wordsPlayed)
             {
-                WordsPlayedP2Text.Text = word + "\n";
+                wordsPlayedP2Txt.Text = wordsPlayedP2Txt.Text + wordScore + Environment.NewLine;
             }
         }
     }

@@ -26,7 +26,7 @@ namespace BoggleClient
         private string userToken;
 
         private string gameID;
-
+        private string clientNickname;
         private string gameState;
         private string gameBoard;
         private bool brief = false;
@@ -51,6 +51,12 @@ namespace BoggleClient
             view.RegisterUser += Register;
             view.DesiredGameDuration += JoinGame;
             view.ScoreWord += PlayWord;
+            view.tickingTimer += handleTickingTimer;
+        }
+
+        private void handleTickingTimer()
+        {
+            GetGameStatus();
         }
 
         /// <summary>
@@ -63,6 +69,7 @@ namespace BoggleClient
 
         public async void Register(String domain, String nickname)
         {
+            clientNickname = nickname;
             baseAddress = domain + "/BoggleService.svc/";
             try
             {
@@ -120,10 +127,15 @@ namespace BoggleClient
                         //Console.WriteLine(gameID);
                         GetGameStatus();
                         view.GameJoined();
+                        wordsFromP1 = new HashSet<string>();
+                        wordsFromP2 = new HashSet<string>();
                     }
                     else
                     {
+                        //403 forbidden.  Time limit is bad.  409 conflict, usertoken is already a player in a pending game.
+                        view.timerEnabled = false;
                         MessageBox.Show("Error Joining Game " + response.StatusCode + "\n" + response.ReasonPhrase);
+                        
                     }
 
 
@@ -165,7 +177,6 @@ namespace BoggleClient
                     {
                         if (response.StatusCode == HttpStatusCode.Conflict)
                         {
-                            gameState = "complete";
                             GetGameStatus();
                         }
                         //MessageBox.Show("Error playing word " + response.StatusCode + "\n" + response.ReasonPhrase);
@@ -231,6 +242,7 @@ namespace BoggleClient
                                 }
                                 else if (gameState == "completed")
                                 {
+                                    Console.WriteLine("Complete");
                                     view.ViewActiveBox(false);
                                     view.ViewCompletedBox(true);
                                     var wordsPlayedP1 =  player1.WordsPlayed;
@@ -239,6 +251,8 @@ namespace BoggleClient
                                         string wordScore = obj.Word + "... ";
                                         wordScore += obj.Score;
                                         wordsFromP1.Add(wordScore);
+                                        
+                                        
                                     }
                                     dynamic player2 = deserialized.Player2;
                                     p2Nickname = player2.Nickname;
@@ -289,7 +303,7 @@ namespace BoggleClient
             //Update Board if not just pending.
             if(gameBoard != null)
             {
-                view.setBoard(gameBoard.ToArray());
+                view.SetBoard(gameBoard.ToArray());
 
             }
 
@@ -300,15 +314,12 @@ namespace BoggleClient
             view.setScores(p1Score, p2Score);
 
             //Update time left
-            view.setTime(timeLimit);
+            view.setTime(timeLeft);
 
             //Update words played
-            if (gameState == "complete")
-            {
-                view.displayWordsPlayed(wordsFromP1, wordsFromP2);
-            }
+            view.setPlayer2WordsPlayed(wordsFromP2);
+            view.setPlayer1WordsPlayed(wordsFromP1);
             
-
 
         }
 
