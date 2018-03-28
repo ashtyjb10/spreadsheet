@@ -9,7 +9,9 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
-
+        static BoggleService()
+        {
+        }
         private readonly static Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
         private static readonly object sync = new object();
 
