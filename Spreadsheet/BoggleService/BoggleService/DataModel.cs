@@ -19,7 +19,11 @@ namespace Boggle
     public class GameInfo
     {
         public string GameState { get; set; }
-        public string BogBoard { get; set; }
+        public string Board { get; set; }
+        public string Player1 { get; set; }
+        public string Player2 { get; set; }
+        public string GameID { get; set; }
+        public string TimeLimit { get; set; }
         // is this right?
 
     }
