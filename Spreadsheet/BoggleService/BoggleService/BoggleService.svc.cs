@@ -9,6 +9,11 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
+
+        private readonly static Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        private static readonly object sync = new object();
+
+
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
         /// an http response is sent.
@@ -28,6 +33,50 @@ namespace Boggle
             SetStatus(OK);
             WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
+        }
+
+        public void cancelGame(string UserToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getGameStats(string GameID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getGameStatsBrief(string GameID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string joinGame(JoinGameInfo item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string playWord(string GameID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Register(UserInfo user)
+        {
+            lock (sync)
+            {
+                if (user.nickName == null || user.nickName.Trim().Length == 0 || user.nickName.Trim().Length > 50)
+                {
+                    SetStatus(Forbidden);
+                    return null;
+                }
+                else
+                {
+                    string userToken = Guid.NewGuid().ToString();
+                    users.Add(userToken, user);
+                    SetStatus(Created);
+                    return userToken;
+                }
+            }
         }
 
         /// <summary>
