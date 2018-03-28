@@ -13,9 +13,17 @@ namespace Boggle
         {
         }
         private readonly static Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        private readonly static Dictionary<String, GameInfo> games = new Dictionary<String, GameInfo>();
         private static readonly object sync = new object();
+        private static int countingID;
+        private static string CurrentPendingGame;
 
 
+        static BoggleService()
+        {
+            countingID = 0;
+            CurrentPendingGame = CreateNewGameID();
+        }
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
         /// an http response is sent.
@@ -63,7 +71,32 @@ namespace Boggle
                     return null;
                 }
 
-                return null;
+                if(games[CurrentPendingGame].Player1 == null)
+                {
+                    games[CurrentPendingGame].Player1 = item.UserToken;
+                    games[CurrentPendingGame].TimeLimit = item.TimeLimit;
+                    SetStatus(Accepted);
+                    return CurrentPendingGame;
+
+                }
+                else if (games[CurrentPendingGame].Player1 == item.UserToken)
+                {
+
+                    SetStatus(Conflict);
+                    return null;
+                }
+                else
+                {
+                    games[CurrentPendingGame].Player2 = item.UserToken;
+
+                    string gameToReturn = CurrentPendingGame;
+                    CreateNewGameID();
+
+                    games[CurrentPendingGame].TimeLimit = ((Convert.ToInt32(games[CurrentPendingGame].TimeLimit) + Convert.ToInt32(item.TimeLimit)) / 2).ToString();
+                    games[CurrentPendingGame].GameState = "Active";
+                    SetStatus(Created);
+                    return gameToReturn;
+                }
             }
         }
 
@@ -123,6 +156,18 @@ namespace Boggle
                 SetStatus(Forbidden);
                 return null;
             }
+        }
+
+        static string CreateNewGameID()
+        {
+            GameInfo newGame = new GameInfo();
+            newGame.GameID = "G" + countingID;
+            games.Add(newGame.GameID, newGame);
+
+            countingID++;
+
+            newGame.GameState = "Pending";
+            return newGame.GameID;
         }
     }
 }
