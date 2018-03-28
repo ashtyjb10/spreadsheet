@@ -7,7 +7,7 @@ namespace Boggle
 {
     public class UserInfo
     {
-        public string nickName { get; set; }
+        public string Nickname { get; set; }
     }
 
     public class JoinGameInfo

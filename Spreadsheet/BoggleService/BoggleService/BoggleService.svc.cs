@@ -64,7 +64,7 @@ namespace Boggle
         {
             lock (sync)
             {
-                if (user.nickName == null || user.nickName.Trim().Length == 0 || user.nickName.Trim().Length > 50)
+                if (user.Nickname == null || user.Nickname.Trim().Length == 0 || user.Nickname.Trim().Length > 50)
                 {
                     SetStatus(Forbidden);
                     return null;
