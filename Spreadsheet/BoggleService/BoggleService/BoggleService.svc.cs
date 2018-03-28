@@ -52,7 +52,17 @@ namespace Boggle
 
         public string joinGame(JoinGameInfo item)
         {
-            throw new NotImplementedException();
+            lock (sync)
+            {
+                if (!users.ContainsKey(item.UserToken) || Convert.ToInt32(item.TimeLimit) < 5
+                    || Convert.ToInt32(item.TimeLimit) > 120)
+                {
+                    SetStatus(Forbidden);
+                    return null;
+                }
+
+                return null;
+            }
         }
 
         public string playWord(string GameID)

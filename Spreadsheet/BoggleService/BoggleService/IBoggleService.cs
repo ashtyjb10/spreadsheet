@@ -29,8 +29,8 @@ namespace Boggle
         [WebInvoke(Method = "POST", UriTemplate = "/users")]
         string Register(UserInfo user);
         
-        //[WebInvoke(Method = "POST", UriTemplate = "/games")]
-        //string joinGame(JoinGameInfo item);
+        [WebInvoke(Method = "POST", UriTemplate = "/games")]
+        string joinGame(JoinGameInfo item);
         
         //[WebInvoke(Method = "PUT", UriTemplate = "/games")]
         //void cancelGame(string UserToken);
