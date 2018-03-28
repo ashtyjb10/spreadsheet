@@ -13,7 +13,7 @@ namespace Boggle
     public class JoinGameInfo
     {
         public string UserToken { get; set; }
-        public string TimeLimit { get; set; }
+        public int TimeLimit { get; set; }
     }
 
     public class GameInfo
@@ -23,7 +23,7 @@ namespace Boggle
         public string Player1 { get; set; }
         public string Player2 { get; set; }
         public string GameID { get; set; }
-        public string TimeLimit { get; set; }
+        public int TimeLimit { get; set; }
         // is this right?
 
     }

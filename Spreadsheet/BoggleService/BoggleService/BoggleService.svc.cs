@@ -9,9 +9,6 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
-        static BoggleService()
-        {
-        }
         private readonly static Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
         private readonly static Dictionary<String, GameInfo> games = new Dictionary<String, GameInfo>();
         private static readonly object sync = new object();
@@ -64,8 +61,8 @@ namespace Boggle
         {
             lock (sync)
             {
-                if (!users.ContainsKey(item.UserToken) || Convert.ToInt32(item.TimeLimit) < 5
-                    || Convert.ToInt32(item.TimeLimit) > 120)
+                if (!users.ContainsKey(item.UserToken) || item.TimeLimit < 5
+                    || item.TimeLimit > 120)
                 {
                     SetStatus(Forbidden);
                     return null;
@@ -92,7 +89,7 @@ namespace Boggle
                     string gameToReturn = CurrentPendingGame;
                     CreateNewGameID();
 
-                    games[CurrentPendingGame].TimeLimit = ((Convert.ToInt32(games[CurrentPendingGame].TimeLimit) + Convert.ToInt32(item.TimeLimit)) / 2).ToString();
+                    games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
                     games[CurrentPendingGame].GameState = "Active";
                     SetStatus(Created);
                     return gameToReturn;
