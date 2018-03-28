@@ -11,8 +11,9 @@ namespace Boggle
     {
 
         private readonly static Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        private readonly static Dictionary<String, JoinGameInfo> games = new Dictionary<String, JoinGameInfo>();
         private static readonly object sync = new object();
-
+        
 
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
