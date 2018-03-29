@@ -65,7 +65,7 @@ namespace Boggle
         {
             string gameID = users[cancelInfo.UserToken].GameID;
             if (!users.ContainsKey(cancelInfo.UserToken) || gameID == null ||
-                games[gameID].GameState != "Pending")
+                games[gameID].GameState != "pending")
             {
                 SetStatus(Forbidden);
             }
@@ -133,7 +133,7 @@ namespace Boggle
                     CreateNewGameID();
 
                     games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
-                    games[CurrentPendingGame].GameState = "Active";
+                    games[CurrentPendingGame].GameState = "active";
                     BoggleBoard newBoard = new BoggleBoard();
                     games[CurrentPendingGame].BoardObject = newBoard;
                     games[CurrentPendingGame].Board = newBoard.ToString();
@@ -172,7 +172,7 @@ namespace Boggle
 
                     //it is player one's
 
-                    if ("a" == "a")//is it an actual word? 
+                    if (words.ContainsKey(wordInfo.Word))//is it an actual word? 
                     {
                         if (games[gameID].BoardObject.CanBeFormed(wordInfo.Word))
                         {
@@ -213,7 +213,7 @@ namespace Boggle
                     int wordPoints = 0;
 
                     //its is player two's word
-                    if ("a" == "a")//is it an actual word? 
+                    if (words.ContainsKey(wordInfo.Word))//is it an actual word? 
                     {
                         if (games[gameID].BoardObject.CanBeFormed(wordInfo.Word))
                         {
@@ -248,9 +248,8 @@ namespace Boggle
                     }
                     games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
                     return wordPoints;
-                }
-                SetStatus(OK);
-                
+                    //todo do I need to set a status for OK?
+                }                
             }
         }
 
@@ -318,7 +317,7 @@ namespace Boggle
 
             countingID++;
 
-            newGame.GameState = "Pending";
+            newGame.GameState = "pending";
             return newGame.GameID;
         }
     }
