@@ -9,7 +9,7 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
-        private readonly static Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        private readonly static Dictionary<String, storedUserInfo> users = new Dictionary<String, storedUserInfo>();
         private readonly static Dictionary<String, GameInfo> games = new Dictionary<String, GameInfo>();
         private static readonly object sync = new object();
         private static int countingID;
@@ -42,13 +42,35 @@ namespace Boggle
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
-        public void cancelGame(string UserToken)
+        public void cancelGame(UserCancel cancelInfo)
         {
-            throw new NotImplementedException();
+            string gameID = users[cancelInfo.UserToken].GameID;
+            if (!users.ContainsKey(cancelInfo.UserToken) || gameID == null ||
+                games[gameID].GameState != "Pending")
+            {
+                SetStatus(Forbidden);
+            }
+            else
+            {
+                //remove user from pending game.
+                if (games[gameID].Player1 == cancelInfo.UserToken)
+                {
+                    games[gameID].Player1.Equals("");
+                    users[cancelInfo.UserToken].GameID.Equals("");
+
+                }
+                else
+                {
+                    games[gameID].Player2.Equals("");
+                    users[cancelInfo.UserToken].GameID.Equals("");
+                }
+                SetStatus(OK);
+            }
         }
 
         public string getGameStats(string GameID)
         {
+            //setup the boogle board
             throw new NotImplementedException();
         }
 
@@ -73,6 +95,8 @@ namespace Boggle
                     games[CurrentPendingGame].Player1 = item.UserToken;
                     games[CurrentPendingGame].TimeLimit = item.TimeLimit;
                     SetStatus(Accepted);
+
+                    users[item.UserToken].GameID = CurrentPendingGame;
                     return CurrentPendingGame;
 
                 }
@@ -91,15 +115,56 @@ namespace Boggle
 
                     games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
                     games[CurrentPendingGame].GameState = "Active";
+                    BoggleBoard newBoard = new BoggleBoard();
+                    games[CurrentPendingGame].BoardObject = newBoard;
+                    games[CurrentPendingGame].Board = newBoard.ToString();
                     SetStatus(Created);
+                    users[item.UserToken].GameID = gameToReturn;
+
                     return gameToReturn;
                 }
             }
         }
 
-        public string playWord(string GameID)
+        public int playWord(WordToPlay wordInfo, string gameID)
         {
-            throw new NotImplementedException();
+            if (wordInfo.Word == "" || wordInfo.Word.Trim().Length > 30 || !games.ContainsKey(gameID)
+                    || !users.ContainsKey(wordInfo.UserToken))
+            {
+                SetStatus(Forbidden);
+                return 0;
+            }
+            else if (games[gameID].Player1 != wordInfo.UserToken &&
+                games[gameID].Player2 != wordInfo.UserToken)
+            {
+                SetStatus(Forbidden);
+                return 0;
+            }
+            else if (games[gameID].GameState != "active")
+            {
+                SetStatus(Conflict);
+                return 0;
+            }
+            else
+            {
+                if (games[gameID].Player1 == wordInfo.UserToken)
+                {
+                    //it is player one's
+
+                    //is it an actual word? 
+                    //can it be formed on the board?
+                    //what is the score of the word?
+                    bool validWord = games[gameID].BoardObject.CanBeFormed(wordInfo.Word);
+                    games[gameID].wordsPlayedP1.Add(wordInfo.Word, 0);
+                }
+                else
+                {
+                    //its is player two's word
+                }
+                //records the trimed word as being played by that UserToken in that game/GameID,
+                //returns the scored word in the context of the game(if word played score = 0)
+                return 0;
+            }
         }
 
         public string Register(UserInfo user)
@@ -114,7 +179,10 @@ namespace Boggle
                 else
                 {
                     string userToken = Guid.NewGuid().ToString();
-                    users.Add(userToken, user);
+                    storedUserInfo newUser = new storedUserInfo();
+                    newUser.Nickname = user.Nickname;
+                    newUser.UserToken = userToken;
+                    users.Add(userToken, newUser);
                     SetStatus(Created);
                     return userToken;
                

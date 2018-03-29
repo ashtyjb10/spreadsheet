@@ -32,11 +32,11 @@ namespace Boggle
         [WebInvoke(Method = "POST", UriTemplate = "/games")]
         string joinGame(JoinGameInfo item);
         
-        //[WebInvoke(Method = "PUT", UriTemplate = "/games")]
-        //void cancelGame(string UserToken);
+        [WebInvoke(Method = "PUT", UriTemplate = "/games")]
+        void cancelGame(UserCancel cancelInfo);
 
-       // [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
-       // string playWord(string GameID);
+        [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
+        int playWord(WordToPlay wordInfo, string GameID);
 
        // [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
         //string getGameStats(string GameID);
