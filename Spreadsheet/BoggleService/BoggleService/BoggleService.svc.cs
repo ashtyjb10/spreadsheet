@@ -76,16 +76,16 @@ namespace Boggle
                 //remove user from pending game.
                 if (games[gameID].Player1 == cancelInfo.UserToken)
                 {
-                    games[gameID].Player1.Equals("");
-                    users[cancelInfo.UserToken].GameID.Equals("");
+                    games[gameID].Player1.Equals(null);
+                    users[cancelInfo.UserToken].GameID.Equals(null);
                     SetStatus(OK);
                     return;
 
                 }
                 else
                 {
-                    games[gameID].Player2.Equals("");
-                    users[cancelInfo.UserToken].GameID.Equals("");
+                    games[gameID].Player2.Equals(null);
+                    users[cancelInfo.UserToken].GameID.Equals(null);
                     SetStatus(OK);
                     return;
                 }
