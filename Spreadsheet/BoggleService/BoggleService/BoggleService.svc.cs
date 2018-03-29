@@ -78,19 +78,24 @@ namespace Boggle
                 {
                     games[gameID].Player1.Equals("");
                     users[cancelInfo.UserToken].GameID.Equals("");
+                    SetStatus(Accepted);
+                    return;
 
                 }
                 else
                 {
                     games[gameID].Player2.Equals("");
                     users[cancelInfo.UserToken].GameID.Equals("");
+                    SetStatus(Created);
+                    return;
                 }
-                SetStatus(OK);
             }
         }
 
-        public string getGameStats(string GameID)
+        public FullGameInfo getGameStats(string GameID)
         {
+            GameInfo current = games[GameID];
+            FullGameInfo infoToReturn = new FullGameInfo();
             //HashSet<string, string> returnThings = new HashSet<>();
             if (!games.ContainsKey(GameID))
             {
@@ -101,16 +106,31 @@ namespace Boggle
             {
                 if (games[GameID].GameState == "pending")
                 {
+
                     SetStatus(OK);
-                   // return "Pending";
+                    infoToReturn.GameState = "pending";
+                    return infoToReturn;
+
+                }
+                else if (current.GameState == "active")
+                {
+                    infoToReturn.GameState = "active";
+                    infoToReturn.Board = current.Board;
+                    infoToReturn.TimeLimit = current.TimeLimit;
+                    infoToReturn.TimeLeft = current.TimeGameStarted - Convert.ToInt32(DateTime.Now);
+                    infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
+                    infoToReturn.Player1.Score = current.p1Score;
+                    infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
+                    infoToReturn.Player2.Score = current.p2Score;
+                    SetStatus(OK);
+                    return infoToReturn;
                 }
                 else
                 {
-                    SetStatus(OK);
-                    //return 
+                    //game is completed!
+                    return null;
                 }
             }
-            throw new NotImplementedException();
         }
 
         public string getGameStatsBrief(string GameID)
@@ -155,8 +175,9 @@ namespace Boggle
                     CreateNewGameID();
 
                     games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
-                    games[CurrentPendingGame].GameState = "active";
                     BoggleBoard newBoard = new BoggleBoard();
+                    games[CurrentPendingGame].GameState = "active";
+                    games[CurrentPendingGame].TimeGameStarted  = 0;
                     games[CurrentPendingGame].BoardObject = newBoard;
                     games[CurrentPendingGame].Board = newBoard.ToString();
                     SetStatus(Created);
@@ -173,7 +194,7 @@ namespace Boggle
             WordScore score = new WordScore();
             score.Score = 0;
 
-            if (wordInfo.Word == "" || wordInfo.Word.Trim().Length > 30 || !games.ContainsKey(gameID)
+            if (wordInfo.Word == "" || wordInfo.Word == null || wordInfo.Word.Trim().Length > 30 || !games.ContainsKey(gameID)
                     || !users.ContainsKey(wordInfo.UserToken))
             {
                 SetStatus(Forbidden);
@@ -232,6 +253,7 @@ namespace Boggle
                             
                     }
                     games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
+                    games[gameID].p1Score += wordPoints;
                     score.Score = wordPoints;
                     return score;
                 }
@@ -275,6 +297,8 @@ namespace Boggle
                     }
                     games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
                     score.Score = wordPoints;
+                    games[gameID].p2Score += wordPoints;
+
                     return score;
                     //todo do I need to set a status for OK?
                 }                
@@ -305,6 +329,7 @@ namespace Boggle
                 }
             }
         }
+
 
         /// <summary>
         /// Demo.  You can delete this.
@@ -350,5 +375,7 @@ namespace Boggle
             newGame.GameState = "pending";
             return newGame.GameID;
         }
+
+
     }
 }
