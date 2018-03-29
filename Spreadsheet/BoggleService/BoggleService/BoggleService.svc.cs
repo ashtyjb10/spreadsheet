@@ -118,10 +118,11 @@ namespace Boggle
             throw new NotImplementedException();
         }
 
-        public string joinGame(JoinGameInfo item)
+        public UserGame joinGame(JoinGameInfo item)
         {
             lock (sync)
             {
+                UserGame returnGID = new UserGame();
                 if (!users.ContainsKey(item.UserToken) || item.TimeLimit < 5
                     || item.TimeLimit > 120)
                 {
@@ -136,7 +137,8 @@ namespace Boggle
                     SetStatus(Accepted);
 
                     users[item.UserToken].GameID = CurrentPendingGame;
-                    return CurrentPendingGame;
+                    returnGID.GameID = CurrentPendingGame;
+                    return returnGID;
 
                 }
                 else if (games[CurrentPendingGame].Player1 == item.UserToken)
@@ -159,30 +161,34 @@ namespace Boggle
                     games[CurrentPendingGame].Board = newBoard.ToString();
                     SetStatus(Created);
                     users[item.UserToken].GameID = gameToReturn;
+                    returnGID.GameID = gameToReturn;
 
-                    return gameToReturn;
+                    return returnGID;
                 }
             }
         }
 
-        public int playWord(WordToPlay wordInfo, string gameID)
+        public WordScore playWord(WordToPlay wordInfo, string gameID)
         {
+            WordScore score = new WordScore();
+            score.Score = 0;
+
             if (wordInfo.Word == "" || wordInfo.Word.Trim().Length > 30 || !games.ContainsKey(gameID)
                     || !users.ContainsKey(wordInfo.UserToken))
             {
                 SetStatus(Forbidden);
-                return 0;
+                return score;
             }
             else if (games[gameID].Player1 != wordInfo.UserToken &&
                 games[gameID].Player2 != wordInfo.UserToken)
             {
                 SetStatus(Forbidden);
-                return 0;
+                return score;
             }
             else if (games[gameID].GameState != "active")
             {
                 SetStatus(Conflict);
-                return 0;
+                return score;
             }
             else
             {
@@ -226,7 +232,8 @@ namespace Boggle
                             
                     }
                     games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
-                    return wordPoints;
+                    score.Score = wordPoints;
+                    return score;
                 }
                 else
                 {
@@ -267,13 +274,14 @@ namespace Boggle
 
                     }
                     games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
-                    return wordPoints;
+                    score.Score = wordPoints;
+                    return score;
                     //todo do I need to set a status for OK?
                 }                
             }
         }
 
-        public string Register(UserInfo user)
+        public UserToke Register(UserInfo user)
         {
             lock (sync)
             {
@@ -291,7 +299,9 @@ namespace Boggle
                     newUser.UserToken = userToken;
                     users.Add(userToken, newUser);
                     SetStatus(Created);
-                    return userToken;
+                    UserToke token = new UserToke();
+                    token.UserToken = userToken;
+                    return token;
                
                 }
             }
