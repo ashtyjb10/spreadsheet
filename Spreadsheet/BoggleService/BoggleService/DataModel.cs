@@ -91,7 +91,6 @@ namespace Boggle
 
         //        [DataMember(EmitDefaultValue = false)] for the array list I have to do.
 
-
     }
     [DataContract]
     public class Player2
