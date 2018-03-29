@@ -169,6 +169,9 @@ namespace Boggle
             Response rOK = client.DoPutAsync(playerOne, "games").Result;
             Assert.AreEqual(OK, rOK.Status);
 
+            r = client.DoPostAsync("games", playerOne).Result;
+            Assert.AreEqual(Accepted, r.Status);
+
 
 
 
