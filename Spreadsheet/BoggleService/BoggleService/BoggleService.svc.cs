@@ -284,6 +284,7 @@ namespace Boggle
                 }
                 else
                 {
+
                     string userToken = Guid.NewGuid().ToString();
                     storedUserInfo newUser = new storedUserInfo();
                     newUser.Nickname = user.Nickname;

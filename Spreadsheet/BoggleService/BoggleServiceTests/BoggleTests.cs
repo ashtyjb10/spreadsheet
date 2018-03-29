@@ -3,6 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static System.Net.HttpStatusCode;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Dynamic;
+using System.Text;
 
 namespace Boggle
 {
@@ -86,7 +89,17 @@ namespace Boggle
         [TestMethod]
         public void TestRegisterValidUser()
         {
-            Response r = client.
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor";
+            //StringContent content = new StringContent(JsonConvert.SerializeObject(users),Encoding.UTF8,"application/json");
+            
+            Response r = client.DoPostAsync("users", users).Result;
+            Assert.AreEqual(Created, r.Status);
+
+            users.Nickname = null;
+            r = client.DoPostAsync("users", users).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
         }
     }
 }
