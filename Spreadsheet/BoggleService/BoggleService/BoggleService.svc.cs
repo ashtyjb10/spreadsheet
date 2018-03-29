@@ -25,7 +25,7 @@ namespace Boggle
             //Reads in the dictionary for all games to use.
             try
             {
-                StreamReader reader = new StreamReader("C:/Users/Nathor/Source/Repos/404-Brain-Not-Found/Spreadsheet/BoggleService/BoggleService/dictionary.txt");
+                StreamReader reader = new StreamReader("BoggleService/dictionary.txt");
                 while (reader.Peek() > -1)
                 {
                     string wordToAdd = reader.ReadLine();
