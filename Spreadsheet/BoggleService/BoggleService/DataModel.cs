@@ -74,7 +74,6 @@ namespace Boggle
         [DataMember]
         public Player1 Player1 { get; set; }
 
-
     }
 
     [DataContract]
