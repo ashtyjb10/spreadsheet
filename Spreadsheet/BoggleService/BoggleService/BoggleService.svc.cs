@@ -25,7 +25,7 @@ namespace Boggle
             //Reads in the dictionary for all games to use.
             try
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
+                string path = AppDomain.CurrentDomain.BaseDirectory + "/dictionary.txt";
                 Console.WriteLine(path);
                 StreamReader reader = new StreamReader(path);
                 while (reader.Peek() > -1)
@@ -81,13 +81,6 @@ namespace Boggle
                     SetStatus(OK);
                     return;
 
-                }
-                else
-                {
-                    games[gameID].Player2 = null;
-                    users[cancelInfo.UserToken].GameID = null;
-                    SetStatus(OK);
-                    return;
                 }
             }
         }
@@ -331,41 +324,7 @@ namespace Boggle
                 }
             }
         }
-
-
-        /// <summary>
-        /// Demo.  You can delete this.
-        /// </summary>
-        public string WordAtIndex(int n)
-        {
-            if (n < 0)
-            {
-                SetStatus(Forbidden);
-                return null;
-            }
-
-            string line;
-            using (StreamReader file = new System.IO.StreamReader(AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt"))
-            {
-                while ((line = file.ReadLine()) != null)
-                {
-                    if (n == 0) break;
-                    n--;
-                }
-            }
-
-            if (n == 0)
-            {
-                SetStatus(OK);
-                return line;
-            }
-            else
-            {
-                SetStatus(Forbidden);
-                return null;
-            }
-        }
-
+        
         static string CreateNewGameID()
         {
             GameInfo newGame = new GameInfo();

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Dynamic;
 using System.Text;
+using System.IO;
 
 namespace Boggle
 {
@@ -68,24 +69,6 @@ namespace Boggle
 
         private RestTestClient client = new RestTestClient("http://localhost:60000/BoggleService.svc/");
 
-        /// <summary>
-        /// Note that DoGetAsync (and the other similar methods) returns a Response object, which contains
-        /// the response Stats and the deserialized JSON response (if any).  See RestTestClient.cs
-        /// for details.
-        /// </summary>
-        [TestMethod]
-        public void TestMethod1()
-        {
-            Response r = client.DoGetAsync("word?index={0}", "-5").Result;
-            Assert.AreEqual(Forbidden, r.Status);
-
-            r = client.DoGetAsync("word?index={0}", "5").Result;
-            Assert.AreEqual(OK, r.Status);
-
-            string word = (string) r.Data;
-            Assert.AreEqual("AAL", word);
-        }
-
         [TestMethod]
         public void TestRegisterValidUser()
         {
@@ -98,9 +81,6 @@ namespace Boggle
             users.Nickname = null;
             r = client.DoPostAsync("users", users).Result;
             Assert.AreEqual(Forbidden, r.Status);
-
-            
-
         }
 
         [TestMethod]
@@ -166,15 +146,84 @@ namespace Boggle
             r = client.DoPutAsync(userTwo, "games").Result;
             Assert.AreEqual(Forbidden, r.Status);
 
+            //Player One cancels the game.
             Response rOK = client.DoPutAsync(playerOne, "games").Result;
             Assert.AreEqual(OK, rOK.Status);
+        }
 
-            r = client.DoPostAsync("games", playerOne).Result;
-            Assert.AreEqual(Accepted, r.Status);
+        [TestMethod]
+        public void TestPlayWord()
+        {
+            //Create and register playerOne
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor5";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic playerOne = new ExpandoObject();
+            playerOne.UserToken = r.Data.UserToken;
+            playerOne.TimeLimit = "120";
+
+            //Create and register playerTwo
+            dynamic users2 = new ExpandoObject();
+            users.Nickname = "Nathor6";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic playerTwo = new ExpandoObject();
+            playerTwo.UserToken = r2.Data.UserToken;
+            playerTwo.TimeLimit = "120";
+
+            //First user enters game.
+            Response rGameID = client.DoPostAsync("games", playerOne).Result;
+
+            //Player one plays when game is not active
+            playerOne.Word = "A";
+            r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(Conflict, r.Status);
+
+            //Player two plays when not in the game.
+            playerTwo.Word = "A";
+            r = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Second user enters game.
+            r = client.DoPostAsync("games", playerTwo).Result;
+
+            //word played is too long.
+            playerOne.Word = "abcdefghijklmnopqrstuvwxyznowiknowmyabcnexttimechooseashorterstring";
+            r = client.DoPutAsync(playerOne,"games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Player one plays a single word.
+            playerOne.Word = "a";
+            r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(OK, r.Status);
 
 
+            StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "/dictionary.txt");
+            try
+            {
 
 
+                while (reader.Peek() > -1)
+                {
+                    string word = reader.ReadLine();
+
+                    if (word.Length < 4)
+                    {
+
+                        playerOne.Word = word;
+                        playerTwo.Word = word;
+
+                        r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+                        Assert.AreEqual(OK, r.Status);
+                        r2 = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+                        Assert.AreEqual(OK, r2.Status);
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
 
 
         }
