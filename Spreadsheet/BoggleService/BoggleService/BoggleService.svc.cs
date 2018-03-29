@@ -14,12 +14,31 @@ namespace Boggle
         private static readonly object sync = new object();
         private static int countingID;
         private static string CurrentPendingGame;
+        private readonly static Dictionary<String, String> words = new Dictionary<String, String>();
 
 
         static BoggleService()
         {
             countingID = 0;
             CurrentPendingGame = CreateNewGameID();
+            
+            //Reads in the dictionary for all games to use.
+            try
+            {
+                StreamReader reader = new StreamReader("C:/Users/Nathor/Source/Repos/404-Brain-Not-Found/Spreadsheet/BoggleService/BoggleService/dictionary.txt");
+                while (reader.Peek() > -1)
+                {
+                    string wordToAdd = reader.ReadLine();
+                    words.Add(wordToAdd, wordToAdd);
+                }
+
+                reader.Close();
+            }
+            catch (IOException)
+            {
+
+            }
+            
         }
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
