@@ -78,7 +78,7 @@ namespace Boggle
                 {
                     games[gameID].Player1.Equals("");
                     users[cancelInfo.UserToken].GameID.Equals("");
-                    SetStatus(Accepted);
+                    SetStatus(OK);
                     return;
 
                 }
@@ -86,7 +86,7 @@ namespace Boggle
                 {
                     games[gameID].Player2.Equals("");
                     users[cancelInfo.UserToken].GameID.Equals("");
-                    SetStatus(Created);
+                    SetStatus(OK);
                     return;
                 }
             }
