@@ -168,21 +168,89 @@ namespace Boggle
             {
                 if (games[gameID].Player1 == wordInfo.UserToken)
                 {
+                    int wordPoints = 0;
+
                     //it is player one's
 
-                    //is it an actual word? 
-                    //can it be formed on the board?
-                    //what is the score of the word?
-                    bool validWord = games[gameID].BoardObject.CanBeFormed(wordInfo.Word);
-                    games[gameID].wordsPlayedP1.Add(wordInfo.Word, 0);
+                    if ("a" == "a")//is it an actual word? 
+                    {
+                        if (games[gameID].BoardObject.CanBeFormed(wordInfo.Word))
+                        {
+                            if (wordInfo.Word.Length < 3)
+                            {
+                                wordPoints = 0;
+                            }
+                            else if (wordInfo.Word.Length >= 3 && wordInfo.Word.Length <= 4)
+                            {
+                                wordPoints = 1;
+                            }
+                            else if (wordInfo.Word.Length == 5)
+                            {
+                                wordPoints = 2;
+                            }
+                            else if (wordInfo.Word.Length == 6)
+                            {
+                                wordPoints = 3;
+                            }
+                            else if (wordInfo.Word.Length == 7)
+                            {
+                                wordPoints = 5;
+                            }
+                            else
+                            {
+                                //it is longer than 7
+                                wordPoints = 11;
+                            }
+                        
+                        }
+                            
+                    }
+                    games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
+                    return wordPoints;
                 }
                 else
                 {
+                    int wordPoints = 0;
+
                     //its is player two's word
+                    if ("a" == "a")//is it an actual word? 
+                    {
+                        if (games[gameID].BoardObject.CanBeFormed(wordInfo.Word))
+                        {
+                            if (wordInfo.Word.Length < 3)
+                            {
+                                wordPoints = 0;
+                            }
+                            else if (wordInfo.Word.Length >= 3 && wordInfo.Word.Length <= 4)
+                            {
+                                wordPoints = 1;
+                            }
+                            else if (wordInfo.Word.Length == 5)
+                            {
+                                wordPoints = 2;
+                            }
+                            else if (wordInfo.Word.Length == 6)
+                            {
+                                wordPoints = 3;
+                            }
+                            else if (wordInfo.Word.Length == 7)
+                            {
+                                wordPoints = 5;
+                            }
+                            else
+                            {
+                                //it is longer than 7
+                                wordPoints = 11;
+                            }
+
+                        }
+
+                    }
+                    games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
+                    return wordPoints;
                 }
-                //records the trimed word as being played by that UserToken in that game/GameID,
-                //returns the scored word in the context of the game(if word played score = 0)
-                return 0;
+                SetStatus(OK);
+                
             }
         }
 
