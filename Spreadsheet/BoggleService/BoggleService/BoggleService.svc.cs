@@ -25,7 +25,9 @@ namespace Boggle
             //Reads in the dictionary for all games to use.
             try
             {
-                StreamReader reader = new StreamReader("BoggleService/dictionary.txt");
+                string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
+                Console.WriteLine(path);
+                StreamReader reader = new StreamReader(path);
                 while (reader.Peek() > -1)
                 {
                     string wordToAdd = reader.ReadLine();
