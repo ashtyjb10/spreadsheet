@@ -35,8 +35,8 @@ namespace Boggle
         [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
         FullGameInfo getGameStats(string GameID);
 
-        //[WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?Brief=yes")]
-       // string getGameStatsBrief(string GameID);
+       //[WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?Brief=yes")]
+        //string getGameStatsBrief(string GameID);
        
 
     }

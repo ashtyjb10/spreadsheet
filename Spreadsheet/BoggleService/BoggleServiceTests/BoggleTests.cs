@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Dynamic;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Boggle
 {
@@ -20,6 +21,7 @@ namespace Boggle
     {
         // Reference to the running process
         private static Process process = null;
+        
 
         /// <summary>
         /// Starts IIS
@@ -32,6 +34,10 @@ namespace Boggle
                 info.WindowStyle = ProcessWindowStyle.Minimized;
                 info.UseShellExecute = false;
                 process = Process.Start(info);
+
+                
+
+
             }
         }
 
@@ -49,6 +55,8 @@ namespace Boggle
     [TestClass]
     public class BoggleTests
     {
+
+        private static Dictionary<String, String> dictionary = new Dictionary<string, string>();
         /// <summary>
         /// This is automatically run prior to all the tests to start the server
         /// </summary>
@@ -56,6 +64,18 @@ namespace Boggle
         public static void StartIIS(TestContext testContext)
         {
             IISAgent.Start(@"/site:""BoggleService"" /apppool:""Clr4IntegratedAppPool"" /config:""..\..\..\.vs\config\applicationhost.config""");
+
+            StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "/dictionary.txt");
+            while (reader.Peek() > -1)
+            {
+                string wordToAdd = reader.ReadLine();
+
+                if (wordToAdd.Length < 4)
+                { 
+                    dictionary.Add(wordToAdd, wordToAdd);
+                }
+            }
+            reader.Close();
         }
 
         /// <summary>
@@ -196,35 +216,65 @@ namespace Boggle
             r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
             Assert.AreEqual(OK, r.Status);
 
-
-            StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "/dictionary.txt");
-            try
+            //Trys to play a series of words.
+            foreach(string word in dictionary.Keys)
             {
+                playerOne.Word = word;
+                playerTwo.Word = word;
 
-
-                while (reader.Peek() > -1)
-                {
-                    string word = reader.ReadLine();
-
-                    if (word.Length < 4)
-                    {
-
-                        playerOne.Word = word;
-                        playerTwo.Word = word;
-
-                        r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
-                        Assert.AreEqual(OK, r.Status);
-                        r2 = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
-                        Assert.AreEqual(OK, r2.Status);
-                    }
-
-                }
-            }
-            catch (Exception)
-            {
+                r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+                Assert.AreEqual(OK, r.Status);
+                r2 = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+                Assert.AreEqual(OK, r2.Status);
 
             }
+        }
 
+        [TestMethod]
+        public void TestGameStatus()
+        {
+            //Create and register playerOne
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor7";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic playerOne = new ExpandoObject();
+            playerOne.UserToken = r.Data.UserToken;
+            playerOne.TimeLimit = "5";
+
+            //Create and register playerTwo
+            dynamic users2 = new ExpandoObject();
+            users.Nickname = "Nathor8";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic playerTwo = new ExpandoObject();
+            playerTwo.UserToken = r2.Data.UserToken;
+            playerTwo.TimeLimit = "5";
+
+            //First user enters game.
+            Response rGameID = client.DoPostAsync("games", playerOne).Result;
+
+            //Fake GameID is made
+            r2.Data.GameID = "54";
+
+            //Fake ID is used against the service
+            r = client.DoGetAsync("games/" + r2.Data.GameID, r2.Data.GameID.ToString()).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Real GameID is used against the service in pending status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+
+            //Player2 enters the game
+            r2 = client.DoPostAsync("games",playerTwo).Result;
+
+            System.Threading.Thread.Sleep(6000);
+
+            //Real GameID is used against the service in active status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+            
+            //Real GameID is used against the service in complete status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
 
         }
     }
