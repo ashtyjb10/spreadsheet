@@ -25,6 +25,8 @@ namespace Boggle
             //Reads in the dictionary for all games to use.
             try
             {
+                string path = Path.GetFullPath(@"dictionary.txt");
+                Console.WriteLine(path);
                 StreamReader reader = new StreamReader("C:/Users/Nathor/Source/Repos/404-Brain-Not-Found/Spreadsheet/BoggleService/BoggleService/dictionary.txt");
                 while (reader.Peek() > -1)
                 {
@@ -89,7 +91,25 @@ namespace Boggle
 
         public string getGameStats(string GameID)
         {
-            //setup the boogle board
+            //HashSet<string, string> returnThings = new HashSet<>();
+            if (!games.ContainsKey(GameID))
+            {
+                SetStatus(Forbidden);
+                return null;
+            }
+            else
+            {
+                if (games[GameID].GameState == "pending")
+                {
+                    SetStatus(OK);
+                   // return "Pending";
+                }
+                else
+                {
+                    SetStatus(OK);
+                    //return 
+                }
+            }
             throw new NotImplementedException();
         }
 
