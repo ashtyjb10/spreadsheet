@@ -147,9 +147,10 @@ namespace Boggle
             }
             else
             {
-                int wordPoints = 0;
                 if (games[gameID].Player1 == wordInfo.UserToken)
                 {
+                    int wordPoints = 0;
+
                     //it is player one's
 
                     if ("a" == "a")//is it an actual word? 
@@ -185,10 +186,13 @@ namespace Boggle
                         }
                             
                     }
-                    games[gameID].wordsPlayedP1.Add(wordInfo.Word, 0);
+                    games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
+                    return wordPoints;
                 }
                 else
                 {
+                    int wordPoints = 0;
+
                     //its is player two's word
                     if ("a" == "a")//is it an actual word? 
                     {
@@ -223,12 +227,11 @@ namespace Boggle
                         }
 
                     }
-                    games[gameID].wordsPlayedP2.Add(wordInfo.Word, 0);
-
+                    games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
+                    return wordPoints;
                 }
-                //records the trimed word as being played by that UserToken in that game/GameID,
-                //returns the scored word in the context of the game(if word played score = 0)
-                return 0;
+                SetStatus(OK);
+                
             }
         }
 
