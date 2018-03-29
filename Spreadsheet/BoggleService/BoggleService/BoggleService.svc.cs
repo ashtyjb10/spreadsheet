@@ -172,7 +172,6 @@ namespace Boggle
                     games[CurrentPendingGame].Player2 = item.UserToken;
 
                     string gameToReturn = CurrentPendingGame;
-                    CreateNewGameID();
 
                     games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
                     BoggleBoard newBoard = new BoggleBoard();
@@ -183,6 +182,8 @@ namespace Boggle
                     SetStatus(Created);
                     users[item.UserToken].GameID = gameToReturn;
                     returnGID.GameID = gameToReturn;
+                    CurrentPendingGame = CreateNewGameID();
+
 
                     return returnGID;
                 }
