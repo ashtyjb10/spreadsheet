@@ -38,8 +38,8 @@ namespace Boggle
         [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
         int playWord(WordToPlay wordInfo, string GameID);
 
-       // [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
-        //string getGameStats(string GameID);
+        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
+        string getGameStats(string GameID);
         //[WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?Brief=yes")]
        // string getGameStatsBrief(string GameID);
        

@@ -91,7 +91,25 @@ namespace Boggle
 
         public string getGameStats(string GameID)
         {
-            //setup the boogle board
+            //HashSet<string, string> returnThings = new HashSet<>();
+            if (!games.ContainsKey(GameID))
+            {
+                SetStatus(Forbidden);
+                return null;
+            }
+            else
+            {
+                if (games[GameID].GameState == "pending")
+                {
+                    SetStatus(OK);
+                   // return "Pending";
+                }
+                else
+                {
+                    SetStatus(OK);
+                    //return 
+                }
+            }
             throw new NotImplementedException();
         }
 
