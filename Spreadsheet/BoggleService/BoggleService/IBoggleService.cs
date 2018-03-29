@@ -39,7 +39,8 @@ namespace Boggle
         WordScore playWord(WordToPlay wordInfo, string GameID);
 
         [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
-        string getGameStats(string GameID);
+        FullGameInfo getGameStats(string GameID);
+
         //[WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?Brief=yes")]
        // string getGameStatsBrief(string GameID);
        
