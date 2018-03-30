@@ -65,7 +65,9 @@ namespace Boggle
         {
             IISAgent.Start(@"/site:""BoggleService"" /apppool:""Clr4IntegratedAppPool"" /config:""..\..\..\.vs\config\applicationhost.config""");
 
-            StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "/dictionary.txt");
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path = path.Remove(path.Length - 10, 10);
+            StreamReader reader = new StreamReader(path + "/dictionary.txt");
             while (reader.Peek() > -1)
             {
                 string wordToAdd = reader.ReadLine();
