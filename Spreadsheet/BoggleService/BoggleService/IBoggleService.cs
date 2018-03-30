@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿//created by Ashton Schmidt and Nathan Herrmann
+
+using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;

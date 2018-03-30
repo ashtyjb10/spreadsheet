@@ -1,4 +1,5 @@
-﻿using System;
+﻿//created by Ashton Schmidt and Nathan Herrmann
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -215,7 +216,7 @@ namespace Boggle
 
             lock (sync)
             {
-
+                
                 if (!games.ContainsKey(GameID))
                 {
                     SetStatus(Forbidden);
@@ -227,7 +228,6 @@ namespace Boggle
                     GameInfo current = games[GameID];
                     //new object to return.
                     FullGameInfo infoToReturn = new FullGameInfo();
-
 
                     infoToReturn.GameState = current.GameState;
                     if (infoToReturn.GameState.Equals("pending"))
@@ -259,11 +259,21 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// If UserToken or time limit is bad setStatue to Forbidden and return nothing. If the user is 
+        /// already in a pending game then SetStatus to Conflict. If there is no players in the game the 
+        /// user is set to player one and TimeLimit is stored and return game id. If thers is already a player in the game then
+        /// We make that game active and set all the information for the now active game.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public UserGame joinGame(JoinGameInfo item)
         {
             lock (sync)
             {
+                //the new GameID
                 UserGame returnGID = new UserGame();
+
                 if (!users.ContainsKey(item.UserToken) || item.TimeLimit < 5
                     || item.TimeLimit > 120)
                 {
@@ -273,10 +283,12 @@ namespace Boggle
 
                 if(games[CurrentPendingGame].Player1 == null)
                 {
+                    //add the information for game information.
                     games[CurrentPendingGame].Player1 = item.UserToken;
                     games[CurrentPendingGame].TimeLimit = item.TimeLimit;
                     SetStatus(Accepted);
 
+                    //add the game id to the users data.
                     users[item.UserToken].GameID = CurrentPendingGame;
                     returnGID.GameID = CurrentPendingGame;
                     return returnGID;
@@ -294,15 +306,22 @@ namespace Boggle
 
                     string gameToReturn = CurrentPendingGame;
 
+                    //average the two TimeLimits.
                     games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
+                    
+                    //Create a new board and activate the current game, and set the time in seconds when the game started.
                     BoggleBoard newBoard = new BoggleBoard();
                     games[CurrentPendingGame].GameState = "active";
                     games[CurrentPendingGame].TimeGameStarted = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                     games[CurrentPendingGame].BoardObject = newBoard;
                     games[CurrentPendingGame].Board = newBoard.ToString();
                     SetStatus(Created);
+
+                    //add info to data stored here.
                     users[item.UserToken].GameID = gameToReturn;
                     returnGID.GameID = gameToReturn;
+
+                    //create a new pending game for users to join.
                     CurrentPendingGame = CreateNewGameID();
 
 
@@ -311,6 +330,15 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// play word returns a WordScore Object. if the word is not within the valid constrains of the
+        /// API then SetStaus is Forbidden. If the Game is anything other than active SetStaus is set to
+        /// Conflict. Otherwise the word is scored and the score and word is stored in WordScore, and
+        /// SetStatus is OK.
+        /// </summary>
+        /// <param name="wordInfo"></param>
+        /// <param name="gameID"></param>
+        /// <returns></returns>
         public WordScore playWord(WordToPlay wordInfo, string gameID)
         {
             lock (sync)
@@ -337,16 +365,21 @@ namespace Boggle
                 }
                 else
                 {
+
+                    //is it player1's move or player2's?
                     if (games[gameID].Player1 == wordInfo.UserToken)
                     {
                         int wordPoints = 0;
 
                         //it is player one's
 
-                        if (words.ContainsKey(wordInfo.Word))//is it an actual word? 
+                        //is it an actual word?
+                        if (words.ContainsKey(wordInfo.Word))
                         {
+                            //can it be created on the current board?
                             if (games[gameID].BoardObject.CanBeFormed(wordInfo.Word))
                             {
+                                //get the score of the word!
                                 if (wordInfo.Word.Length < 3)
                                 {
                                     wordPoints = 0;
@@ -374,8 +407,19 @@ namespace Boggle
                                 }
 
                             }
+                            else
+                            {
+                                //cant be dubplicated on board.
+                                wordPoints = -1;
+                            }
 
                         }
+                        else
+                        {
+                            //not a valid word in the dictionary.
+                            wordPoints = -1;
+                        }
+                        //if the word has not already been played then add it and the score.
                         if(!games[gameID].wordsPlayedP1.ContainsKey(wordInfo.Word))
                         {
                             games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
@@ -383,17 +427,22 @@ namespace Boggle
                             score.Score = wordPoints;
 
                         }
+                        SetStatus(OK);
                         return score;
                     }
                     else
                     {
                         int wordPoints = 0;
 
-                        //its is player two's word
-                        if (words.ContainsKey(wordInfo.Word))//is it an actual word? 
+                        //its is player two's move!
+
+                        //is it an actual word in the dictuinary?
+                        if (words.ContainsKey(wordInfo.Word))
                         {
+                            //can it be duplicated on the board?
                             if (games[gameID].BoardObject.CanBeFormed(wordInfo.Word))
                             {
+                                //score the valid word.
                                 if (wordInfo.Word.Length < 3)
                                 {
                                     wordPoints = 0;
@@ -421,8 +470,19 @@ namespace Boggle
                                 }
 
                             }
+                            else
+                            {
+                                //cant be duplicated on board.
+                                wordPoints = -1;
+                            }
 
                         }
+                        else
+                        {
+                            //not a vlid word in the dictionary.
+                            wordPoints = -1;
+                        }
+                        //if the word has not already been played add it and the score.
                         if (!games[gameID].wordsPlayedP2.ContainsKey(wordInfo.Word))
                         {
                             games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
@@ -430,13 +490,20 @@ namespace Boggle
                             score.Score = wordPoints;
 
                         }
+                        SetStatus(OK);
                         return score;
-                        //todo do I need to set a status for OK?
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Registers a new User. If the Nickname doesnt fit the API standards that SetStaus is Forbidden and nothing
+        /// is returned. Otherwise we create a new token add a new user to the Dictionary of users, and 
+        /// sent back a new UserToke.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public UserToke Register(UserInfo user)
         {
             lock (sync)
@@ -449,12 +516,21 @@ namespace Boggle
                 else
                 {
 
+                    //get new token.
                     string userToken = Guid.NewGuid().ToString();
+
+                    //create new user
                     storedUserInfo newUser = new storedUserInfo();
+
+                    //add nickname and token to user.
                     newUser.Nickname = user.Nickname;
                     newUser.UserToken = userToken;
+
+                    //add user to the dicionary of users.
                     users.Add(userToken, newUser);
                     SetStatus(Created);
+
+                    //send back a new userToken.
                     UserToke token = new UserToke();
                     token.UserToken = userToken;
                     return token;
@@ -463,6 +539,10 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// Creates the new GameID string that is used for the games, and creates a new pending game.
+        /// </summary>
+        /// <returns></returns>
         static string CreateNewGameID()
         {
             GameInfo newGame = new GameInfo();
