@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -94,6 +95,7 @@ namespace Boggle
                 }
             }
         }
+       
 
         public FullGameInfo getGameStats(string GameID)
         {
@@ -126,7 +128,7 @@ namespace Boggle
                         int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
                         if (timeLeft <= 0)
                         {
-                            current.GameState = "complete";
+                            current.GameState = "completed";
                         }
                         infoToReturn.TimeLeft = timeLeft;
                         infoToReturn.Player1 = new Player1();
@@ -141,16 +143,48 @@ namespace Boggle
                     else
                     {
                         //game is completed!
-                        infoToReturn.GameState = "complete";
+                        infoToReturn.GameState = "completed";
                         infoToReturn.Board = current.Board;
                         infoToReturn.TimeLimit = current.TimeLimit;
                         infoToReturn.TimeLeft = 0;
                         infoToReturn.Player1 = new Player1();
                         infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
                         infoToReturn.Player1.Score = current.p1Score;
+
+                        List<WordInfo> playedListP1 = new List<WordInfo>();
+                         //ArrayList playedListP1 = new ArrayList();
+                        foreach (KeyValuePair<string, int> entry in current.wordsPlayedP1)
+                        {
+                            WordInfo word = new WordInfo();
+                            word.Word = entry.Key;
+                            word.Score = "" + entry.Value;
+
+                            if (!playedListP1.Contains(word))
+                            {
+                                playedListP1.Add(word);
+                            }
+                        }
+
+                        infoToReturn.Player1.WordsPlayed = playedListP1;
+                        SetStatus(OK);
                         infoToReturn.Player2 = new Player2();
                         infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
                         infoToReturn.Player2.Score = current.p2Score;
+
+                        List<WordInfo> playedListP2 = new List<WordInfo>();
+                        //ArrayList playedListP2 = new ArrayList();
+                        foreach (KeyValuePair<string, int> entry in current.wordsPlayedP2)
+                        {
+                            WordInfo word = new WordInfo();
+                            word.Word = entry.Key;
+                            word.Score = ""+entry.Value;
+
+                            if (!playedListP2.Contains(word))
+                            {
+                                playedListP2.Add(word);
+                            }
+                        }
+                        infoToReturn.Player2.WordsPlayed = playedListP2;
                         SetStatus(OK);
                         return infoToReturn;
                     }
@@ -158,9 +192,45 @@ namespace Boggle
             }
         }
 
-        public string getGameStatsBrief(string GameID)
+
+        public FullGameInfo getGameStatsBrief(string GameID)
         {
-            throw new NotImplementedException();
+
+            lock (sync)
+            {
+                GameInfo current = games[GameID];
+                FullGameInfo infoToReturn = new FullGameInfo();
+                //HashSet<string, string> returnThings = new HashSet<>();
+                if (!games.ContainsKey(GameID))
+                {
+                    SetStatus(Forbidden);
+                    return null;
+                }
+                else
+                {
+                    
+                    infoToReturn.GameState = current.GameState;
+                    if (infoToReturn.GameState.Equals("pending"))
+                    {
+                        return infoToReturn;
+                    }
+
+                    int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                    int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
+                    if (timeLeft <= 0)
+                    {
+                        current.GameState = "completed";
+                        timeLeft = 0;
+                    }
+                    infoToReturn.TimeLeft = timeLeft;
+                    infoToReturn.Player1 = new Player1();
+                    infoToReturn.Player1.Score = current.p1Score;
+                    infoToReturn.Player2 = new Player2();
+                    infoToReturn.Player2.Score = current.p2Score;
+
+                    return infoToReturn;
+                }
+            }
         }
 
         public UserGame joinGame(JoinGameInfo item)
@@ -280,9 +350,13 @@ namespace Boggle
                             }
 
                         }
-                        games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
-                        games[gameID].p1Score += wordPoints;
-                        score.Score = wordPoints;
+                        if(!games[gameID].wordsPlayedP1.ContainsKey(wordInfo.Word))
+                        {
+                            games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
+                            games[gameID].p1Score += wordPoints;
+                            score.Score = wordPoints;
+
+                        }
                         return score;
                     }
                     else
@@ -323,10 +397,13 @@ namespace Boggle
                             }
 
                         }
-                        games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
-                        score.Score = wordPoints;
-                        games[gameID].p2Score += wordPoints;
+                        if (!games[gameID].wordsPlayedP2.ContainsKey(wordInfo.Word))
+                        {
+                            games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
+                            games[gameID].p2Score += wordPoints;
+                            score.Score = wordPoints;
 
+                        }
                         return score;
                         //todo do I need to set a status for OK?
                     }

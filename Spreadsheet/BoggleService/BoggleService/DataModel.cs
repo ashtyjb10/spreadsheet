@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -62,7 +63,6 @@ namespace Boggle
         public Dictionary<string, int> wordsPlayedP1 = new Dictionary<string, int>();
         public Dictionary<string, int> wordsPlayedP2 = new Dictionary<string, int>();
 
-        // is this right?
     }
     [DataContract]
     public class FullGameInfo
@@ -84,22 +84,32 @@ namespace Boggle
     [DataContract]
     public class Player1
     {
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public string Nickname { get; set; }
         [DataMember]
         public int Score { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public List<WordInfo> WordsPlayed { get; set; }
 
     }
     [DataContract]
     public class Player2
     {
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public string Nickname { get; set; }
         [DataMember]
         public int Score { get; set; }
-        //[DataMember(EmitDefaultValue = false)] for the array list I have to do.
+        [DataMember(EmitDefaultValue = false)]
+        public List<WordInfo> WordsPlayed { get; set; }
 
     }
+
+    public class WordInfo
+    {
+        public string Word { get; set; }
+        public string Score { get; set; }
+    }
+
 
     public class storedUserInfo
     {
