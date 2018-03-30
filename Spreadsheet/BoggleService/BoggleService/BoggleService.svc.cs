@@ -215,11 +215,6 @@ namespace Boggle
 
             lock (sync)
             {
-                //get current game requested
-                GameInfo current = games[GameID];
-                //new object to return.
-                FullGameInfo infoToReturn = new FullGameInfo();
-
 
                 if (!games.ContainsKey(GameID))
                 {
@@ -228,7 +223,12 @@ namespace Boggle
                 }
                 else
                 {
-                    
+                    //get current game requested
+                    GameInfo current = games[GameID];
+                    //new object to return.
+                    FullGameInfo infoToReturn = new FullGameInfo();
+
+
                     infoToReturn.GameState = current.GameState;
                     if (infoToReturn.GameState.Equals("pending"))
                     {
