@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -9,22 +10,28 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
+        //store the users.
         private readonly static Dictionary<String, storedUserInfo> users = new Dictionary<String, storedUserInfo>();
+        //store all of the games.
         private readonly static Dictionary<String, GameInfo> games = new Dictionary<String, GameInfo>();
+        //allow for thread manipulation.
         private static readonly object sync = new object();
+        //What game number / id # we are on
         private static int countingID;
+        //the new game Id generated
         private static string CurrentPendingGame;
+        //The Dictionary that stores the valid words from dictionary.txt.
         private readonly static Dictionary<String, String> words = new Dictionary<String, String>();
 
 
         static BoggleService()
         {
+
             countingID = 0;
             CurrentPendingGame = CreateNewGameID();
             
             //Reads in the dictionary for all games to use.
             string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
-            Console.WriteLine(path);
             StreamReader reader = new StreamReader(path);
             while (reader.Peek() > -1)
             {
@@ -55,6 +62,11 @@ namespace Boggle
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
+        /// <summary>
+        /// Returns nothing but will set the status to Forbidden if the GameState is not pending,
+        /// otherwise will set the status to OK and remove player1 from the game.
+        /// </summary>
+        /// <param name="cancelInfo"></param>
         public void cancelGame(UserCancel cancelInfo)
         {
             lock (sync)
@@ -79,13 +91,20 @@ namespace Boggle
                 }
             }
         }
+       
+        /// <summary>
+        /// Returns a FullGameInfo object that will be serialized.  If the gameID is not valid nothing is returned and 
+        /// the status is set to Forbidden. Otherwise the game will be set to ok and have the correct things added specified
+        /// via the API.
+        /// </summary>
+        /// <param name="GameID"></param>
+        /// <returns></returns>
 
         public FullGameInfo getGameStats(string GameID)
         {
             lock (sync)
             {
                 
-                //HashSet<string, string> returnThings = new HashSet<>();
                 if (!games.ContainsKey(GameID))
                 {
                     SetStatus(Forbidden);
@@ -93,7 +112,9 @@ namespace Boggle
                 }
                 else
                 {
+                    //current game object
                     GameInfo current = games[GameID];
+                    //new object to return.
                     FullGameInfo infoToReturn = new FullGameInfo();
 
                     if (games[GameID].GameState == "pending")
@@ -109,13 +130,16 @@ namespace Boggle
                         infoToReturn.GameState = "active";
                         infoToReturn.Board = current.Board;
                         infoToReturn.TimeLimit = current.TimeLimit;
+                        //get the current time in seconds subtract it from the time the game started, and add that to the TimeLimit
                         int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                         int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
                         if (timeLeft <= 0)
                         {
-                            current.GameState = "complete";
+                            current.GameState = "completed";
                         }
                         infoToReturn.TimeLeft = timeLeft;
+
+                        //set the player (1 and 2) information in the object to return.
                         infoToReturn.Player1 = new Player1();
                         infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
                         infoToReturn.Player1.Score = current.p1Score;
@@ -128,16 +152,51 @@ namespace Boggle
                     else
                     {
                         //game is completed!
-                        infoToReturn.GameState = "complete";
+                        infoToReturn.GameState = "completed";
                         infoToReturn.Board = current.Board;
                         infoToReturn.TimeLimit = current.TimeLimit;
                         infoToReturn.TimeLeft = 0;
+
+                        //set player1 info.
                         infoToReturn.Player1 = new Player1();
                         infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
                         infoToReturn.Player1.Score = current.p1Score;
+
+                        //list of words played by player 1 added to the infoToReturn.
+                        List<WordInfo> playedListP1 = new List<WordInfo>();
+                        foreach (KeyValuePair<string, int> entry in current.wordsPlayedP1)
+                        {
+                            WordInfo word = new WordInfo();
+                            word.Word = entry.Key;
+                            word.Score = "" + entry.Value;
+
+                            if (!playedListP1.Contains(word))
+                            {
+                                playedListP1.Add(word);
+                            }
+                        }
+
+                        infoToReturn.Player1.WordsPlayed = playedListP1;
+
+                        //set player2 info.
                         infoToReturn.Player2 = new Player2();
                         infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
                         infoToReturn.Player2.Score = current.p2Score;
+
+                        //list of words played by player 2 added to the infoToReturn.
+                        List<WordInfo> playedListP2 = new List<WordInfo>();
+                        foreach (KeyValuePair<string, int> entry in current.wordsPlayedP2)
+                        {
+                            WordInfo word = new WordInfo();
+                            word.Word = entry.Key;
+                            word.Score = ""+entry.Value;
+
+                            if (!playedListP2.Contains(word))
+                            {
+                                playedListP2.Add(word);
+                            }
+                        }
+                        infoToReturn.Player2.WordsPlayed = playedListP2;
                         SetStatus(OK);
                         return infoToReturn;
                     }
@@ -145,9 +204,59 @@ namespace Boggle
             }
         }
 
-        public string getGameStatsBrief(string GameID)
+        /// <summary>
+        /// See above for outline. All that is different is that infoToReturn only sets the gameStatus, TimeLeft,
+        /// and player 1, and 2's score.
+        /// </summary>
+        /// <param name="GameID"></param>
+        /// <returns></returns>
+        public FullGameInfo getGameStatsBrief(string GameID)
         {
-            throw new NotImplementedException();
+
+            lock (sync)
+            {
+                //get current game requested
+                GameInfo current = games[GameID];
+                //new object to return.
+                FullGameInfo infoToReturn = new FullGameInfo();
+
+
+                if (!games.ContainsKey(GameID))
+                {
+                    SetStatus(Forbidden);
+                    return null;
+                }
+                else
+                {
+                    
+                    infoToReturn.GameState = current.GameState;
+                    if (infoToReturn.GameState.Equals("pending"))
+                    {
+                        SetStatus(OK);
+                        return infoToReturn;
+                    }
+
+                    //take current time subtract it from the time the game started and add that to the time Limit. 
+                    int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                    int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
+                    if (timeLeft <= 0)
+                    {
+                        current.GameState = "completed";
+                        timeLeft = 0;
+                    }
+                    infoToReturn.TimeLeft = timeLeft;
+
+                    //set Player1 info.
+                    infoToReturn.Player1 = new Player1();
+                    infoToReturn.Player1.Score = current.p1Score;
+                    //set Playe2 info.
+                    infoToReturn.Player2 = new Player2();
+                    infoToReturn.Player2.Score = current.p2Score;
+                    SetStatus(OK);
+
+                    return infoToReturn;
+                }
+            }
         }
 
         public UserGame joinGame(JoinGameInfo item)
@@ -267,9 +376,13 @@ namespace Boggle
                             }
 
                         }
-                        games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
-                        games[gameID].p1Score += wordPoints;
-                        score.Score = wordPoints;
+                        if(!games[gameID].wordsPlayedP1.ContainsKey(wordInfo.Word))
+                        {
+                            games[gameID].wordsPlayedP1.Add(wordInfo.Word, wordPoints);
+                            games[gameID].p1Score += wordPoints;
+                            score.Score = wordPoints;
+
+                        }
                         return score;
                     }
                     else
@@ -310,10 +423,13 @@ namespace Boggle
                             }
 
                         }
-                        games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
-                        score.Score = wordPoints;
-                        games[gameID].p2Score += wordPoints;
+                        if (!games[gameID].wordsPlayedP2.ContainsKey(wordInfo.Word))
+                        {
+                            games[gameID].wordsPlayedP2.Add(wordInfo.Word, wordPoints);
+                            games[gameID].p2Score += wordPoints;
+                            score.Score = wordPoints;
 
+                        }
                         return score;
                         //todo do I need to set a status for OK?
                     }
