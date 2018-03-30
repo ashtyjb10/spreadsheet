@@ -259,11 +259,21 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// If UserToken or time limit is bad setStatue to Forbidden and return nothing. If the user is 
+        /// already in a pending game then SetStatus to Conflict. If there is no players in the game the 
+        /// user is set to player one and TimeLimit is stored and return game id. If thers is already a player in the game then
+        /// We make that game active and set all the information for the now active game.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public UserGame joinGame(JoinGameInfo item)
         {
             lock (sync)
             {
+                //the new GameID
                 UserGame returnGID = new UserGame();
+
                 if (!users.ContainsKey(item.UserToken) || item.TimeLimit < 5
                     || item.TimeLimit > 120)
                 {
@@ -273,10 +283,12 @@ namespace Boggle
 
                 if(games[CurrentPendingGame].Player1 == null)
                 {
+                    //add the information for game information.
                     games[CurrentPendingGame].Player1 = item.UserToken;
                     games[CurrentPendingGame].TimeLimit = item.TimeLimit;
                     SetStatus(Accepted);
 
+                    //add the game id to the users data.
                     users[item.UserToken].GameID = CurrentPendingGame;
                     returnGID.GameID = CurrentPendingGame;
                     return returnGID;
@@ -294,15 +306,22 @@ namespace Boggle
 
                     string gameToReturn = CurrentPendingGame;
 
+                    //average the two TimeLimits.
                     games[CurrentPendingGame].TimeLimit = ((games[CurrentPendingGame].TimeLimit + item.TimeLimit) / 2);
+                    
+                    //Create a new board and activate the current game, and set the time in seconds when the game started.
                     BoggleBoard newBoard = new BoggleBoard();
                     games[CurrentPendingGame].GameState = "active";
                     games[CurrentPendingGame].TimeGameStarted = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                     games[CurrentPendingGame].BoardObject = newBoard;
                     games[CurrentPendingGame].Board = newBoard.ToString();
                     SetStatus(Created);
+
+                    //add info to data stored here.
                     users[item.UserToken].GameID = gameToReturn;
                     returnGID.GameID = gameToReturn;
+
+                    //create a new pending game for users to join.
                     CurrentPendingGame = CreateNewGameID();
 
 
