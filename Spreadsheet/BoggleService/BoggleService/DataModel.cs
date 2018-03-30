@@ -1,4 +1,6 @@
-﻿using System;
+﻿//created by Ashton Schmidt and Nathan Herrmann
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
