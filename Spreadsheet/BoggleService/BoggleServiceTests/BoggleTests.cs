@@ -3,6 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static System.Net.HttpStatusCode;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Dynamic;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Boggle
 {
@@ -16,6 +21,7 @@ namespace Boggle
     {
         // Reference to the running process
         private static Process process = null;
+        
 
         /// <summary>
         /// Starts IIS
@@ -28,6 +34,10 @@ namespace Boggle
                 info.WindowStyle = ProcessWindowStyle.Minimized;
                 info.UseShellExecute = false;
                 process = Process.Start(info);
+
+                
+
+
             }
         }
 
@@ -45,6 +55,8 @@ namespace Boggle
     [TestClass]
     public class BoggleTests
     {
+
+        private static Dictionary<String, String> dictionary = new Dictionary<string, string>();
         /// <summary>
         /// This is automatically run prior to all the tests to start the server
         /// </summary>
@@ -52,6 +64,18 @@ namespace Boggle
         public static void StartIIS(TestContext testContext)
         {
             IISAgent.Start(@"/site:""BoggleService"" /apppool:""Clr4IntegratedAppPool"" /config:""..\..\..\.vs\config\applicationhost.config""");
+
+            StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "/dictionary.txt");
+            while (reader.Peek() > -1)
+            {
+                string wordToAdd = reader.ReadLine();
+
+                if (wordToAdd.Length < 4)
+                { 
+                    dictionary.Add(wordToAdd, wordToAdd);
+                }
+            }
+            reader.Close();
         }
 
         /// <summary>
@@ -65,22 +89,193 @@ namespace Boggle
 
         private RestTestClient client = new RestTestClient("http://localhost:60000/BoggleService.svc/");
 
-        /// <summary>
-        /// Note that DoGetAsync (and the other similar methods) returns a Response object, which contains
-        /// the response Stats and the deserialized JSON response (if any).  See RestTestClient.cs
-        /// for details.
-        /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void TestRegisterValidUser()
         {
-            Response r = client.DoGetAsync("word?index={0}", "-5").Result;
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor";
+            
+            Response r = client.DoPostAsync("users", users).Result;
+            Assert.AreEqual(Created, r.Status);
+
+            users.Nickname = null;
+            r = client.DoPostAsync("users", users).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+        }
+
+        [TestMethod]
+        public void TestJoinGame()
+        {
+            //Create first user.
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor1";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic userOne = new ExpandoObject();
+            userOne.UserToken = r.Data.UserToken;
+            userOne.TimeLimit = "25";
+
+            //Create second user.
+            users.Nickname = "Nathor2";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic userTwo = new ExpandoObject();
+            userTwo.UserToken = r2.Data.UserToken;
+            userTwo.TimeLimit = "0";
+            
+            //User two with wrong time limit.
+            r = client.DoPostAsync("games", userTwo).Result;
             Assert.AreEqual(Forbidden, r.Status);
 
-            r = client.DoGetAsync("word?index={0}", "5").Result;
+            //Set time limit properly.
+            userTwo.TimeLimit = "25";
+
+            //First user enters game.
+            r = client.DoPostAsync("games", userOne).Result;
+            Assert.AreEqual(Accepted, r.Status);
+            //PlayerOne enters the game again.
+            r = client.DoPostAsync("games", userOne).Result;
+            Assert.AreEqual(Conflict, r.Status);
+            //Second player joins the game.
+            r = client.DoPostAsync("games", userTwo).Result;
+            Assert.AreEqual(Created, r.Status);
+        }
+
+        [TestMethod]
+        public void TestCancelJoinRequest()
+        {
+            //Create and register playerOne
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor3";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic playerOne = new ExpandoObject();
+            playerOne.UserToken = r.Data.UserToken;
+            playerOne.TimeLimit = "25";
+
+            //Create second user.
+            users.Nickname = "Nathor4";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic userTwo = new ExpandoObject();
+            userTwo.UserToken = r2.Data.UserToken;
+            userTwo.TimeLimit = "0";
+
+
+            //First user enters game.
+            r = client.DoPostAsync("games", playerOne).Result;
+            Assert.AreEqual(Accepted, r.Status);
+
+            //Second player cancels the game
+            r = client.DoPutAsync(userTwo, "games").Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Player One cancels the game.
+            Response rOK = client.DoPutAsync(playerOne, "games").Result;
+            Assert.AreEqual(OK, rOK.Status);
+        }
+
+        [TestMethod]
+        public void TestPlayWord()
+        {
+            //Create and register playerOne
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor5";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic playerOne = new ExpandoObject();
+            playerOne.UserToken = r.Data.UserToken;
+            playerOne.TimeLimit = "120";
+
+            //Create and register playerTwo
+            dynamic users2 = new ExpandoObject();
+            users.Nickname = "Nathor6";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic playerTwo = new ExpandoObject();
+            playerTwo.UserToken = r2.Data.UserToken;
+            playerTwo.TimeLimit = "120";
+
+            //First user enters game.
+            Response rGameID = client.DoPostAsync("games", playerOne).Result;
+
+            //Player one plays when game is not active
+            playerOne.Word = "A";
+            r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(Conflict, r.Status);
+
+            //Player two plays when not in the game.
+            playerTwo.Word = "A";
+            r = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Second user enters game.
+            r = client.DoPostAsync("games", playerTwo).Result;
+
+            //word played is too long.
+            playerOne.Word = "abcdefghijklmnopqrstuvwxyznowiknowmyabcnexttimechooseashorterstring";
+            r = client.DoPutAsync(playerOne,"games/" + rGameID.Data.GameID).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Player one plays a single word.
+            playerOne.Word = "a";
+            r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
             Assert.AreEqual(OK, r.Status);
 
-            string word = (string) r.Data;
-            Assert.AreEqual("AAL", word);
+            //Trys to play a series of words.
+            foreach(string word in dictionary.Keys)
+            {
+                playerOne.Word = word;
+                playerTwo.Word = word;
+
+                r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+                Assert.AreEqual(OK, r.Status);
+                r2 = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+                Assert.AreEqual(OK, r2.Status);
+
+            }
+        }
+
+        [TestMethod]
+        public void TestGameStatus()
+        {
+            //Create and register playerOne
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor7";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic playerOne = new ExpandoObject();
+            playerOne.UserToken = r.Data.UserToken;
+            playerOne.TimeLimit = "5";
+
+            //Create and register playerTwo
+            dynamic users2 = new ExpandoObject();
+            users.Nickname = "Nathor8";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic playerTwo = new ExpandoObject();
+            playerTwo.UserToken = r2.Data.UserToken;
+            playerTwo.TimeLimit = "5";
+
+            //First user enters game.
+            Response rGameID = client.DoPostAsync("games", playerOne).Result;
+
+            //Fake GameID is made
+            r2.Data.GameID = "54";
+
+            //Fake ID is used against the service
+            r = client.DoGetAsync("games/" + r2.Data.GameID, r2.Data.GameID.ToString()).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Real GameID is used against the service in pending status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+
+            //Player2 enters the game
+            r2 = client.DoPostAsync("games",playerTwo).Result;
+
+            System.Threading.Thread.Sleep(6000);
+
+            //Real GameID is used against the service in active status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+            
+            //Real GameID is used against the service in complete status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+
         }
     }
 }
