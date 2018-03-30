@@ -24,24 +24,16 @@ namespace Boggle
             CurrentPendingGame = CreateNewGameID();
             
             //Reads in the dictionary for all games to use.
-            try
+            string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
+            Console.WriteLine(path);
+            StreamReader reader = new StreamReader(path);
+            while (reader.Peek() > -1)
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
-                Console.WriteLine(path);
-                StreamReader reader = new StreamReader(path);
-                while (reader.Peek() > -1)
-                {
-                    string wordToAdd = reader.ReadLine();
-                    words.Add(wordToAdd, wordToAdd);
-                }
-
-                reader.Close();
+                string wordToAdd = reader.ReadLine();
+                words.Add(wordToAdd, wordToAdd);
             }
-            catch (IOException)
-            {
 
-            }
-            
+            reader.Close();
         }
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
@@ -85,13 +77,6 @@ namespace Boggle
                         return;
 
                     }
-                    else
-                    {
-                        games[gameID].Player2 = null;
-                        users[cancelInfo.UserToken].GameID = null;
-                        SetStatus(OK);
-                        return;
-                    }
                 }
             }
         }
@@ -101,8 +86,7 @@ namespace Boggle
         {
             lock (sync)
             {
-                GameInfo current = games[GameID];
-                FullGameInfo infoToReturn = new FullGameInfo();
+                
                 //HashSet<string, string> returnThings = new HashSet<>();
                 if (!games.ContainsKey(GameID))
                 {
@@ -111,6 +95,9 @@ namespace Boggle
                 }
                 else
                 {
+                    GameInfo current = games[GameID];
+                    FullGameInfo infoToReturn = new FullGameInfo();
+
                     if (games[GameID].GameState == "pending")
                     {
 
@@ -434,40 +421,6 @@ namespace Boggle
                     return token;
                
                 }
-            }
-        }
-
-
-        /// <summary>
-        /// Demo.  You can delete this.
-        /// </summary>
-        public string WordAtIndex(int n)
-        {
-            if (n < 0)
-            {
-                SetStatus(Forbidden);
-                return null;
-            }
-
-            string line;
-            using (StreamReader file = new System.IO.StreamReader(AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt"))
-            {
-                while ((line = file.ReadLine()) != null)
-                {
-                    if (n == 0) break;
-                    n--;
-                }
-            }
-
-            if (n == 0)
-            {
-                SetStatus(OK);
-                return line;
-            }
-            else
-            {
-                SetStatus(Forbidden);
-                return null;
             }
         }
 
