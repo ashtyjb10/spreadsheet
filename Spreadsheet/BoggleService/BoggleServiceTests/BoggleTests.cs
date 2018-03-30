@@ -294,7 +294,7 @@ namespace Boggle
         {
             //Create and register playerOne
             dynamic users = new ExpandoObject();
-            users.Nickname = "Nathor8";
+            users.Nickname = "Nathor9";
             Response r = client.DoPostAsync("users", users).Result;
             dynamic playerOne = new ExpandoObject();
             playerOne.UserToken = r.Data.UserToken;
@@ -302,7 +302,7 @@ namespace Boggle
 
             //Create and register playerTwo
             dynamic users2 = new ExpandoObject();
-            users.Nickname = "Nathor9";
+            users.Nickname = "Nathor10";
             Response r2 = client.DoPostAsync("users", users).Result;
             dynamic playerTwo = new ExpandoObject();
             playerTwo.UserToken = r2.Data.UserToken;
@@ -312,10 +312,10 @@ namespace Boggle
             Response rGameID = client.DoPostAsync("games", playerOne).Result;
 
             //Fake GameID is made
-            r2.Data.GameID = "54";
+            r2.Data.GameID = "5566";
 
             //Fake ID is used against the service
-            r = client.DoGetAsync("games/" + r2.Data.GameID + "?Brief=yes", r2.Data.GameID.ToString()).Result;
+            r = client.DoGetAsync("games/" + r2.Data.GameID + "?Brief=yes").Result;
             Assert.AreEqual(Forbidden, r.Status);
 
             //Real GameID is used against the service in pending status
@@ -336,11 +336,11 @@ namespace Boggle
             System.Threading.Thread.Sleep(6000);
 
             //Real GameID is used against the service in active status
-            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID + "?Brief=yes", rGameID.Data.GameID.ToString()).Result;
             Assert.AreEqual(OK, r.Status);
 
             //Real GameID is used against the service in complete status
-            r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID + "?Brief=yes", rGameID.Data.GameID.ToString()).Result;
             Assert.AreEqual(OK, r.Status);
         }
     }
