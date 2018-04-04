@@ -72,16 +72,20 @@ namespace Boggle
         {
             lock (sync)
             {
-                string gameID = users[cancelInfo.UserToken].GameID;
-                if (!users.ContainsKey(cancelInfo.UserToken) || gameID == null ||
-                    games[gameID].GameState != "pending")
+                //string gameID = users[cancelInfo.UserToken].GameID;
+                if (!users.ContainsKey(cancelInfo.UserToken) || users[cancelInfo.UserToken].GameID == null)
                 {
                     SetStatus(Forbidden);
                 }
                 else
                 {
+                    string gameID = users[cancelInfo.UserToken].GameID;
+                    if (games[gameID].GameState != "pending")
+                    {
+                        SetStatus(Forbidden);
+                    }
                     //remove user from pending game.
-                    if (games[gameID].Player1 == cancelInfo.UserToken)
+                    else if (games[gameID].Player1 == cancelInfo.UserToken)
                     {
                         games[gameID].Player1 = null;
                         users[cancelInfo.UserToken].GameID = null;
@@ -137,18 +141,72 @@ namespace Boggle
                         if (timeLeft <= 0)
                         {
                             current.GameState = "completed";
-                        }
-                        infoToReturn.TimeLeft = timeLeft;
+                            infoToReturn.TimeLeft = 0;
 
-                        //set the player (1 and 2) information in the object to return.
-                        infoToReturn.Player1 = new Player1();
-                        infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
-                        infoToReturn.Player1.Score = current.p1Score;
-                        infoToReturn.Player2 = new Player2();
-                        infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
-                        infoToReturn.Player2.Score = current.p2Score;
-                        SetStatus(OK);
-                        return infoToReturn;
+                            //game is completed!
+                            infoToReturn.GameState = "completed";
+                            infoToReturn.Board = current.Board;
+                            infoToReturn.TimeLimit = current.TimeLimit;
+                            infoToReturn.TimeLeft = 0;
+
+                            //set player1 info.
+                            infoToReturn.Player1 = new Player1();
+                            infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
+                            infoToReturn.Player1.Score = current.p1Score;
+
+                            //list of words played by player 1 added to the infoToReturn.
+                            List<WordInfo> playedListP1 = new List<WordInfo>();
+                            foreach (KeyValuePair<string, int> entry in current.wordsPlayedP1)
+                            {
+                                WordInfo word = new WordInfo();
+                                word.Word = entry.Key;
+                                word.Score = "" + entry.Value;
+
+                                if (!playedListP1.Contains(word))
+                                {
+                                    playedListP1.Add(word);
+                                }
+                            }
+
+                            infoToReturn.Player1.WordsPlayed = playedListP1;
+
+                            //set player2 info.
+                            infoToReturn.Player2 = new Player2();
+                            infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
+                            infoToReturn.Player2.Score = current.p2Score;
+
+                            //list of words played by player 2 added to the infoToReturn.
+                            List<WordInfo> playedListP2 = new List<WordInfo>();
+                            foreach (KeyValuePair<string, int> entry in current.wordsPlayedP2)
+                            {
+                                WordInfo word = new WordInfo();
+                                word.Word = entry.Key;
+                                word.Score = "" + entry.Value;
+
+                                if (!playedListP2.Contains(word))
+                                {
+                                    playedListP2.Add(word);
+                                }
+                            }
+                            infoToReturn.Player2.WordsPlayed = playedListP2;
+                            SetStatus(OK);
+                            return infoToReturn;
+                        }
+                        else
+                        {
+                            infoToReturn.TimeLeft = timeLeft;
+                            //set the player (1 and 2) information in the object to return.
+                            infoToReturn.Player1 = new Player1();
+                            infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
+                            infoToReturn.Player1.Score = current.p1Score;
+                            infoToReturn.Player2 = new Player2();
+                            infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
+                            infoToReturn.Player2.Score = current.p2Score;
+                            SetStatus(OK);
+                            return infoToReturn;
+                        }
+
+                     
                     }
                     else
                     {
@@ -358,7 +416,9 @@ namespace Boggle
                     SetStatus(Forbidden);
                     return score;
                 }
-                else if (games[gameID].GameState != "active")
+                int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                int timeLeft = games[gameID].TimeLimit + (games[gameID].TimeGameStarted - currentTime);
+                 if (timeLeft <= 0)
                 {
                     SetStatus(Conflict);
                     return score;
@@ -372,6 +432,7 @@ namespace Boggle
                         int wordPoints = 0;
 
                         //it is player one's
+
 
                         //is it an actual word?
                         if (words.ContainsKey(wordInfo.Word))
@@ -410,14 +471,29 @@ namespace Boggle
                             else
                             {
                                 //cant be dubplicated on board.
-                                wordPoints = -1;
+                                if (wordInfo.Word.Length < 3)
+                                {
+                                    wordPoints = 0;
+                                }
+                                else
+                                {
+                                    wordPoints = -1;
+                                }
                             }
 
                         }
                         else
                         {
                             //not a valid word in the dictionary.
-                            wordPoints = -1;
+                            if (wordInfo.Word.Length < 3)
+                            {
+                                wordPoints = 0;
+                            }
+                            else
+                            {
+                                wordPoints = -1;
+                            }
+                            
                         }
                         //if the word has not already been played then add it and the score.
                         if(!games[gameID].wordsPlayedP1.ContainsKey(wordInfo.Word))
@@ -473,14 +549,28 @@ namespace Boggle
                             else
                             {
                                 //cant be duplicated on board.
-                                wordPoints = -1;
+                                if (wordInfo.Word.Length < 3)
+                                {
+                                    wordPoints = 0;
+                                }
+                                else
+                                {
+                                    wordPoints = -1;
+                                }
                             }
 
                         }
                         else
                         {
                             //not a vlid word in the dictionary.
-                            wordPoints = -1;
+                            if (wordInfo.Word.Length < 3)
+                            {
+                                wordPoints = 0;
+                            }
+                            else
+                            {
+                                wordPoints = -1;
+                            }
                         }
                         //if the word has not already been played add it and the score.
                         if (!games[gameID].wordsPlayedP2.ContainsKey(wordInfo.Word))
