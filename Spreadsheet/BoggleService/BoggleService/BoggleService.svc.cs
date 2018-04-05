@@ -108,6 +108,7 @@ namespace Boggle
                         //check to see if it is in the pending game
                         query = "SELECT TOP 1 * FROM dbo.Games ORDER BY GameID DESC";
                         string gameStatus = null;
+                        string player1Toke = null;
                         int? gameID = null;
                         using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                         {
@@ -116,25 +117,44 @@ namespace Boggle
                                 while (reader.Read())
                                 {
                                     gameID = (int)reader["GameID"];
+                                    if (reader["Player1"] != System.DBNull.Value)
+                                    {
+                                        player1Toke = (string)reader["Player1"];
+                                    }
                                     if (reader["GameStatus"] != System.DBNull.Value)
                                     {
                                         gameStatus = (string)reader["GameStatus"];
                                     }
-                                    if (gameStatus != "pending")
+                                    if (gameStatus != "pending" || player1Toke != cancelInfo.UserToken)
                                     {
                                         SetStatus(Forbidden);
                                         reader.Close();
                                         trans.Commit();
                                         return;
-                                        
+
                                     }
+                          
                                 }
                             }
 
+                        }
+                       // it is okay to remove the game.
+                        query = "DELETE FROM Games WHERE GameID = @GameID";
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@GameID", gameID);
+                            if (cmd.ExecuteNonQuery() == 0)
+                            {
+                                //something went wrong.
+                            }
+                            else
+                            {
+                                SetStatus(OK);
+                                trans.Commit();
+                                return;
+                            }
 
                         }
-
-
                     }
                 }
 
