@@ -1264,7 +1264,7 @@ namespace Boggle
                             using (SqlDataReader GameIdReader = findGameid.ExecuteReader())
                             {
 
-                                //If the reader does not return a row, set forbidden
+                                //If the reader does not return a row, set forbidden.
                                 if (!GameIdReader.HasRows)
                                 {
                                     SetStatus(Forbidden);
