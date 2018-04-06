@@ -157,15 +157,7 @@ namespace Boggle
                         }
                     }
                 }
-
-
-
-
-
-
-
-
-
+                /*
                     //string gameID = users[cancelInfo.UserToken].GameID;
                     if (!users.ContainsKey(cancelInfo.UserToken) || users[cancelInfo.UserToken].GameID == null)
                     {
@@ -188,6 +180,7 @@ namespace Boggle
 
                         }
                     }
+                    */
             }
         }
        
@@ -203,40 +196,188 @@ namespace Boggle
         {
             lock (sync)
             {
-                
-                if (!games.ContainsKey(GameID))
+                FullGameInfo gameInfo = new FullGameInfo();
+                using (SqlConnection conn = new SqlConnection(BoggleDB))
                 {
-                    SetStatus(Forbidden);
-                    return null;
-                }
-                else
-                {
-                    //current game object
-                    GameInfo current = games[GameID];
-                    //new object to return.
-                    FullGameInfo infoToReturn = new FullGameInfo();
+                    conn.Open();
 
-                    if (games[GameID].GameState == "pending")
+                    using (SqlTransaction trans = conn.BeginTransaction())
                     {
+                        string query = "Select * From dbo.Games Where GameID = @GameID";
 
-                        SetStatus(OK);
-                        infoToReturn.GameState = "pending";
-                        return infoToReturn;
-
-                    }
-                    else if (current.GameState == "active")
-                    {
-                        infoToReturn.GameState = "active";
-                        infoToReturn.Board = current.Board;
-                        infoToReturn.TimeLimit = current.TimeLimit;
-                        //get the current time in seconds subtract it from the time the game started, and add that to the TimeLimit
-                        int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-                        int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
-                        if (timeLeft <= 0)
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                         {
-                            current.GameState = "completed";
-                            infoToReturn.TimeLeft = 0;
+                            cmd.Parameters.AddWithValue("@GameID", GameID);
 
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (!reader.HasRows)
+                                {
+                                    SetStatus(Forbidden);
+                                    reader.Close();
+                                    trans.Commit();
+                                    return null;
+                                }
+                                else
+                                {
+                                    while (reader.Read())
+                                    {
+                                        //string b = (string)reader["Board"];
+                                        gameInfo.GameState = (string)reader["GameStatus"];
+                                        if (gameInfo.GameState == "pending")
+                                        {
+                                            SetStatus(OK);
+                                            reader.Close();
+                                            trans.Commit();
+                                            return gameInfo;
+                                        }
+                                        else if (gameInfo.GameState == "active")
+                                        {
+                                            gameInfo.Board = (string)reader["Board"];
+                                            gameInfo.TimeLimit = (int)reader["TimeLimit"];
+
+                                            //do the time calculations.
+                                            DateTime startTime = reader.GetDateTime(5);
+                                            int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
+                                            int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                                            int timeLeft = gameInfo.TimeLimit + (startInInt - currentTime);
+                                            // get the rest of the info for the reader.
+                                            string player1 = (string)reader["Player1"];
+                                            string player2 = (String)reader["Player2"];
+
+                                            if (timeLeft <= 0)
+                                            {
+                                                gameInfo.GameState = "completed";
+                                                gameInfo.TimeLeft = 0;
+
+                                                //add the player information
+                                                gameInfo.Player1 = new Player1();
+                                                //get the player nickname, and the score of the words played
+
+                                            }
+                                            else
+                                            {
+                                                gameInfo.TimeLeft = timeLeft;
+                                                // get the player nickname, and the score and words played with score.
+
+                                            }
+
+
+                                            
+                                        }
+                                    }
+                                    // the id is valid.
+
+                                    //now we need to know if the status is pending. / get all user data.
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                    if (!games.ContainsKey(GameID))
+                    {
+                        SetStatus(Forbidden);
+                        return null;
+                    }
+                    else
+                    {
+                        //current game object
+                        GameInfo current = games[GameID];
+                        //new object to return.
+                        FullGameInfo infoToReturn = new FullGameInfo();
+
+                        if (games[GameID].GameState == "pending")
+                        {
+
+                            SetStatus(OK);
+                            infoToReturn.GameState = "pending";
+                            return infoToReturn;
+
+                        }
+                        else if (current.GameState == "active")
+                        {
+                            infoToReturn.GameState = "active";
+                            infoToReturn.Board = current.Board;
+                            infoToReturn.TimeLimit = current.TimeLimit;
+                            //get the current time in seconds subtract it from the time the game started, and add that to the TimeLimit
+                            int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                            int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
+                            if (timeLeft <= 0)
+                            {
+                                current.GameState = "completed";
+                                infoToReturn.TimeLeft = 0;
+
+                                //game is completed!
+                                infoToReturn.GameState = "completed";
+                                infoToReturn.Board = current.Board;
+                                infoToReturn.TimeLimit = current.TimeLimit;
+                                infoToReturn.TimeLeft = 0;
+
+                                //set player1 info.
+                                infoToReturn.Player1 = new Player1();
+                                infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
+                                infoToReturn.Player1.Score = current.p1Score;
+
+                                //list of words played by player 1 added to the infoToReturn.
+                                List<WordInfo> playedListP1 = new List<WordInfo>();
+                                foreach (KeyValuePair<string, int> entry in current.wordsPlayedP1)
+                                {
+                                    WordInfo word = new WordInfo();
+                                    word.Word = entry.Key;
+                                    word.Score = "" + entry.Value;
+
+                                    if (!playedListP1.Contains(word))
+                                    {
+                                        playedListP1.Add(word);
+                                    }
+                                }
+
+                                infoToReturn.Player1.WordsPlayed = playedListP1;
+
+                                //set player2 info.
+                                infoToReturn.Player2 = new Player2();
+                                infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
+                                infoToReturn.Player2.Score = current.p2Score;
+
+                                //list of words played by player 2 added to the infoToReturn.
+                                List<WordInfo> playedListP2 = new List<WordInfo>();
+                                foreach (KeyValuePair<string, int> entry in current.wordsPlayedP2)
+                                {
+                                    WordInfo word = new WordInfo();
+                                    word.Word = entry.Key;
+                                    word.Score = "" + entry.Value;
+
+                                    if (!playedListP2.Contains(word))
+                                    {
+                                        playedListP2.Add(word);
+                                    }
+                                }
+                                infoToReturn.Player2.WordsPlayed = playedListP2;
+                                SetStatus(OK);
+                                return infoToReturn;
+                            }
+                            else
+                            {
+                                infoToReturn.TimeLeft = timeLeft;
+                                //set the player (1 and 2) information in the object to return.
+                                infoToReturn.Player1 = new Player1();
+                                infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
+                                infoToReturn.Player1.Score = current.p1Score;
+                                infoToReturn.Player2 = new Player2();
+                                infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
+                                infoToReturn.Player2.Score = current.p2Score;
+                                SetStatus(OK);
+                                return infoToReturn;
+                            }
+
+
+                        }
+                        else
+                        {
                             //game is completed!
                             infoToReturn.GameState = "completed";
                             infoToReturn.Board = current.Board;
@@ -286,74 +427,7 @@ namespace Boggle
                             SetStatus(OK);
                             return infoToReturn;
                         }
-                        else
-                        {
-                            infoToReturn.TimeLeft = timeLeft;
-                            //set the player (1 and 2) information in the object to return.
-                            infoToReturn.Player1 = new Player1();
-                            infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
-                            infoToReturn.Player1.Score = current.p1Score;
-                            infoToReturn.Player2 = new Player2();
-                            infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
-                            infoToReturn.Player2.Score = current.p2Score;
-                            SetStatus(OK);
-                            return infoToReturn;
-                        }
-
-                     
                     }
-                    else
-                    {
-                        //game is completed!
-                        infoToReturn.GameState = "completed";
-                        infoToReturn.Board = current.Board;
-                        infoToReturn.TimeLimit = current.TimeLimit;
-                        infoToReturn.TimeLeft = 0;
-
-                        //set player1 info.
-                        infoToReturn.Player1 = new Player1();
-                        infoToReturn.Player1.Nickname = users[current.Player1].Nickname;
-                        infoToReturn.Player1.Score = current.p1Score;
-
-                        //list of words played by player 1 added to the infoToReturn.
-                        List<WordInfo> playedListP1 = new List<WordInfo>();
-                        foreach (KeyValuePair<string, int> entry in current.wordsPlayedP1)
-                        {
-                            WordInfo word = new WordInfo();
-                            word.Word = entry.Key;
-                            word.Score = "" + entry.Value;
-
-                            if (!playedListP1.Contains(word))
-                            {
-                                playedListP1.Add(word);
-                            }
-                        }
-
-                        infoToReturn.Player1.WordsPlayed = playedListP1;
-
-                        //set player2 info.
-                        infoToReturn.Player2 = new Player2();
-                        infoToReturn.Player2.Nickname = users[current.Player2].Nickname;
-                        infoToReturn.Player2.Score = current.p2Score;
-
-                        //list of words played by player 2 added to the infoToReturn.
-                        List<WordInfo> playedListP2 = new List<WordInfo>();
-                        foreach (KeyValuePair<string, int> entry in current.wordsPlayedP2)
-                        {
-                            WordInfo word = new WordInfo();
-                            word.Word = entry.Key;
-                            word.Score = ""+entry.Value;
-
-                            if (!playedListP2.Contains(word))
-                            {
-                                playedListP2.Add(word);
-                            }
-                        }
-                        infoToReturn.Player2.WordsPlayed = playedListP2;
-                        SetStatus(OK);
-                        return infoToReturn;
-                    }
-                }
             }
         }
 
