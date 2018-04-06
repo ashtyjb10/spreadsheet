@@ -197,6 +197,13 @@ namespace Boggle
             lock (sync)
             {
                 FullGameInfo gameInfo = new FullGameInfo();
+                string gameStatus = null;
+                string player1 = null;
+                string player2 = null;
+                string board = null;
+                int? timeLimit = null;
+                int? startGame = null;
+
                 using (SqlConnection conn = new SqlConnection(BoggleDB))
                 {
                     conn.Open();
@@ -223,15 +230,39 @@ namespace Boggle
                                     while (reader.Read())
                                     {
                                         //string b = (string)reader["Board"];
-                                        gameInfo.GameState = (string)reader["GameStatus"];
-                                        if (gameInfo.GameState == "pending")
+                                        gameStatus = (string)reader["GameStatus"];
+                                        if (gameStatus == "pending")
                                         {
+                                            gameInfo.GameState = gameStatus;
                                             SetStatus(OK);
                                             reader.Close();
                                             trans.Commit();
                                             return gameInfo;
                                         }
-                                        else if (gameInfo.GameState == "active")
+                                        else
+                                        {
+                                            player1 = (string)reader["Player1"];
+                                            player2 = (string)reader["Player2"];
+                                            board = (string)reader["Board"];
+                                            timeLimit = (int)reader["TimeLimit"];
+                                            DateTime startTime = reader.GetDateTime(5);
+                                            int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
+                                            startGame = startInInt;
+                                            reader.Close();
+                                        }
+                                    }
+                                }
+                            }
+                            if (gameStatus == "active")
+                            {
+                                gameInfo.GameState = gameStatus;
+                            }
+                            else
+                            {
+                                //game is complete....
+                            }
+
+                                       /* else if (gameInfo.GameState == "active")
                                         {
                                             gameInfo.Board = (string)reader["Board"];
                                             gameInfo.TimeLimit = (int)reader["TimeLimit"];
@@ -245,6 +276,7 @@ namespace Boggle
                                             string player1 = (string)reader["Player1"];
                                             string player2 = (String)reader["Player2"];
 
+
                                             if (timeLeft <= 0)
                                             {
                                                 gameInfo.GameState = "completed";
@@ -252,6 +284,7 @@ namespace Boggle
 
                                                 //add the player information
                                                 gameInfo.Player1 = new Player1();
+                                                gameInfo.Player2 = new Player2();
                                                 //get the player nickname, and the score of the words played
 
                                             }
@@ -265,14 +298,12 @@ namespace Boggle
 
                                             
                                         }
-                                    }
+                                        */
+                                    
                                     // the id is valid.
 
-                                    //now we need to know if the status is pending. / get all user data.
-
-
-                                }
-                            }
+                                    //now we need to know if the status is pending. / get all user data. 
+                            
                         }
                     }
                 }
