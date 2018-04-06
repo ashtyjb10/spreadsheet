@@ -223,7 +223,7 @@ namespace Boggle
                                 {
                                     SetStatus(Forbidden);
                                     reader.Close();
-                                    trans.Commit();
+                                    //trans.Commit();
                                     return null;
                                 }
                                 else
@@ -856,6 +856,7 @@ namespace Boggle
                         string player2Tok = null;
                         int gameID;
 
+
                         using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                         {
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -878,6 +879,7 @@ namespace Boggle
 
                         if (player1Tok != null && player2Tok != null)
                         {
+                            
                             query = "INSERT INTO dbo.Games  (Player1, TimeLimit, GameStatus) VALUES(@Player1, @TimeLimit, @GameStatus)";
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                             {
@@ -916,8 +918,8 @@ namespace Boggle
 
                             int player1Time = 0;
                             gameID = 0;
+                            player1Tok = null;
 
-                            ;
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                             {
                                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -926,6 +928,15 @@ namespace Boggle
                                     {
                                         player1Time = (int)reader["TimeLimit"];
                                         gameID = (int)reader["GameID"];
+                                        player1Tok = (string)reader["Player1"];
+
+                                        if (item.UserToken == player1Tok)
+                                        {
+                                            SetStatus(Conflict);
+                                            reader.Close();
+                                            trans.Commit();
+                                            return null;
+                                        }
                                     }
                                 }
                             }
@@ -1278,9 +1289,16 @@ namespace Boggle
                                     Player1 = GameIdReader["Player1"].ToString();
                                     Player2 = GameIdReader["Player2"].ToString();
                                     Board = GameIdReader["Board"].ToString();
+                                    GameStatus = GameIdReader["GameStatus"].ToString();
+                                    if (GameStatus != "active")
+                                    {
+                                        SetStatus(Conflict);
+                                        GameIdReader.Close();
+                                        trans.Commit();
+                                        return score;
+                                    }
                                     TimeLimit = (int)GameIdReader["TimeLimit"];
                                     StartTime = GameIdReader.GetDateTime(5);
-                                    GameStatus = GameIdReader["GameStatus"].ToString();
                                 }
 
                                 GameIdReader.Close();
