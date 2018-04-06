@@ -1143,34 +1143,111 @@ namespace Boggle
                                     GameIdReader.Close();
                                     return score;
                                 }
+                                //If the time limit is zero, then set conflict and return zero score.
+                                int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                                if(((int)GameIdReader["TimeLimit"] + ((int)GameIdReader["StartTime"] - currentTime)) <= 0)
+                                {
+                                    SetStatus(Conflict);
+                                    GameIdReader.Close();
+                                    return score;
+                                }
+
+                                //If it is Player1 who moves.
+                                if(((string)GameIdReader["Player1"]) == (wordInfo.UserToken))
+                                {
+                                    int wordPoints = 0;
+
+                                    //Check the word.
+                                    if (words.ContainsKey(wordInfo.Word))
+                                    {
+                                        //Create the board to check if it can be formed.
+                                        BoggleBoard board = new BoggleBoard(GameIdReader["Board"].ToString());
+
+                                        //Can it be created on the board?
+                                        if (board.CanBeFormed(wordInfo.Word))
+                                        {
+                                            //Get the score of the word.
+                                            if (wordInfo.Word.Length < 3)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            else if (wordInfo.Word.Length >= 3 && wordInfo.Word.Length <= 4)
+                                            {
+                                                wordPoints = 1;
+                                            }
+                                            else if (wordInfo.Word.Length == 5)
+                                            {
+                                                wordPoints = 2;
+                                            }
+                                            else if (wordInfo.Word.Length == 6)
+                                            {
+                                                wordPoints = 3;
+                                            }
+                                            else if (wordInfo.Word.Length == 7)
+                                            {
+                                                wordPoints = 5;
+                                            }
+                                            else
+                                            {
+                                                //it is longer than 7
+                                                wordPoints = 11;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //cant be dubplicated on board.
+                                            if (wordInfo.Word.Length < 3)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            else
+                                            {
+                                                wordPoints = -1;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //not a valid word in the dictionary.
+                                        if (wordInfo.Word.Length < 3)
+                                        {
+                                            wordPoints = 0;
+                                        }
+                                        else
+                                        {
+                                            wordPoints = -1;
+                                        }
+                                    }
+                                }
+
+                                
                             }
                         }
 
                         //Set command to find if UserID exists.
-                        using (SqlCommand findUserid =
-                            new SqlCommand("Select UserID from Users where UserID = @UserID",
-                                            conn,
-                                            trans)){
-                            //Set the perameter.
-                            findUserid.Parameters.AddWithValue("@UserID", wordInfo.UserToken);
+                        //using (SqlCommand findUserid =
+                        //    new SqlCommand("Select UserID from Users where UserID = @UserID",
+                        //                    conn,
+                        //                    trans)){
+                            //Set the parameter.
+                       //     findUserid.Parameters.AddWithValue("@UserID", wordInfo.UserToken);
 
                             //User command reader.
-                            using(SqlDataReader UserIdReader = findUserid.ExecuteReader())
-                            {
+                      //      using(SqlDataReader UserIdReader = findUserid.ExecuteReader())
+                     //       {
                                 //If the reader does not return a row, set forbidden
-                                if (!UserIdReader.HasRows)
-                                {
-                                    SetStatus(Forbidden);
-                                    UserIdReader.Close();
-                                    return score;
-                                }
-                            }
-                        }
+                   //             if (!UserIdReader.HasRows)
+                      //          {
+                      //              SetStatus(Forbidden);
+                      //              UserIdReader.Close();
+                       //             return score;
+                       //         }
+                       //     }
+                     //   }
 
-                        int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                        
 
-                        //Set command for finding time.
-
+                        
 
                     }
 
