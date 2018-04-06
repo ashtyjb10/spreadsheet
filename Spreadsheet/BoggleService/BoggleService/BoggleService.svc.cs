@@ -35,7 +35,7 @@ namespace Boggle
 
             countingID = 0;
             CurrentPendingGame = CreateNewGameID();
-            
+
             //Reads in the dictionary for all games to use.
             string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
             StreamReader reader = new StreamReader(path);
@@ -133,12 +133,12 @@ namespace Boggle
                                         return;
 
                                     }
-                          
+
                                 }
                             }
 
                         }
-                       // it is okay to remove the game.
+                        // it is okay to remove the game.
                         query = "DELETE FROM Games WHERE GameID = @GameID";
                         using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                         {
@@ -183,7 +183,7 @@ namespace Boggle
                     */
             }
         }
-       
+
         /// <summary>
         /// Returns a FullGameInfo object that will be serialized.  If the gameID is not valid nothing is returned and 
         /// the status is set to Forbidden. Otherwise the game will be set to ok and have the correct things added specified
@@ -249,7 +249,7 @@ namespace Boggle
                                             DateTime startTime = reader.GetDateTime(5);
                                             int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
                                             startGame = startInInt;
-                                            
+
                                         }
                                     }
                                     reader.Close();
@@ -274,7 +274,7 @@ namespace Boggle
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                while(reader.Read())
+                                while (reader.Read())
                                 {
                                     player1Tok = (string)reader["Player1"];
                                     player2Tok = (string)reader["Player2"];
@@ -406,7 +406,7 @@ namespace Boggle
                                     }
                                     reader.Close();
                                 }
-                                
+
                             }
                             gameInfo.Player1.Score = player1Score;
                             gameInfo.Player2.Score = player2Score;
@@ -418,49 +418,49 @@ namespace Boggle
                         return gameInfo;
 
 
-                                       /* else if (gameInfo.GameState == "active")
-                                        {
-                                            gameInfo.Board = (string)reader["Board"];
-                                            gameInfo.TimeLimit = (int)reader["TimeLimit"];
+                        /* else if (gameInfo.GameState == "active")
+                         {
+                             gameInfo.Board = (string)reader["Board"];
+                             gameInfo.TimeLimit = (int)reader["TimeLimit"];
 
-                                            //do the time calculations.
-                                            DateTime startTime = reader.GetDateTime(5);
-                                            int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
-                                            int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-                                            int timeLeft = gameInfo.TimeLimit + (startInInt - currentTime);
-                                            // get the rest of the info for the reader.
-                                            string player1 = (string)reader["Player1"];
-                                            string player2 = (String)reader["Player2"];
-
-
-                                            if (timeLeft <= 0)
-                                            {
-                                                gameInfo.GameState = "completed";
-                                                gameInfo.TimeLeft = 0;
-
-                                                //add the player information
-                                                gameInfo.Player1 = new Player1();
-                                                gameInfo.Player2 = new Player2();
-                                                //get the player nickname, and the score of the words played
-
-                                            }
-                                            else
-                                            {
-                                                gameInfo.TimeLeft = timeLeft;
-                                                // get the player nickname, and the score and words played with score.
-
-                                            }
+                             //do the time calculations.
+                             DateTime startTime = reader.GetDateTime(5);
+                             int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
+                             int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                             int timeLeft = gameInfo.TimeLimit + (startInInt - currentTime);
+                             // get the rest of the info for the reader.
+                             string player1 = (string)reader["Player1"];
+                             string player2 = (String)reader["Player2"];
 
 
-                                            
-                                        }
-                                        */
-                                    
-                                    // the id is valid.
+                             if (timeLeft <= 0)
+                             {
+                                 gameInfo.GameState = "completed";
+                                 gameInfo.TimeLeft = 0;
 
-                                    //now we need to know if the status is pending. / get all user data. 
-                            
-                     
+                                 //add the player information
+                                 gameInfo.Player1 = new Player1();
+                                 gameInfo.Player2 = new Player2();
+                                 //get the player nickname, and the score of the words played
+
+                             }
+                             else
+                             {
+                                 gameInfo.TimeLeft = timeLeft;
+                                 // get the player nickname, and the score and words played with score.
+
+                             }
+
+
+
+                         }
+                         */
+
+                        // the id is valid.
+
+                        //now we need to know if the status is pending. / get all user data. 
+
+
                     }
                 }
 
@@ -678,8 +678,8 @@ namespace Boggle
                                         int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
                                         timeStarted = startInInt;
                                         int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-                                        int timeLeft = (int) (gameInfo.TimeLimit + (timeStarted - currentTime));
-                                        
+                                        int timeLeft = (int)(gameInfo.TimeLimit + (timeStarted - currentTime));
+
 
                                         if (timeLeft <= 0)
                                         {
@@ -692,7 +692,7 @@ namespace Boggle
                                             gameInfo.TimeLeft = timeLeft;
                                         }
 
-                                        
+
                                     }
                                 }
                                 reader.Close();
@@ -703,100 +703,100 @@ namespace Boggle
                         query = "SELECT * FROM words WHERE GameID = @GameID AND Player = @Player";
                         int player1Score = 0;
                         int player2Score = 0;
-                           
 
-                           //get player1 info
-                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+
+                        //get player1 info
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@GameID", GameID);
+                            cmd.Parameters.AddWithValue("@Player", player1Tok);
+
+                            //get player one info.
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                cmd.Parameters.AddWithValue("@GameID", GameID);
-                                cmd.Parameters.AddWithValue("@Player", player1Tok);
-
-                                //get player one info.
-                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                while (reader.Read())
                                 {
-                                    while (reader.Read())
-                                    {
-                                        WordInfo wordStats = new WordInfo();
-                                        wordStats.Word = (string)reader["Word"];
-                                        int score = (int)reader["Score"];
-                                        wordStats.Score = score.ToString();
-                                        player1Score += score;
-                                    }
-                                    reader.Close();
+                                    WordInfo wordStats = new WordInfo();
+                                    wordStats.Word = (string)reader["Word"];
+                                    int score = (int)reader["Score"];
+                                    wordStats.Score = score.ToString();
+                                    player1Score += score;
                                 }
+                                reader.Close();
                             }
+                        }
 
-                            //get Player2 info.
-                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        //get Player2 info.
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@GameID", GameID);
+                            cmd.Parameters.AddWithValue("@Player", player2Tok);
+
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                cmd.Parameters.AddWithValue("@GameID", GameID);
-                                cmd.Parameters.AddWithValue("@Player", player2Tok);
-
-                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                while (reader.Read())
                                 {
-                                    while (reader.Read())
-                                    {
-                                        WordInfo wordStats = new WordInfo();
-                                        wordStats.Word = (string)reader["Word"];
-                                        int score = (int)reader["Score"];
-                                        wordStats.Score = score.ToString();
-                                        player2Score += score;
-                                    }
-                                    reader.Close();
-
+                                    WordInfo wordStats = new WordInfo();
+                                    wordStats.Word = (string)reader["Word"];
+                                    int score = (int)reader["Score"];
+                                    wordStats.Score = score.ToString();
+                                    player2Score += score;
                                 }
+                                reader.Close();
+
                             }
+                        }
 
-                            SetStatus(OK);
-                            trans.Commit();
-                            gameInfo.Player1.Score = player1Score;
-                            gameInfo.Player2.Score = player2Score;
-                            return gameInfo;
-
-                    }
-                }
-
-
-               /* if (!games.ContainsKey(GameID))
-                {
-                    SetStatus(Forbidden);
-                    return null;
-                }
-                else
-                {
-                    //get current game requested
-                    GameInfo current = games[GameID];
-                    //new object to return.
-                    FullGameInfo infoToReturn = new FullGameInfo();
-
-                    infoToReturn.GameState = current.GameState;
-                    if (infoToReturn.GameState.Equals("pending"))
-                    {
                         SetStatus(OK);
-                        return infoToReturn;
+                        trans.Commit();
+                        gameInfo.Player1.Score = player1Score;
+                        gameInfo.Player2.Score = player2Score;
+                        return gameInfo;
+
                     }
-
-                    //take current time subtract it from the time the game started and add that to the time Limit. 
-                    int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-                    int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
-                    if (timeLeft <= 0)
-                    {
-                        current.GameState = "completed";
-                        timeLeft = 0;
-                    }
-                    infoToReturn.TimeLeft = timeLeft;
-
-                    //set Player1 info.
-                    infoToReturn.Player1 = new Player1();
-                    infoToReturn.Player1.Score = current.p1Score;
-                    //set Playe2 info.
-                    infoToReturn.Player2 = new Player2();
-                    infoToReturn.Player2.Score = current.p2Score;
-                    SetStatus(OK);
-
-                    return infoToReturn;
                 }
-                */
+
+
+                /* if (!games.ContainsKey(GameID))
+                 {
+                     SetStatus(Forbidden);
+                     return null;
+                 }
+                 else
+                 {
+                     //get current game requested
+                     GameInfo current = games[GameID];
+                     //new object to return.
+                     FullGameInfo infoToReturn = new FullGameInfo();
+
+                     infoToReturn.GameState = current.GameState;
+                     if (infoToReturn.GameState.Equals("pending"))
+                     {
+                         SetStatus(OK);
+                         return infoToReturn;
+                     }
+
+                     //take current time subtract it from the time the game started and add that to the time Limit. 
+                     int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                     int timeLeft = infoToReturn.TimeLimit + (current.TimeGameStarted - currentTime);
+                     if (timeLeft <= 0)
+                     {
+                         current.GameState = "completed";
+                         timeLeft = 0;
+                     }
+                     infoToReturn.TimeLeft = timeLeft;
+
+                     //set Player1 info.
+                     infoToReturn.Player1 = new Player1();
+                     infoToReturn.Player1.Score = current.p1Score;
+                     //set Playe2 info.
+                     infoToReturn.Player2 = new Player2();
+                     infoToReturn.Player2.Score = current.p2Score;
+                     SetStatus(OK);
+
+                     return infoToReturn;
+                 }
+                 */
             }
         }
 
@@ -815,7 +815,7 @@ namespace Boggle
                 //the new GameID
                 UserGame returnGID = new UserGame();
 
-                
+
                 if (item.UserToken == null || item.TimeLimit < 5 ////?????? should it be null??
                     || item.TimeLimit > 120)
                 {
@@ -862,7 +862,7 @@ namespace Boggle
                             {
                                 while (reader.Read())
                                 {
-                                    gameID = (int) reader["GameID"];
+                                    gameID = (int)reader["GameID"];
                                     if (reader["Player1"] != System.DBNull.Value)
                                     {
                                         player1Tok = (string)reader["Player1"];
@@ -876,7 +876,7 @@ namespace Boggle
                             }
                         }
 
-                        if(player1Tok !=  null && player2Tok != null)
+                        if (player1Tok != null && player2Tok != null)
                         {
                             query = "INSERT INTO dbo.Games  (Player1, TimeLimit, GameStatus) VALUES(@Player1, @TimeLimit, @GameStatus)";
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
@@ -915,9 +915,9 @@ namespace Boggle
 
 
                             int player1Time = 0;
-                             gameID = 0;
+                            gameID = 0;
 
-                            query = "SELECT TOP 1 * FROM dbo.Games ORDER BY GameID DESC";
+                            ;
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                             {
                                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -1034,7 +1034,7 @@ namespace Boggle
         /// <returns></returns>
         public WordScore playWord(WordToPlay wordInfo, string gameID)
         {
-            lock (sync)
+            /*lock (sync)
             {
                 WordScore score = new WordScore();
                 score.Score = 0;
@@ -1220,6 +1220,329 @@ namespace Boggle
                     }
                 }
             }
+            */
+
+            lock (sync)
+            {
+
+                WordScore score = new WordScore();
+                score.Score = 0;
+
+                //Check the word for valid input.  If not valid, fobidden set and score 0 returned.
+                if (wordInfo.Word == "" || wordInfo.Word == null || wordInfo.Word.Trim().Length > 30)
+                {
+                    SetStatus(Forbidden);
+                    return score;
+                }
+
+                //Connect to the Database
+                using (SqlConnection conn = new SqlConnection(BoggleDB))
+                {
+
+                    conn.Open();
+
+                    //Set up transaction.
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        //Set command to find gameID.
+                        using (SqlCommand findGameid =
+                            new SqlCommand("Select * from Games where GameID = @GameID",
+                                            conn,
+                                            trans))
+                        {
+                            //Set parameter.
+                            findGameid.Parameters.AddWithValue("@GameID", gameID);
+
+                            //Use command in reader.
+                            using (SqlDataReader GameIdReader = findGameid.ExecuteReader())
+                            {
+                                //If the reader does not return a row, set forbidden
+                                if (!GameIdReader.HasRows)
+                                {
+                                    SetStatus(Forbidden);
+                                    GameIdReader.Close();
+                                    trans.Commit();
+                                    return score;
+                                }
+
+                                //If neither of the PlayerIds match the playerId playing, set forbidden and return zero score.
+                                if (((string)GameIdReader["Player1"]) != (wordInfo.UserToken) &&
+                                    ((string)GameIdReader["Player2"]) != (wordInfo.UserToken))
+                                {
+                                    SetStatus(Forbidden);
+                                    GameIdReader.Close();
+                                    trans.Commit();
+                                    return score;
+                                }
+                                //If the time limit is zero, then set conflict and return zero score.
+                                int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                                if (((int)GameIdReader["TimeLimit"] + ((int)GameIdReader["StartTime"] - currentTime)) <= 0)
+                                {
+                                    SetStatus(Conflict);
+                                    GameIdReader.Close();
+                                    trans.Commit();
+                                    return score;
+                                }
+
+                                //If it is Player1 who moves.
+                                if (((string)GameIdReader["Player1"]) == (wordInfo.UserToken))
+                                {
+                                    int wordPoints = 0;
+
+                                    //Check the word.
+                                    if (words.ContainsKey(wordInfo.Word))
+                                    {
+                                        //Create the board to check if it can be formed.
+                                        BoggleBoard board = new BoggleBoard(GameIdReader["Board"].ToString());
+
+                                        //Can it be created on the board?
+                                        if (board.CanBeFormed(wordInfo.Word))
+                                        {
+                                            //Get the score of the word.
+                                            if (wordInfo.Word.Length < 3)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            else if (wordInfo.Word.Length >= 3 && wordInfo.Word.Length <= 4)
+                                            {
+                                                wordPoints = 1;
+                                            }
+                                            else if (wordInfo.Word.Length == 5)
+                                            {
+                                                wordPoints = 2;
+                                            }
+                                            else if (wordInfo.Word.Length == 6)
+                                            {
+                                                wordPoints = 3;
+                                            }
+                                            else if (wordInfo.Word.Length == 7)
+                                            {
+                                                wordPoints = 5;
+                                            }
+                                            else
+                                            {
+                                                //it is longer than 7
+                                                wordPoints = 11;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //cant be dubplicated on board.
+                                            if (wordInfo.Word.Length < 3)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            else
+                                            {
+                                                wordPoints = -1;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //not a valid word in the dictionary.
+                                        if (wordInfo.Word.Length < 3)
+                                        {
+                                            wordPoints = 0;
+                                        }
+                                        else
+                                        {
+                                            wordPoints = -1;
+                                        }
+                                    }
+                                    //If the word has not already been played the add it and the score.
+                                    bool isInList = true;
+                                    using (SqlCommand findWordsPlayed =
+                                            new SqlCommand("Select * from Words where GameID = @GameID AND Player = @Player AND Word = @Word",
+                                            conn,
+                                            trans))
+                                    {
+                                        findWordsPlayed.Parameters.AddWithValue("@GameID", gameID);
+                                        findWordsPlayed.Parameters.AddWithValue("@Player", wordInfo.UserToken);
+                                        findWordsPlayed.Parameters.AddWithValue("@Word", wordInfo.Word);
+
+                                        using (SqlDataReader readWord = findWordsPlayed.ExecuteReader())
+                                        {
+                                            if (readWord.HasRows)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            isInList = false;
+                                            readWord.Close();
+
+                                            using (SqlCommand setWordInPlayed =
+                                                new SqlCommand("insert into Words (Word, GameID, Player, Score) values(@Word, @GameID, @Player, @Score)",
+                                                               conn,
+                                                               trans))
+                                            {
+                                                setWordInPlayed.Parameters.AddWithValue("@Word", wordInfo.Word);
+                                                setWordInPlayed.Parameters.AddWithValue("@GameID", gameID);
+                                                setWordInPlayed.Parameters.AddWithValue("@Player", wordInfo.UserToken);
+                                                setWordInPlayed.Parameters.AddWithValue("@Score", wordPoints);
+
+                                                if (setWordInPlayed.ExecuteNonQuery() != 1)
+                                                {
+                                                    throw new Exception("Query failed unexpectedly");
+                                                }
+
+                                                SetStatus(OK);
+                                                score.Score = wordPoints;
+                                                trans.Commit();
+                                                return score;
+                                            }
+
+                                        }
+
+
+                                    }
+                                }
+                                else
+                                {
+                                    int wordPoints = 0;
+
+                                    //Check the word.
+                                    if (words.ContainsKey(wordInfo.Word))
+                                    {
+                                        //Create the board to check if it can be formed.
+                                        BoggleBoard board = new BoggleBoard(GameIdReader["Board"].ToString());
+
+                                        //Can it be created on the board?
+                                        if (board.CanBeFormed(wordInfo.Word))
+                                        {
+                                            //Get the score of the word.
+                                            if (wordInfo.Word.Length < 3)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            else if (wordInfo.Word.Length >= 3 && wordInfo.Word.Length <= 4)
+                                            {
+                                                wordPoints = 1;
+                                            }
+                                            else if (wordInfo.Word.Length == 5)
+                                            {
+                                                wordPoints = 2;
+                                            }
+                                            else if (wordInfo.Word.Length == 6)
+                                            {
+                                                wordPoints = 3;
+                                            }
+                                            else if (wordInfo.Word.Length == 7)
+                                            {
+                                                wordPoints = 5;
+                                            }
+                                            else
+                                            {
+                                                //it is longer than 7
+                                                wordPoints = 11;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //cant be dubplicated on board.
+                                            if (wordInfo.Word.Length < 3)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            else
+                                            {
+                                                wordPoints = -1;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //not a valid word in the dictionary.
+                                        if (wordInfo.Word.Length < 3)
+                                        {
+                                            wordPoints = 0;
+                                        }
+                                        else
+                                        {
+                                            wordPoints = -1;
+                                        }
+                                    }
+                                    //If the word has not already been played the add it and the score.
+                                    bool isInList = true;
+                                    using (SqlCommand findWordsPlayed =
+                                            new SqlCommand("Select * from Words where GameID = @GameID AND Player = @Player AND Word = @Word",
+                                            conn,
+                                            trans))
+                                    {
+                                        findWordsPlayed.Parameters.AddWithValue("@GameID", gameID);
+                                        findWordsPlayed.Parameters.AddWithValue("@Player", wordInfo.UserToken);
+                                        findWordsPlayed.Parameters.AddWithValue("@Word", wordInfo.Word);
+
+                                        using (SqlDataReader readWord = findWordsPlayed.ExecuteReader())
+                                        {
+                                            if (readWord.HasRows)
+                                            {
+                                                wordPoints = 0;
+                                            }
+                                            isInList = false;
+                                            readWord.Close();
+
+                                            using (SqlCommand setWordInPlayed =
+                                                new SqlCommand("insert into Words (Word, GameID, Player, Score) values(@Word, @GameID, @Player, @Score)",
+                                                               conn,
+                                                               trans))
+                                            {
+                                                setWordInPlayed.Parameters.AddWithValue("@Word", wordInfo.Word);
+                                                setWordInPlayed.Parameters.AddWithValue("@GameID", gameID);
+                                                setWordInPlayed.Parameters.AddWithValue("@Player", wordInfo.UserToken);
+                                                setWordInPlayed.Parameters.AddWithValue("@Score", wordPoints);
+
+                                                if (setWordInPlayed.ExecuteNonQuery() != 1)
+                                                {
+                                                    throw new Exception("Query failed unexpectedly");
+                                                }
+
+                                                SetStatus(OK);
+                                                score.Score = wordPoints;
+                                                trans.Commit();
+                                                return score;
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+     
+                        //Set command to find if UserID exists.
+                        //using (SqlCommand findUserid =
+                        //    new SqlCommand("Select UserID from Users where UserID = @UserID",
+                        //                    conn,
+                        //                    trans)){
+                            //Set the parameter.
+                       //     findUserid.Parameters.AddWithValue("@UserID", wordInfo.UserToken);
+
+                            //User command reader.
+                      //      using(SqlDataReader UserIdReader = findUserid.ExecuteReader())
+                     //       {
+                                //If the reader does not return a row, set forbidden
+                   //             if (!UserIdReader.HasRows)
+                      //          {
+                      //              SetStatus(Forbidden);
+                      //              UserIdReader.Close();
+                       //             return score;
+                       //         }
+                       //     }
+                     //   }
+
+                        
+
+                        
+
+                    }
+
+
+                }
+
+                //Stub
+                return null;
+            }
+
         }
 
         /// <summary>
