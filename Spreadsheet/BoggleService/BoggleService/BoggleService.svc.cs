@@ -629,8 +629,135 @@ namespace Boggle
 
             lock (sync)
             {
-                
-                if (!games.ContainsKey(GameID))
+
+                FullGameInfo gameInfo = new FullGameInfo();
+                string player1Tok = null;
+                string player2Tok = null;
+                string gameState = null;
+                int? timeStarted = null;
+                int timeLimit = 0;
+                using (SqlConnection conn = new SqlConnection(BoggleDB))
+                {
+                    conn.Open();
+
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        string query = "Select * From dbo.Games Where GameID = @GameID";
+
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@GameID", GameID);
+
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (!reader.HasRows)
+                                {
+                                    SetStatus(Forbidden);
+                                    reader.Close();
+                                    trans.Commit();
+                                    return null;
+                                }
+                                else
+                                {
+                                    while (reader.Read())
+                                    {
+                                        player1Tok = (string)reader["Player1"];
+                                        player2Tok = (string)reader["Player2"];
+                                        gameState = (string)reader["GameState"];
+                                        timeLimit = (int)reader["TimeLimit"];
+
+                                        if (gameState == "pending")
+                                        {
+                                            SetStatus(Forbidden);
+                                            reader.Close();
+                                            trans.Commit();
+                                            return null;
+                                        }
+
+                                        DateTime startTime = reader.GetDateTime(5);
+                                        int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
+                                        timeStarted = startInInt;
+                                        int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                                        int timeLeft = (int) (gameInfo.TimeLimit + (timeStarted - currentTime));
+                                        
+
+                                        if (timeLeft <= 0)
+                                        {
+                                            gameInfo.GameState = "completed";
+                                            gameInfo.TimeLeft = 0;
+                                        }
+                                        else
+                                        {
+                                            gameInfo.GameState = gameState;
+                                            gameInfo.TimeLeft = timeLeft;
+                                        }
+
+                                        
+                                    }
+                                }
+                                reader.Close();
+
+                            }
+                        }
+
+                        query = "SELECT * FROM words WHERE GameID = @GameID AND Player = @Player";
+                        int player1Score = 0;
+                        int player2Score = 0;
+                           
+
+                           //get player1 info
+                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@GameID", GameID);
+                                cmd.Parameters.AddWithValue("@Player", player1Tok);
+
+                                //get player one info.
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        WordInfo wordStats = new WordInfo();
+                                        wordStats.Word = (string)reader["Word"];
+                                        int score = (int)reader["Score"];
+                                        wordStats.Score = score.ToString();
+                                        player1Score += score;
+                                    }
+                                    reader.Close();
+                                }
+                            }
+
+                            //get Player2 info.
+                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@GameID", GameID);
+                                cmd.Parameters.AddWithValue("@Player", player2Tok);
+
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        WordInfo wordStats = new WordInfo();
+                                        wordStats.Word = (string)reader["Word"];
+                                        int score = (int)reader["Score"];
+                                        wordStats.Score = score.ToString();
+                                        player2Score += score;
+                                    }
+                                    reader.Close();
+
+                                }
+                            }
+
+                            SetStatus(OK);
+                            trans.Commit();
+                            gameInfo.Player1.Score = player1Score;
+                            gameInfo.Player2.Score = player2Score;
+                            return gameInfo;
+
+                    }
+                }
+
+
+               /* if (!games.ContainsKey(GameID))
                 {
                     SetStatus(Forbidden);
                     return null;
@@ -669,6 +796,7 @@ namespace Boggle
 
                     return infoToReturn;
                 }
+                */
             }
         }
 
