@@ -750,7 +750,7 @@ namespace Boggle
         /// <returns></returns>
         public WordScore playWord(WordToPlay wordInfo, string gameID)
         {
-            lock (sync)
+            /*lock (sync)
             {
                 WordScore score = new WordScore();
                 score.Score = 0;
@@ -936,6 +936,95 @@ namespace Boggle
                     }
                 }
             }
+            */
+
+            lock (sync)
+            {
+
+                WordScore score = new WordScore();
+                score.Score = 0;
+
+                //Check the word for valid input.  If not valid, fobidden set and score 0 returned.
+                if(wordInfo.Word == "" || wordInfo.Word == null || wordInfo.Word.Trim().Length > 30 )
+                {
+                    SetStatus(Forbidden);
+                    return score;
+                }
+                
+                //Connect to the Database
+                using (SqlConnection conn = new SqlConnection(BoggleDB))
+                {
+
+                    conn.Open();
+
+                    //Set up transaction.
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        //Set command to find gameID.
+                        using (SqlCommand findGameid =
+                            new SqlCommand("Select * from Games where GameID = @GameID",
+                                            conn,
+                                            trans)){
+                            //Set parameter.
+                            findGameid.Parameters.AddWithValue("@GameID", gameID);
+
+                            //Use command in reader.
+                            using(SqlDataReader GameIdReader = findGameid.ExecuteReader())
+                            {
+                                //If the reader does not return a row, set forbidden
+                                if (!GameIdReader.HasRows)
+                                {
+                                    SetStatus(Forbidden);
+                                    GameIdReader.Close();
+                                    return score;
+                                }
+
+                                //If neither of the PlayerIds match the playerId playing, set forbidden and return zero score.
+                                if (((string)GameIdReader["Player1"]) != (wordInfo.UserToken) &&
+                                    ((string)GameIdReader["Player2"]) != (wordInfo.UserToken))
+                                {
+                                    SetStatus(Forbidden);
+                                    GameIdReader.Close();
+                                    return score;
+                                }
+                            }
+                        }
+
+                        //Set command to find if UserID exists.
+                        using (SqlCommand findUserid =
+                            new SqlCommand("Select UserID from Users where UserID = @UserID",
+                                            conn,
+                                            trans)){
+                            //Set the perameter.
+                            findUserid.Parameters.AddWithValue("@UserID", wordInfo.UserToken);
+
+                            //User command reader.
+                            using(SqlDataReader UserIdReader = findUserid.ExecuteReader())
+                            {
+                                //If the reader does not return a row, set forbidden
+                                if (!UserIdReader.HasRows)
+                                {
+                                    SetStatus(Forbidden);
+                                    UserIdReader.Close();
+                                    return score;
+                                }
+                            }
+                        }
+
+                        int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+
+                        //Set command for finding time.
+
+
+                    }
+
+
+                }
+
+                //Stub
+                return null;
+            }
+
         }
 
         /// <summary>
