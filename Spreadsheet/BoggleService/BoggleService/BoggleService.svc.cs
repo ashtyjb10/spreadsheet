@@ -602,7 +602,7 @@ namespace Boggle
                             int player1Time = 0;
                              gameID = 0;
 
-                            query = "SELECT TOP 1 * FROM dbo.Games ORDER BY GameID DESC";
+                            ;
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                             {
                                 using (SqlDataReader reader = cmd.ExecuteReader())
