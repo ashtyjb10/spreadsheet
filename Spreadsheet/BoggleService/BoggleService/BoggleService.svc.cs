@@ -203,6 +203,7 @@ namespace Boggle
                 string board = null;
                 int? timeLimit = null;
                 int? startGame = null;
+                int? timeLeft = null;
 
                 using (SqlConnection conn = new SqlConnection(BoggleDB))
                 {
@@ -248,19 +249,174 @@ namespace Boggle
                                             DateTime startTime = reader.GetDateTime(5);
                                             int startInInt = (int)(startTime - new DateTime(1970, 1, 1)).TotalSeconds;
                                             startGame = startInInt;
-                                            reader.Close();
+                                            
                                         }
                                     }
+                                    reader.Close();
                                 }
                             }
-                            if (gameStatus == "active")
+
+                            gameInfo.GameState = gameStatus;
+                            gameInfo.Board = board;
+                            gameInfo.TimeLimit = (int)timeLimit;
+                            gameInfo.Player1 = new Player1();
+                            gameInfo.Player2 = new Player2();
+                            int currentTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                            timeLeft = gameInfo.TimeLimit + ((int)startGame - currentTime);
+                        }
+                        //get names.
+                        query = "SELECT Player1,Player2 FROM Games WHERE GameID = @GameID";
+                        string player1Tok = null;
+                        string player2Tok = null;
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@GameID", GameID);
+
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                gameInfo.GameState = gameStatus;
+                                while(reader.Read())
+                                {
+                                    player1Tok = (string)reader["Player1"];
+                                    player2Tok = (string)reader["Player2"];
+                                }
+                                reader.Close();
                             }
-                            else
+                        }
+
+                        query = "SELECT Nickname FROM Users WHERE UserID = @UserID";
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@UserID", player1Tok);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                //game is complete....
+                                while (reader.Read())
+                                {
+                                    gameInfo.Player1.Nickname = (string)reader["Nickname"];
+                                }
                             }
+                        }
+                        query = "SELECT Nickname FROM Users WHERE UserID = @UserID";
+                        using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@UserID", player2Tok);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    gameInfo.Player2.Nickname = (string)reader["Nickname"];
+                                }
+                            }
+                        }
+
+                        //query to get the nicknames of the users.
+
+                        query = "SELECT * FROM words WHERE GameID = @GameID AND Player = @Player";
+                        int player1Score = 0;
+                        List<WordInfo> player1Words = new List<WordInfo>();
+                        int player2Score = 0;
+                        List<WordInfo> player2Words = new List<WordInfo>();
+
+                        //make a list for each and then if it is contained dont count the value.
+                        if (timeLeft <= 0)
+                        {
+                            //game complete
+
+                            //get player1 info
+                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@GameID", GameID);
+                                cmd.Parameters.AddWithValue("@Player", player1);
+
+                                //get player one info.
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        WordInfo wordStats = new WordInfo();
+                                        wordStats.Word = (string)reader["Word"];
+                                        int score = (int)reader["Score"];
+                                        wordStats.Score = score.ToString();
+                                        player1Score += score;
+                                        player1Words.Add(wordStats);
+                                    }
+                                    reader.Close();
+                                }
+                            }
+
+                            //get Player2 info.
+                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@GameID", GameID);
+                                cmd.Parameters.AddWithValue("@Player", player2);
+
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        WordInfo wordStats = new WordInfo();
+                                        wordStats.Word = (string)reader["Word"];
+                                        int score = (int)reader["Score"];
+                                        wordStats.Score = score.ToString();
+                                        player2Score += score;
+                                        player2Words.Add(wordStats);
+                                    }
+                                    reader.Close();
+
+                                }
+                            }
+
+                            SetStatus(OK);
+                            trans.Commit();
+                            gameInfo.Player1.Score = player1Score;
+                            gameInfo.Player1.WordsPlayed = player1Words;
+                            gameInfo.Player2.Score = player2Score;
+                            gameInfo.Player2.WordsPlayed = player2Words;
+                            gameInfo.TimeLeft = 0;
+                            gameInfo.GameState = "completed";
+                            return gameInfo;
+
+                        }
+                        else
+                        {
+                            //game active.
+                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@GameID", GameID);
+                                cmd.Parameters.AddWithValue("@Player", player1);
+
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        player1Score += (int)reader["Score"];
+                                    }
+                                    reader.Close();
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@GameID", GameID);
+                                cmd.Parameters.AddWithValue("@Player", player2);
+
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        player2Score += (int)reader["Score"];
+                                    }
+                                    reader.Close();
+                                }
+                                
+                            }
+                            gameInfo.Player1.Score = player1Score;
+                            gameInfo.Player2.Score = player2Score;
+                            gameInfo.TimeLeft = timeLeft;
+                        }
+
+                        SetStatus(OK);
+                        trans.Commit();
+                        return gameInfo;
+
 
                                        /* else if (gameInfo.GameState == "active")
                                         {
@@ -304,11 +460,11 @@ namespace Boggle
 
                                     //now we need to know if the status is pending. / get all user data. 
                             
-                        }
+                     
                     }
                 }
 
-
+                /*
                     if (!games.ContainsKey(GameID))
                     {
                         SetStatus(Forbidden);
@@ -458,7 +614,7 @@ namespace Boggle
                             SetStatus(OK);
                             return infoToReturn;
                         }
-                    }
+                    }*/
             }
         }
 
