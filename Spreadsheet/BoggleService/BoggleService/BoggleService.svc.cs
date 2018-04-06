@@ -1265,6 +1265,30 @@ namespace Boggle
                                     return score;
                                 }
 
+                                //Set command to find if UserID exists.
+                                using (SqlCommand findUserid =
+                                    new SqlCommand("Select UserID from Users where UserID = @UserID",
+                                                    conn,
+                                                    trans))
+                                {
+                                    //Set the parameter.
+                                    findUserid.Parameters.AddWithValue("@UserID", wordInfo.UserToken);
+
+                                    //User command reader.
+                                    using (SqlDataReader UserIdReader = findUserid.ExecuteReader())
+                                    {
+                                        //If the reader does not return a row, set forbidden
+                                        if (!UserIdReader.HasRows)
+                                        {
+                                            SetStatus(Forbidden);
+                                            UserIdReader.Close();
+                                            trans.Commit();
+                                            return score;
+                                        }
+                                    }
+                                }
+
+
                                 //If neither of the PlayerIds match the playerId playing, set forbidden and return zero score.
                                 if (((string)GameIdReader["Player1"]) != (wordInfo.UserToken) &&
                                     ((string)GameIdReader["Player2"]) != (wordInfo.UserToken))
@@ -1509,26 +1533,7 @@ namespace Boggle
                         }
 
      
-                        //Set command to find if UserID exists.
-                        //using (SqlCommand findUserid =
-                        //    new SqlCommand("Select UserID from Users where UserID = @UserID",
-                        //                    conn,
-                        //                    trans)){
-                            //Set the parameter.
-                       //     findUserid.Parameters.AddWithValue("@UserID", wordInfo.UserToken);
-
-                            //User command reader.
-                      //      using(SqlDataReader UserIdReader = findUserid.ExecuteReader())
-                     //       {
-                                //If the reader does not return a row, set forbidden
-                   //             if (!UserIdReader.HasRows)
-                      //          {
-                      //              SetStatus(Forbidden);
-                      //              UserIdReader.Close();
-                       //             return score;
-                       //         }
-                       //     }
-                     //   }
+                        
 
                         
 
