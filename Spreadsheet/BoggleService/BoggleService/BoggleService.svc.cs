@@ -1278,12 +1278,22 @@ namespace Boggle
                                     Player1 = GameIdReader["Player1"].ToString();
                                     Player2 = GameIdReader["Player2"].ToString();
                                     Board = GameIdReader["Board"].ToString();
+                                    GameStatus = GameIdReader["GameStatus"].ToString();
+                                    if(GameStatus != "active")
+                                    {
+                                        SetStatus(Forbidden);
+                                        GameIdReader.Close();
+                                        trans.Commit();
+                                        return score;
+                                    }
+
                                     TimeLimit = (int)GameIdReader["TimeLimit"];
                                     StartTime = GameIdReader.GetDateTime(5);
-                                    GameStatus = GameIdReader["GameStatus"].ToString();
+                                    
                                 }
-
                                 GameIdReader.Close();
+
+
                             }
                             //Set command to find if UserID exists.
                             using (SqlCommand findUserid =
@@ -1309,8 +1319,7 @@ namespace Boggle
 
                                 }
                             }
-
-
+                            
                             //If neither of the PlayerIds match the playerId playing, set forbidden and return zero score.
                             if (Player1 != (wordInfo.UserToken) &&
                                 (Player2 != (wordInfo.UserToken)))
@@ -1436,10 +1445,6 @@ namespace Boggle
                                         trans.Commit();
                                         return score;
                                     }
-
-
-
-
                                 }
                             }
                             else
