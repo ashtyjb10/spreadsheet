@@ -431,7 +431,7 @@ namespace Boggle
 
                         SetStatus(OK);
                         trans.Commit();
-                        return gameInfo; 
+                        return gameInfo;
 
                     }
                 }
