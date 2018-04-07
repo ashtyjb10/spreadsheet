@@ -1085,7 +1085,6 @@ namespace Boggle
                                     }
                                 }
                                 //If the word has not already been played the add it and the score.
-                                bool isInList = true;
                                 using (SqlCommand findWordsPlayed =
                                         new SqlCommand("Select * from Words where GameID = @GameID AND Player = @Player AND Word = @Word",
                                         conn,
@@ -1102,7 +1101,6 @@ namespace Boggle
                                         {
                                             wordPoints = 0;
                                         }
-                                        isInList = false;
                                         readWord.Close();
                                     }
                                     // add the word and word info into the Database.
