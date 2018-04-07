@@ -64,9 +64,10 @@ namespace Boggle
         public static void StartIIS(TestContext testContext)
         {
             IISAgent.Start(@"/site:""BoggleService"" /apppool:""Clr4IntegratedAppPool"" /config:""..\..\..\.vs\config\applicationhost.config""");
-            string path = AppDomain.CurrentDomain.;
 
-            StreamReader reader = new StreamReader(AppDomain.CurrentDomain + "/dictionary.txt");
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path = path.Remove(path.Length - 10, 10);
+            StreamReader reader = new StreamReader(path + "/dictionary.txt");
             while (reader.Peek() > -1)
             {
                 string wordToAdd = reader.ReadLine();
@@ -269,6 +270,15 @@ namespace Boggle
 
             System.Threading.Thread.Sleep(6000);
 
+            //Player one plays a single word.
+            playerOne.Word = "a";
+            r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+
+            //Player two plays a single word.
+            playerTwo.Word = "a";
+            r = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+            
+
             //Real GameID is used against the service in active status
             r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
             Assert.AreEqual(OK, r.Status);
@@ -277,6 +287,61 @@ namespace Boggle
             r = client.DoGetAsync("games/" + rGameID.Data.GameID, rGameID.Data.GameID.ToString()).Result;
             Assert.AreEqual(OK, r.Status);
 
+        }
+
+        [TestMethod]
+        public void TestGameStatusBrief()
+        {
+            //Create and register playerOne
+            dynamic users = new ExpandoObject();
+            users.Nickname = "Nathor9";
+            Response r = client.DoPostAsync("users", users).Result;
+            dynamic playerOne = new ExpandoObject();
+            playerOne.UserToken = r.Data.UserToken;
+            playerOne.TimeLimit = "5";
+
+            //Create and register playerTwo
+            dynamic users2 = new ExpandoObject();
+            users.Nickname = "Nathor10";
+            Response r2 = client.DoPostAsync("users", users).Result;
+            dynamic playerTwo = new ExpandoObject();
+            playerTwo.UserToken = r2.Data.UserToken;
+            playerTwo.TimeLimit = "5";
+
+            //First user enters game.
+            Response rGameID = client.DoPostAsync("games", playerOne).Result;
+
+            //Fake GameID is made
+            r2.Data.GameID = "5566";
+
+            //Fake ID is used against the service
+            r = client.DoGetAsync("games/" + r2.Data.GameID + "?Brief=yes").Result;
+            Assert.AreEqual(Forbidden, r.Status);
+
+            //Real GameID is used against the service in pending status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID + "?Brief=yes", rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+
+            //Player2 enters the game
+            r2 = client.DoPostAsync("games", playerTwo).Result;
+
+            //Player one plays a single word.
+            playerOne.Word = "a";
+            r = client.DoPutAsync(playerOne, "games/" + rGameID.Data.GameID).Result;
+
+            //Player two plays a single word.
+            playerTwo.Word = "a";
+            r = client.DoPutAsync(playerTwo, "games/" + rGameID.Data.GameID).Result;
+
+            System.Threading.Thread.Sleep(6000);
+
+            //Real GameID is used against the service in active status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID + "?Brief=yes", rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
+
+            //Real GameID is used against the service in complete status
+            r = client.DoGetAsync("games/" + rGameID.Data.GameID + "?Brief=yes", rGameID.Data.GameID.ToString()).Result;
+            Assert.AreEqual(OK, r.Status);
         }
     }
 }
