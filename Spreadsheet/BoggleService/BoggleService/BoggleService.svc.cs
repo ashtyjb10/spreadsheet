@@ -223,7 +223,7 @@ namespace Boggle
                                 {
                                     SetStatus(Forbidden);
                                     reader.Close();
-                                    trans.Commit();
+                                    //trans.Commit();
                                     return null;
                                 }
                                 else
@@ -878,6 +878,7 @@ namespace Boggle
 
                         if (player1Tok != null && player2Tok != null)
                         {
+                            
                             query = "INSERT INTO dbo.Games  (Player1, TimeLimit, GameStatus) VALUES(@Player1, @TimeLimit, @GameStatus)";
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                             {
@@ -1281,7 +1282,7 @@ namespace Boggle
                                     GameStatus = GameIdReader["GameStatus"].ToString();
                                     if(GameStatus != "active")
                                     {
-                                        SetStatus(Forbidden);
+                                        SetStatus(Conflict);
                                         GameIdReader.Close();
                                         trans.Commit();
                                         return score;
@@ -1513,7 +1514,7 @@ namespace Boggle
                                     }
                                 }
                                 //If the word has not already been played the add it and the score.
-                                bool isInList = true;
+                                
                                 using (SqlCommand findWordsPlayed =
                                         new SqlCommand("Select * from Words where GameID = @GameID AND Player = @Player AND Word = @Word",
                                         conn,
