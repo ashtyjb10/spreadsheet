@@ -74,6 +74,8 @@ namespace CustomNetworking
             socket = s;
             encoding = e;
             // TODO: Complete implementation of StringSocket
+
+            
         }
 
         /// <summary>
