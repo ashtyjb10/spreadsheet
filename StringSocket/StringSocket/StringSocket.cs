@@ -63,6 +63,8 @@ namespace CustomNetworking
         // Encoding used for sending and receiving
         private Encoding encoding;
 
+
+
         /// <summary>
         /// Creates a StringSocket from a regular Socket, which should already be connected.  
         /// The read and write methods of the regular Socket must not be called after the
@@ -73,6 +75,19 @@ namespace CustomNetworking
         {
             socket = s;
             encoding = e;
+
+            StringBuilder incoming = new StringBuilder();
+            StringBuilder outgoing = new StringBuilder();
+            string incomingString = "";
+            ReceiveCallback sb;
+
+            this.BeginReceive((ss,p) => { incomingString = ss; }, null);
+            //remember the socket and encoding
+            //call begin recieve to start listening
+
+            StringSocketListener list = new StringSocketListener(4000, e);
+
+
             // TODO: Complete implementation of StringSocket
 
             
@@ -120,6 +135,8 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
+            
+            
             // TODO: Implement BeginSend
         }
 
@@ -164,6 +181,14 @@ namespace CustomNetworking
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
             // TODO: Implement BeginReceive
+            if (length <= 0)
+            {
+                socket.Close();
+            }
+            else
+            {
+                encoding.
+            }
         }
 
         /// <summary>
