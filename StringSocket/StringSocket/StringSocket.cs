@@ -173,6 +173,7 @@ namespace CustomNetworking
                 pendingBytes = encoding.GetBytes(s);
 
                 sendCallbackQueue.Enqueue(callback);
+
                 if (!sendIsOngoing)
                 {
                     sendIsOngoing = true;
