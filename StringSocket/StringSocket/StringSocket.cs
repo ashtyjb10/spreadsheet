@@ -64,7 +64,7 @@ namespace CustomNetworking
         private Encoding encoding;
 
         //
-        private Queue<ReceiveCallback> callbackQueue = new Queue<ReceiveCallback>();
+        private Queue<SendCallback> callbackQueue = new Queue<SendCallback>();
         private const int BUFFER_SIZE = 1024;
         private byte[] incomingBytes = new byte[BUFFER_SIZE];
         private char[] incomingChars = new char[BUFFER_SIZE];
@@ -152,13 +152,16 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
+            callbackQueue.Enqueue(callback);
+
+            //AsyncCallback a = new AsyncCallback(callback);
             //convert string into an array of bytes.
             //remember the callback, string and payload that needs to be stored.
             //send bytes out
             //use the socket to send the bytes.
             //when the bytes have been completely sent you can quit calling the callback.
             //same idea as the send in the chat server.
-
+            //AsyncCallback back = new AsyncCallback(callback);
             lock (sendSync)
             {
                 outgoing.Append(s);
@@ -166,6 +169,8 @@ namespace CustomNetworking
                 if (!sendIsOngoing)
                 {
                     sendIsOngoing = true;
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                           SocketFlags.None, MessageSent, null);
                     sendBytes();
                 }
             }
@@ -193,6 +198,7 @@ namespace CustomNetworking
                 outgoing.Clear();
                 try
                 {
+
                     socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
                            SocketFlags.None, MessageSent, null);
                 }
@@ -202,6 +208,8 @@ namespace CustomNetworking
             }
             else
             {
+                SendCallback tosend = (callbackQueue.Dequeue());
+                tosend(true, "Payload");
                 sendIsOngoing = false;
             }
         }
