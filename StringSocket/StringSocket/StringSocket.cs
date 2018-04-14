@@ -97,7 +97,7 @@ namespace CustomNetworking
             outgoing = new StringBuilder();
             string incomingString = "";
             ReceiveCallback sb;
-            this.BeginSend("", (bb, pp) => {}, null);
+            //this.BeginSend("Hello\n", (bb, pp) => {}, null);
             //this.BeginReceive((ss,p) => { incomingString = ss; }, null);
             sendIsOngoing = false;
             //remember the socket and encoding
@@ -170,10 +170,6 @@ namespace CustomNetworking
                 }
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public void sendBytes()
         {
             //we are in the middle of sending.
@@ -287,7 +283,7 @@ namespace CustomNetworking
             {
                 callbackQueue.Enqueue(callback);
             }*/
-            this.BeginSend("Hello there", (bb, pp) => { }, null);
+            //this.BeginSend("Hello there", (bb, pp) => { }, null);
 
         }
 

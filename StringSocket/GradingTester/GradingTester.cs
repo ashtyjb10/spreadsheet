@@ -191,7 +191,7 @@ namespace GradingTester
                 try
                 {
                     sender.BeginSend("Hello\n", (s, p) => { payload = p; mre.Set(); }, "Payload");
-                    mre.WaitOne();
+                    //mre.WaitOne();
                     Assert.AreEqual("Payload", payload);
                 }
                 finally
