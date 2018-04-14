@@ -77,7 +77,9 @@ namespace CustomNetworking
         private bool sendIsOngoing;
 
         private Queue<SendCallback> sendCallbackQueue;
+        private Queue<Object> sendCallbackPayloadQueue;
         private Queue<ReceiveCallback> receiveCallbackQueue;
+        private Queue<Object> recieveCallbackPayloadQueue;
 
 
         
@@ -96,7 +98,9 @@ namespace CustomNetworking
             encoding = e;
 
             sendCallbackQueue = new Queue<SendCallback>();
+            sendCallbackPayloadQueue = new Queue<object>();
             receiveCallbackQueue = new Queue<ReceiveCallback>();
+            recieveCallbackPayloadQueue = new Queue<object>();
 
             decoder = e.GetDecoder();
             
@@ -170,9 +174,11 @@ namespace CustomNetworking
             lock (sendSync)
             {
                 //convert string into an array of bytes.
-                pendingBytes = encoding.GetBytes(s);
+                outgoing.Append(s);
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
 
                 sendCallbackQueue.Enqueue(callback);
+                sendCallbackPayloadQueue.Enqueue(payload);
                 if (!sendIsOngoing)
                 {
                     sendIsOngoing = true;
@@ -201,6 +207,7 @@ namespace CustomNetworking
             //not currently have block of bytes, make a new one!
             else if (outgoing.Length > 0)
             {
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
                 pendingIndex = 0;
                 outgoing.Clear();
                 try
@@ -214,6 +221,9 @@ namespace CustomNetworking
             }
             else
             {
+                SendCallback send = sendCallbackQueue.Dequeue();
+                object pay = sendCallbackPayloadQueue.Dequeue();
+                send(true, pay);
                 sendIsOngoing = false;
             }
         }
@@ -276,16 +286,15 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-            ReceiveCallback s;
 
             //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-            //int incoming = socket.Available;
+            int incoming = socket.Available;
 
             //string incomingString;
             //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
 
             // TODO: Implement BeginReceive
-            /*if (incoming <= 0)
+            if (incoming <= 0)
             {
                 //read the first line that comes in.
                 //socket.BeginReceive();
@@ -293,8 +302,10 @@ namespace CustomNetworking
             }
             else
             {
-                callbackQueue.Enqueue(callback);
-            }*/
+                receiveCallbackQueue.Enqueue(callback);
+                recieveCallbackPayloadQueue.Enqueue(payload);
+                
+            }
             //this.BeginSend("Hello there", (bb, pp) => { }, null);
 
         }
