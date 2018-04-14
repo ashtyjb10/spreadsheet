@@ -97,7 +97,7 @@ namespace CustomNetworking
             outgoing = new StringBuilder();
             string incomingString = "";
             ReceiveCallback sb;
-            this.BeginSend("Hello there", (bb, pp) => {}, null);
+            this.BeginSend("Hello", (bb, pp) => {}, null);
             this.BeginReceive((ss,p) => { incomingString = ss; }, null);
             sendIsOngoing = false;
             //remember the socket and encoding
@@ -264,13 +264,13 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-            ReceiveCallback s;
+            //ReceiveCallback s;
             
-            socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-            int incoming = socket.Available;
+            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
+            //int incoming = socket.Available;
 
-            string incomingString;
-            this.BeginReceive((ss, p) => { incomingString = ss; }, null);
+            //string incomingString;
+            //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
 
             // TODO: Implement BeginReceive
             /*if (incoming <= 0)
