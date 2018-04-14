@@ -69,7 +69,7 @@ namespace CustomNetworking
         private byte[] incomingBytes = new byte[BUFFER_SIZE];
         private char[] incomingChars = new char[BUFFER_SIZE];
         private Decoder decoder;
-        StringBuilder incoming;
+        private StringBuilder incoming;
         private int pendingIndex = 0;
         private StringBuilder outgoing;
         private byte[] pendingBytes = new byte[0];
@@ -286,16 +286,14 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-
+            int bytesRead = socket.Available;
             //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-            //int incoming = socket.Available;
 
-            incoming.Append()
             //string incomingString;
             //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
 
             // TODO: Implement BeginReceive
-            if (incoming <= 0)
+            if (bytesRead <= 0)
             {
                 //read the first line that comes in.
                 //socket.BeginReceive();
@@ -305,10 +303,35 @@ namespace CustomNetworking
             {
                 receiveCallbackQueue.Enqueue(callback);
                 recieveCallbackPayloadQueue.Enqueue(payload);
-                
-            }
+                try
+                {
+                    socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                        MessageReceived, null);
+                }
+                catch(ObjectDisposedException)
+                { }
 
-            
+                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                incoming.Append(incomingChars, 0, charsRead);
+                Console.WriteLine(incoming);
+                
+                /*receiveCallbackQueue.Enqueue(callback);
+                recieveCallbackPayloadQueue.Enqueue(payload);
+                incomingChars = socket.
+                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                incoming.Append(incomingChars, 0, charsRead);
+                */
+                ReceiveCallback rec = receiveCallbackQueue.Dequeue();
+                object pay = recieveCallbackPayloadQueue.Dequeue();
+                rec(incoming.ToString(), pay);
+                //BeginReceive(callback, payload, length);
+
+
+                // socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+
+                //convert bytes
+                //incoming.Append(incomingChars, 0, charsRead);
+            }
             //this.BeginSend("Hello there", (bb, pp) => { }, null);
 
         }
