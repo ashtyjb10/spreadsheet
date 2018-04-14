@@ -288,8 +288,9 @@ namespace CustomNetworking
         {
 
             //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-            int incoming = socket.Available;
+            //int incoming = socket.Available;
 
+            incoming.Append()
             //string incomingString;
             //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
 
@@ -306,6 +307,8 @@ namespace CustomNetworking
                 recieveCallbackPayloadQueue.Enqueue(payload);
                 
             }
+
+            
             //this.BeginSend("Hello there", (bb, pp) => { }, null);
 
         }
