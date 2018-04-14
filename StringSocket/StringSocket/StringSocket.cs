@@ -98,7 +98,7 @@ namespace CustomNetworking
             string incomingString = "";
             ReceiveCallback sb;
             this.BeginSend("Hello there", (bb, pp) => {}, null);
-            this.BeginReceive((ss,p) => { incomingString = ss; }, null);
+            //this.BeginReceive((ss,p) => { incomingString = ss; }, null);
             sendIsOngoing = false;
             //remember the socket and encoding
             //call begin recieve to start listening
@@ -265,12 +265,12 @@ namespace CustomNetworking
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
             ReceiveCallback s;
-            
-            socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-            int incoming = socket.Available;
 
-            string incomingString;
-            this.BeginReceive((ss, p) => { incomingString = ss; }, null);
+            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
+            //int incoming = socket.Available;
+
+            //string incomingString;
+            //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
 
             // TODO: Implement BeginReceive
             /*if (incoming <= 0)
@@ -283,6 +283,8 @@ namespace CustomNetworking
             {
                 callbackQueue.Enqueue(callback);
             }*/
+            this.BeginSend("Hello there", (bb, pp) => { }, null);
+
         }
 
         private void MessageReceived(IAsyncResult result)
