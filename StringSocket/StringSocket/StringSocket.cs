@@ -70,6 +70,12 @@ namespace CustomNetworking
         private char[] incomingChars = new char[BUFFER_SIZE];
         private Decoder decoder;
         StringBuilder incoming;
+        private int pendingIndex = 0;
+        private StringBuilder outgoing;
+        private byte[] pendingBytes = new byte[0];
+        private readonly object sendSync = new object();
+        private bool sendIsOngoing;
+        
 
 
 
@@ -88,11 +94,12 @@ namespace CustomNetworking
             
 
             incoming = new StringBuilder();
-            StringBuilder outgoing = new StringBuilder();
+            outgoing = new StringBuilder();
             string incomingString = "";
             ReceiveCallback sb;
-
+            this.BeginSend("Hello there", (bb, pp) => {}, null);
             this.BeginReceive((ss,p) => { incomingString = ss; }, null);
+            sendIsOngoing = false;
             //remember the socket and encoding
             //call begin recieve to start listening
 
@@ -117,6 +124,7 @@ namespace CustomNetworking
         {
             socket.Close();
         }
+
 
         /// <summary>
         /// We can write a string to a StringSocket ss by doing
@@ -144,9 +152,76 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
-            string outgoing = s;
-            
-            // TODO: Implement BeginSend
+            //convert string into an array of bytes.
+            //remember the callback, string and payload that needs to be stored.
+            //send bytes out
+            //use the socket to send the bytes.
+            //when the bytes have been completely sent you can quit calling the callback.
+            //same idea as the send in the chat server.
+
+            lock (sendSync)
+            {
+                outgoing.Append(s);
+
+                if (!sendIsOngoing)
+                {
+                    sendIsOngoing = true;
+                    sendBytes();
+                }
+            }
+        }
+        public void sendBytes()
+        {
+            //we are in the middle of sending.
+            if (pendingIndex < pendingBytes.Length)
+            {
+                try
+                {
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                            SocketFlags.None, MessageSent, null);
+                }
+                catch (ObjectDisposedException)
+                {
+
+                }
+            }
+            //not currently have block of bytes, make a new one!
+            else if (outgoing.Length > 0)
+            {
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
+                pendingIndex = 0;
+                outgoing.Clear();
+                try
+                {
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                           SocketFlags.None, MessageSent, null);
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+            }
+            else
+            {
+                sendIsOngoing = false;
+            }
+        }
+
+        private void MessageSent(IAsyncResult result)
+        {
+            int byteSent = socket.EndSend(result);
+
+            //make a lock!
+
+            if (byteSent == 0)
+            {
+                socket.Close();
+
+            }
+            else
+            {
+                pendingIndex += byteSent;
+                sendBytes();
+            }
         }
 
         /// <summary>
