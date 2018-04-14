@@ -75,6 +75,11 @@ namespace CustomNetworking
         private byte[] pendingBytes = new byte[0];
         private readonly object sendSync = new object();
         private bool sendIsOngoing;
+
+        private Queue<SendCallback> sendCallbackQueue;
+        private Queue<ReceiveCallback> receiveCallbackQueue;
+
+
         
 
 
@@ -89,6 +94,9 @@ namespace CustomNetworking
         {
             socket = s;
             encoding = e;
+
+            sendCallbackQueue = new Queue<SendCallback>();
+            receiveCallbackQueue = new Queue<ReceiveCallback>();
 
             decoder = e.GetDecoder();
             
@@ -152,7 +160,7 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
-            //convert string into an array of bytes.
+            
             //remember the callback, string and payload that needs to be stored.
             //send bytes out
             //use the socket to send the bytes.
@@ -161,8 +169,10 @@ namespace CustomNetworking
 
             lock (sendSync)
             {
-                outgoing.Append(s);
+                //convert string into an array of bytes.
+                pendingBytes = encoding.GetBytes(s);
 
+                sendCallbackQueue.Enqueue(callback);
                 if (!sendIsOngoing)
                 {
                     sendIsOngoing = true;
@@ -170,6 +180,9 @@ namespace CustomNetworking
                 }
             }
         }
+
+
+
         public void sendBytes()
         {
             //we are in the middle of sending.
@@ -188,7 +201,6 @@ namespace CustomNetworking
             //not currently have block of bytes, make a new one!
             else if (outgoing.Length > 0)
             {
-                pendingBytes = encoding.GetBytes(outgoing.ToString());
                 pendingIndex = 0;
                 outgoing.Clear();
                 try
