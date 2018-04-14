@@ -63,6 +63,14 @@ namespace CustomNetworking
         // Encoding used for sending and receiving
         private Encoding encoding;
 
+        //
+        private Queue<ReceiveCallback> callbackQueue = new Queue<ReceiveCallback>();
+        private const int BUFFER_SIZE = 1024;
+        private byte[] incomingBytes = new byte[BUFFER_SIZE];
+        private char[] incomingChars = new char[BUFFER_SIZE];
+        private Decoder decoder;
+        StringBuilder incoming;
+
 
 
         /// <summary>
@@ -76,7 +84,10 @@ namespace CustomNetworking
             socket = s;
             encoding = e;
 
-            StringBuilder incoming = new StringBuilder();
+            decoder = e.GetDecoder();
+            
+
+            incoming = new StringBuilder();
             StringBuilder outgoing = new StringBuilder();
             string incomingString = "";
             ReceiveCallback sb;
@@ -133,7 +144,7 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
-            
+            string outgoing = s;
             
             // TODO: Implement BeginSend
         }
@@ -178,21 +189,51 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
+            ReceiveCallback s;
+            
+            socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
+            int incoming = socket.Available;
+
+            string incomingString;
+            this.BeginReceive((ss, p) => { incomingString = ss; }, null);
+
             // TODO: Implement BeginReceive
-            if (length <= 0)
+            /*if (incoming <= 0)
             {
+                //read the first line that comes in.
+                //socket.BeginReceive();
                 socket.Close();
             }
             else
             {
-                encoding.
-            }
+                callbackQueue.Enqueue(callback);
+            }*/
         }
 
-        /// <summary>
-        /// Frees resources associated with this StringSocket.
-        /// </summary>
-        public void Dispose()
+        private void MessageReceived(IAsyncResult result)
+        {
+            // Figure out how many bytes have come in
+            int bytesRead = socket.EndReceive(result);
+
+            if (bytesRead == 0)
+            {
+                Console.WriteLine("Socket closed");
+                //server.RemoveClient(this);
+                socket.Close();
+            }
+            else
+            {
+                
+                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                incoming.Append(incomingChars, 0, charsRead);
+                Console.WriteLine(incoming);
+            }
+
+        }
+            /// <summary>
+            /// Frees resources associated with this StringSocket.
+            /// </summary>
+            public void Dispose()
         {
             Shutdown(SocketShutdown.Both);
             Close();
