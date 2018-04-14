@@ -135,7 +135,8 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
-            
+
+            socket.BeginSend(null, 0, 0, SocketFlags.None, callback, null);
             // TODO: Implement BeginSend
         }
 
