@@ -136,7 +136,6 @@ namespace CustomNetworking
         public void BeginSend(String s, SendCallback callback, object payload)
         {
             
-            
             // TODO: Implement BeginSend
         }
 
