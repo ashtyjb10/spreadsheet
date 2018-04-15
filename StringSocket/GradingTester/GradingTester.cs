@@ -158,7 +158,7 @@ namespace GradingTester
                 {
                     sender.BeginSend("Hello\n", (s, p) => { }, null);
                     receiver.BeginReceive((s, p) => { payload = p; mre.Set(); }, "Payload");
-                    mre.WaitOne();
+                   // mre.WaitOne();
                     Assert.AreEqual("Payload", payload);
                 }
                 finally
