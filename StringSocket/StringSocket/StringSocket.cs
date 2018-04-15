@@ -286,6 +286,7 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
+            
             lock (sendSync)
             {
                 int bytesRead = socket.Available;
@@ -299,6 +300,7 @@ namespace CustomNetworking
                 {
                     //read the first line that comes in.
                     //socket.BeginReceive();
+
                     socket.Close();
                 }
                 else
@@ -350,7 +352,6 @@ namespace CustomNetworking
                     object pay = recieveCallbackPayloadQueue.Dequeue();
 
                     rec(incoming.ToString(), pay);
-                    //server.RemoveClient(this);
                     socket.Close();
                 }
                 else
