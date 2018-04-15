@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CustomNetworking
 {
@@ -74,6 +75,8 @@ namespace CustomNetworking
         private StringBuilder outgoing;
         private byte[] pendingBytes = new byte[0];
         private readonly object sendSync = new object();
+        private readonly object recSync = new object();
+        private readonly object recQueSync = new object();
         private bool sendIsOngoing;
 
         private Queue<SendCallback> sendCallbackQueue;
@@ -230,20 +233,21 @@ namespace CustomNetworking
 
         private void MessageSent(IAsyncResult result)
         {
-            int byteSent = socket.EndSend(result);
+            lock(sendSync)
+            { 
+                int byteSent = socket.EndSend(result);
+                if (byteSent == 0)
+                {
+                    socket.Close();
 
-            //make a lock!
-
-            if (byteSent == 0)
-            {
-                socket.Close();
-
+                }
+                else
+                {
+                    pendingIndex += byteSent;
+                    sendBytes();
+                }
             }
-            else
-            {
-                pendingIndex += byteSent;
-                sendBytes();
-            }
+            
         }
 
         /// <summary>
@@ -286,34 +290,44 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-            
-            lock (sendSync)
+            receiveCallbackQueue.Enqueue(callback);
+            recieveCallbackPayloadQueue.Enqueue(payload);
+
+
+            //lock (sendSync)
+            //{
+            int bytesRead = socket.Available;
+            //receiveCallbackQueue.Enqueue(callback);
+            //recieveCallbackPayloadQueue.Enqueue(payload);
+            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
+
+            //string incomingString;
+            //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
+
+            // TODO: Implement BeginReceive
+            /*if (bytesRead <= 0)
             {
-                int bytesRead = socket.Available;
-                //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
+                //read the first line that comes in.
+                //socket.BeginReceive();
 
-                //string incomingString;
-                //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
+                //socket.Close();
+            }
+            else
+            {*/
 
-                // TODO: Implement BeginReceive
-                if (bytesRead <= 0)
+            
+
+            try
                 {
-                    //read the first line that comes in.
-                    //socket.BeginReceive();
-
-                    socket.Close();
+                   socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                        MessageReceived, null);
                 }
-                else
-                {
-                    receiveCallbackQueue.Enqueue(callback);
-                    recieveCallbackPayloadQueue.Enqueue(payload);
-                    try
-                    {
-                        socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
-                            MessageReceived, null);
-                    }
-                    catch (ObjectDisposedException)
-                    { }     
+                catch (ObjectDisposedException)
+                { }
+           
+            
+
+
 
 
                     //Console.WriteLine(incoming);
@@ -332,18 +346,20 @@ namespace CustomNetworking
 
                     //convert bytes
                     //incoming.Append(incomingChars, 0, charsRead);
-                }
-            }
+                //}
+            //}
             //this.BeginSend("Hello there", (bb, pp) => { }, null);
 
         }
 
         private void MessageReceived(IAsyncResult result)
         {
-            lock (sendSync)
-            {
+            
+            
                 // Figure out how many bytes have come in
                 int bytesRead = socket.EndReceive(result);
+            
+
 
                 if (bytesRead == 0)
                 {
@@ -361,12 +377,16 @@ namespace CustomNetworking
                     incoming.Append(incomingChars, 0, charsRead);
                     for (int index = 0; index < incoming.Length; index++)
                     {
+
                         if (incoming[index] == '\n')
                         {
+
                             ReceiveCallback rec = receiveCallbackQueue.Dequeue();
                             object pay = recieveCallbackPayloadQueue.Dequeue();
+
                             incoming.Remove(incoming.Length - 1, 1);
                             rec(incoming.ToString(), pay);
+                            incoming.Clear();
                         }
                     }
                     try
@@ -376,8 +396,9 @@ namespace CustomNetworking
                     }
                     catch (ObjectDisposedException)
                     { }
-                }
+                
             }
+            
 
         }
             /// <summary>
