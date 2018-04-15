@@ -346,7 +346,7 @@ namespace CustomNetworking
                 if (bytesRead == 0)
                 {
                     Console.WriteLine("Socket closed");
-                    ReceiveCallback rec = receiveCallbackQueue.Dequeue();
+                    ReceiveCallback rec = receiveCallbackQueue.Dequeue(); 
                     object pay = recieveCallbackPayloadQueue.Dequeue();
 
                     rec(incoming.ToString(), pay);
