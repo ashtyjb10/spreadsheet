@@ -286,51 +286,51 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-            int bytesRead = socket.Available;
-            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-
-            //string incomingString;
-            //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
-
-            // TODO: Implement BeginReceive
-            if (bytesRead <= 0)
+            lock (sendSync)
             {
-                //read the first line that comes in.
-                //socket.BeginReceive();
-                socket.Close();
-            }
-            else
-            {
-                receiveCallbackQueue.Enqueue(callback);
-                recieveCallbackPayloadQueue.Enqueue(payload);
-                try
+                int bytesRead = socket.Available;
+                //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
+
+                //string incomingString;
+                //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
+
+                // TODO: Implement BeginReceive
+                if (bytesRead <= 0)
                 {
-                    socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
-                        MessageReceived, null);
+                    //read the first line that comes in.
+                    //socket.BeginReceive();
+                    socket.Close();
                 }
-                catch(ObjectDisposedException)
-                { }
-
-                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                incoming.Append(incomingChars, 0, charsRead);
-                Console.WriteLine(incoming);
-                
-                /*receiveCallbackQueue.Enqueue(callback);
-                recieveCallbackPayloadQueue.Enqueue(payload);
-                incomingChars = socket.
-                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                incoming.Append(incomingChars, 0, charsRead);
-                */
-                ReceiveCallback rec = receiveCallbackQueue.Dequeue();
-                object pay = recieveCallbackPayloadQueue.Dequeue();
-                rec(incoming.ToString(), pay);
-                //BeginReceive(callback, payload, length);
+                else
+                {
+                    receiveCallbackQueue.Enqueue(callback);
+                    recieveCallbackPayloadQueue.Enqueue(payload);
+                    try
+                    {
+                        socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                            MessageReceived, null);
+                    }
+                    catch (ObjectDisposedException)
+                    { }     
 
 
-                // socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+                    //Console.WriteLine(incoming);
 
-                //convert bytes
-                //incoming.Append(incomingChars, 0, charsRead);
+                    /*receiveCallbackQueue.Enqueue(callback);
+                    recieveCallbackPayloadQueue.Enqueue(payload);
+                    incomingChars = socket.
+                    int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                    incoming.Append(incomingChars, 0, charsRead);
+                    */
+
+                    //BeginReceive(callback, payload, length);
+
+
+                    // socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+
+                    //convert bytes
+                    //incoming.Append(incomingChars, 0, charsRead);
+                }
             }
             //this.BeginSend("Hello there", (bb, pp) => { }, null);
 
@@ -338,21 +338,44 @@ namespace CustomNetworking
 
         private void MessageReceived(IAsyncResult result)
         {
-            // Figure out how many bytes have come in
-            int bytesRead = socket.EndReceive(result);
+            lock (sendSync)
+            {
+                // Figure out how many bytes have come in
+                int bytesRead = socket.EndReceive(result);
 
-            if (bytesRead == 0)
-            {
-                Console.WriteLine("Socket closed");
-                //server.RemoveClient(this);
-                socket.Close();
-            }
-            else
-            {
-                
-                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                incoming.Append(incomingChars, 0, charsRead);
-                Console.WriteLine(incoming);
+                if (bytesRead == 0)
+                {
+                    Console.WriteLine("Socket closed");
+                    ReceiveCallback rec = receiveCallbackQueue.Dequeue();
+                    object pay = recieveCallbackPayloadQueue.Dequeue();
+
+                    rec(incoming.ToString(), pay);
+                    //server.RemoveClient(this);
+                    socket.Close();
+                }
+                else
+                {
+
+                    int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                    incoming.Append(incomingChars, 0, charsRead);
+                    for (int index = 0; index < incoming.Length; index++)
+                    {
+                        if (incoming[index] == '\n')
+                        {
+                            ReceiveCallback rec = receiveCallbackQueue.Dequeue();
+                            object pay = recieveCallbackPayloadQueue.Dequeue();
+                            incoming.Remove(incoming.Length - 1, 1);
+                            rec(incoming.ToString(), pay);
+                        }
+                    }
+                    try
+                    {
+                        socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                            MessageReceived, null);
+                    }
+                    catch (ObjectDisposedException)
+                    { }
+                }
             }
 
         }
