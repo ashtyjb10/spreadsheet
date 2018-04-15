@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CustomNetworking
 {
+
     /// <summary>
     /// The type of delegate that is called when a StringSocket send has completed.
     /// </summary>
@@ -77,6 +78,7 @@ namespace CustomNetworking
         private readonly object recSync = new object();
         private readonly object recQueSync = new object();
         private bool sendIsOngoing;
+        private bool isRecieving;
 
         private Queue<SendCallback> sendCallbackQueue;
         private Queue<Object> sendCallbackPayloadQueue;
@@ -84,10 +86,12 @@ namespace CustomNetworking
         private Queue<Object> recieveCallbackPayloadQueue;
 
         private Queue<SendSave> sendSaveQueue;
-        private Queue<ReceiveSave> receiveQueueSave;
+        private Queue<RecieveSave> recieveQueueSave;
 
-        private int sentBytes;
-       
+
+        
+
+
 
         /// <summary>
         /// Creates a StringSocket from a regular Socket, which should already be connected.  
@@ -105,12 +109,10 @@ namespace CustomNetworking
             receiveCallbackQueue = new Queue<ReceiveCallback>();
             recieveCallbackPayloadQueue = new Queue<object>();
 
+            decoder = e.GetDecoder();
 
             sendSaveQueue = new Queue<SendSave>();
-            receiveQueueSave = new Queue<ReceiveSave>();
-
-
-            decoder = e.GetDecoder();
+            recieveQueueSave = new Queue<RecieveSave>();
             
 
             incoming = new StringBuilder();
@@ -129,20 +131,17 @@ namespace CustomNetworking
             // TODO: Complete implementation of StringSocket
         }
 
-
         private struct SendSave
         {
-            public string SentMessage { get; set; }
+            public StringBuilder sentMessage { get; set; }
             public object Payload { get; set; }
             public SendCallback Callback { get; set; }
         }
 
-        private struct ReceiveSave
+        private struct RecieveSave
         {
-
             public object Payload { get; set; }
             public ReceiveCallback Callback { get; set; }
-
         }
 
         /// <summary>
@@ -188,72 +187,87 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
+            
+            //remember the callback, string and payload that needs to be stored.
+            //send bytes out
+            //use the socket to send the bytes.
+            //when the bytes have been completely sent you can quit calling the callback.
+            //same idea as the send in the chat server.
 
-            lock (sendSaveQueue)
+            lock (sendSync)
             {
-                
-                sendSaveQueue.Enqueue(new SendSave { SentMessage = s, Callback = callback, Payload = payload });
+                //convert string into an array of bytes.
+                outgoing.Append(s);
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
 
+                sendCallbackQueue.Enqueue(callback);
+                sendCallbackPayloadQueue.Enqueue(payload);
                 if (!sendIsOngoing)
                 {
-                    
                     sendIsOngoing = true;
-                    SendBytes();
+                    sendBytes();
                 }
             }
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SendBytes()
+
+        public void sendBytes()
         {
-            sentBytes = 0;
-            pendingBytes = encoding.GetBytes(sendSaveQueue.Peek().SentMessage);
-            try
+            //we are in the middle of sending.
+            if (pendingIndex < pendingBytes.Length)
             {
-                socket.BeginSend(pendingBytes, 0, pendingBytes.Length, SocketFlags.None, MessageSent, null);
+                try
+                {
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                            SocketFlags.None, MessageSent, null);
+                }
+                catch (ObjectDisposedException)
+                {
+
+                }
             }
-            catch(Exception)
+            //not currently have block of bytes, make a new one!
+            else if (outgoing.Length > 0)
             {
-                sendSaveQueue.Dequeue();
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
+                pendingIndex = 0;
+                outgoing.Clear();
+                try
+                {
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                           SocketFlags.None, MessageSent, null);
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+            }
+            else
+            {
+                SendCallback send = sendCallbackQueue.Dequeue();
+                object pay = sendCallbackPayloadQueue.Dequeue();
+                send(true, pay);
+                sendIsOngoing = false;
             }
         }
 
         private void MessageSent(IAsyncResult result)
         {
-            
-            lock (sendSaveQueue)
-            {
-                sentBytes = sentBytes + socket.EndSend(result);
-
-                int leftToSend = pendingBytes.Length - sentBytes;
-
-                if (leftToSend > 0)
+            lock(sendSync)
+            { 
+                int byteSent = socket.EndSend(result);
+                if (byteSent == 0)
                 {
-                    socket.BeginSend(pendingBytes, sentBytes, leftToSend, SocketFlags.None, MessageSent, null);
+                    socket.Close();
+
                 }
                 else
                 {
-                    //Dequeue the sendSave
-                    SendSave toCall = sendSaveQueue.Dequeue();
-
-                    //Create a new task for the callback to ensure non-blocking.
-                    Task callbackTask = new Task(() => toCall.Callback.Invoke(true, toCall.Payload));
-                    callbackTask.Start();
-                    
-
-                    if (sendSaveQueue.Count > 0)
-                    {
-                        SendBytes();
-                    }
-                    else
-                    {
-                        sendIsOngoing = false;
-                    }
+                    pendingIndex += byteSent;
+                    sendBytes();
                 }
             }
+            
         }
 
         /// <summary>
@@ -296,115 +310,123 @@ namespace CustomNetworking
         /// </summary>
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-            receiveCallbackQueue.Enqueue(callback);
-            recieveCallbackPayloadQueue.Enqueue(payload);
-
-
-            //lock (sendSync)
-            //{
-            int bytesRead = socket.Available;
-            //receiveCallbackQueue.Enqueue(callback);
-            //recieveCallbackPayloadQueue.Enqueue(payload);
-            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived , null);
-
-            //string incomingString;
-            //this.BeginReceive((ss, p) => { incomingString = ss; }, null);
-
-            // TODO: Implement BeginReceive
-            /*if (bytesRead <= 0)
+            lock (recSync)
             {
-                //read the first line that comes in.
-                //socket.BeginReceive();
+                recieveQueueSave.Enqueue(new RecieveSave { Callback = callback, Payload = payload });
 
-                //socket.Close();
-            }
-            else
-            {*/
-
-            
-
-            try
+                if (!isRecieving)
                 {
-                   socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
-                        MessageReceived, null);
+                    isRecieving = true;
+                    RecieveNewMessage();
+                    isRecieving = false;
+                }
+
+            }
+        }
+
+        private void RecieveNewMessage()
+        {
+            //if we have messages pending
+            while (recieveQueueSave.Count > 0)
+            {
+                //if we have a string to send.
+                if (incoming.Length > 0)
+                {
+                    RecieveSave recieved = recieveQueueSave.Dequeue();
+                    recieved.Callback(incoming.ToString(), recieved.Payload);
+                    //ThreadPool.QueueUserWorkItem(o => recieved.Callback(incoming.ToString(), recieved.Payload));
+                }
+                else
+                {
+                    break;
+                }
+
+            }
+
+            if (recieveQueueSave.Count > 0)
+            {
+                try
+                {
+                    socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                            MessageReceived, null);
+
+  
                 }
                 catch (ObjectDisposedException)
-                { }
-           
-            
-
-
-
-
-                    //Console.WriteLine(incoming);
-
-                    /*receiveCallbackQueue.Enqueue(callback);
-                    recieveCallbackPayloadQueue.Enqueue(payload);
-                    incomingChars = socket.
-                    int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                    incoming.Append(incomingChars, 0, charsRead);
-                    */
-
-                    //BeginReceive(callback, payload, length);
-
-
-                    // socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
-
-                    //convert bytes
-                    //incoming.Append(incomingChars, 0, charsRead);
-                //}
-            //}
-            //this.BeginSend("Hello there", (bb, pp) => { }, null);
+                {
+                    recieveQueueSave.Dequeue();
+                }
+            }
+            else
+            {
+                isRecieving = false;
+            }
 
         }
 
         private void MessageReceived(IAsyncResult result)
         {
-            
-            
-                // Figure out how many bytes have come in
+            lock (recSync)
+            {
                 int bytesRead = socket.EndReceive(result);
-            
 
-
-                if (bytesRead == 0)
+                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                incoming.Append(incomingChars, 0, charsRead);
+                for (int index = 0; index < incoming.Length; index++)
                 {
-                    Console.WriteLine("Socket closed");
-                    ReceiveCallback rec = receiveCallbackQueue.Dequeue(); 
-                    object pay = recieveCallbackPayloadQueue.Dequeue();
 
-                    rec(incoming.ToString(), pay);
-                    socket.Close();
+                    if (incoming[index] == '\n')
+                    { 
+                        incoming.Remove(incoming.Length - 1, 1);
+                    }
+
+
                 }
-                else
-                {
+                RecieveNewMessage();
 
-                    int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                    incoming.Append(incomingChars, 0, charsRead);
-                    for (int index = 0; index < incoming.Length; index++)
-                    {
+            /* // Figure out how many bytes have come in
+             int bytesRead = socket.EndReceive(result);
 
-                        if (incoming[index] == '\n')
-                        {
 
-                            ReceiveCallback rec = receiveCallbackQueue.Dequeue();
-                            object pay = recieveCallbackPayloadQueue.Dequeue();
 
-                            incoming.Remove(incoming.Length - 1, 1);
-                            rec(incoming.ToString(), pay);
-                            incoming.Clear();
-                        }
-                    }
-                    try
-                    {
-                        socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
-                            MessageReceived, null);
-                    }
-                    catch (ObjectDisposedException)
-                    { }
-                
-            }
-            
+             if (bytesRead == 0)
+             {
+                 Console.WriteLine("Socket closed");
+                 ReceiveCallback rec = receiveCallbackQueue.Dequeue();
+                 object pay = recieveCallbackPayloadQueue.Dequeue();
+
+                 rec(incoming.ToString(), pay);
+                 socket.Close();
+             }
+             else
+             {
+
+                 int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                 incoming.Append(incomingChars, 0, charsRead);
+                 for (int index = 0; index < incoming.Length; index++)
+                 {
+
+                     if (incoming[index] == '\n')
+                     {
+
+                         ReceiveCallback rec = receiveCallbackQueue.Dequeue();
+                         object pay = recieveCallbackPayloadQueue.Dequeue();
+
+                         incoming.Remove(incoming.Length - 1, 1);
+                         rec(incoming.ToString(), pay);
+                         incoming.Clear();
+                     }
+                 }
+                 try
+                 {
+                     socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                         MessageReceived, null);
+                 }
+                 catch (ObjectDisposedException)
+                 { }*/
+
+         }
+
 
         }
             /// <summary>
