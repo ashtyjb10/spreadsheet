@@ -132,7 +132,7 @@ namespace CustomNetworking
 
         private struct SendSave
         {
-            public StringBuilder SentMessage { get; set; }
+            public string SentMessage { get; set; }
             public object Payload { get; set; }
             public SendCallback Callback { get; set; }
         }
@@ -189,22 +189,14 @@ namespace CustomNetworking
         public void BeginSend(String s, SendCallback callback, object payload)
         {
 
-            
-            //remember the callback, string and payload that needs to be stored.
-            //send bytes out
-            //use the socket to send the bytes.
-            //when the bytes have been completely sent you can quit calling the callback.
-            //same idea as the send in the chat server.
-
             lock (sendSaveQueue)
             {
-                outgoing.Append(s);
                 
-                sendSaveQueue.Enqueue(new SendSave { SentMessage = outgoing, Callback = callback, Payload = payload });
+                sendSaveQueue.Enqueue(new SendSave { SentMessage = s, Callback = callback, Payload = payload });
 
                 if (!sendIsOngoing)
                 {
-                    Console.WriteLine("Sending " + sendSaveQueue.Peek().SentMessage.ToString());
+                    
                     sendIsOngoing = true;
                     SendBytes();
                 }
@@ -217,15 +209,11 @@ namespace CustomNetworking
         /// </summary>
         public void SendBytes()
         {
-
             sentBytes = 0;
-            pendingBytes = encoding.GetBytes(sendSaveQueue.Peek().SentMessage.ToString());
+            pendingBytes = encoding.GetBytes(sendSaveQueue.Peek().SentMessage);
             try
             {
-
-
                 socket.BeginSend(pendingBytes, 0, pendingBytes.Length, SocketFlags.None, MessageSent, null);
-                
             }
             catch(Exception)
             {
@@ -236,7 +224,6 @@ namespace CustomNetworking
         private void MessageSent(IAsyncResult result)
         {
             
-
             lock (sendSaveQueue)
             {
                 sentBytes = sentBytes + socket.EndSend(result);
@@ -249,10 +236,15 @@ namespace CustomNetworking
                 }
                 else
                 {
+                    //Dequeue the sendSave
                     SendSave toCall = sendSaveQueue.Dequeue();
-                    toCall.Callback.Invoke(true, toCall.Payload);
 
-                    if(sendSaveQueue.Count > 0)
+                    //Create a new task for the callback to ensure non-blocking.
+                    Task callbackTask = new Task(() => toCall.Callback.Invoke(true, toCall.Payload));
+                    callbackTask.Start();
+                    
+
+                    if (sendSaveQueue.Count > 0)
                     {
                         SendBytes();
                     }
@@ -260,13 +252,8 @@ namespace CustomNetworking
                     {
                         sendIsOngoing = false;
                     }
-
                 }
-
             }
-
-
-
         }
 
         /// <summary>
