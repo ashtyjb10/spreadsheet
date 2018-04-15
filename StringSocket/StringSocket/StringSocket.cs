@@ -112,9 +112,7 @@ namespace CustomNetworking
 
 
             decoder = e.GetDecoder();
-
-            sendSaveQueue = new Queue<SendSave>();
-            recieveQueueSave = new Queue<RecieveSave>();
+            
             
 
             incoming = new StringBuilder();
@@ -136,7 +134,7 @@ namespace CustomNetworking
 
         private struct SendSave
         {
-            public StringBuilder SentMessage { get; set; }
+            public string SentMessage { get; set; }
             public object Payload { get; set; }
             public SendCallback Callback { get; set; }
         }
@@ -202,9 +200,9 @@ namespace CustomNetworking
 
             lock (sendSaveQueue)
             {
-                outgoing.Append(s);
                 
-                sendSaveQueue.Enqueue(new SendSave { SentMessage = outgoing, Callback = callback, Payload = payload });
+                
+                sendSaveQueue.Enqueue(new SendSave { SentMessage = s, Callback = callback, Payload = payload });
 
                 if (!sendIsOngoing)
                 {
@@ -223,7 +221,7 @@ namespace CustomNetworking
         {
 
             sentBytes = 0;
-            pendingBytes = encoding.GetBytes(sendSaveQueue.Peek().SentMessage.ToString());
+            pendingBytes = encoding.GetBytes(sendSaveQueue.Peek().SentMessage);
             try
             {
 
@@ -254,7 +252,8 @@ namespace CustomNetworking
                 else
                 {
                     SendSave toCall = sendSaveQueue.Dequeue();
-                    toCall.Callback.Invoke(true, toCall.Payload);
+                    Task sendCallback = new Task( () => toCall.Callback.Invoke(true, toCall.Payload));
+                    sendCallback.Start();
 
                     if(sendSaveQueue.Count > 0)
                     {
@@ -315,7 +314,7 @@ namespace CustomNetworking
         {
             lock (recSync)
             {
-                recieveQueueSave.Enqueue(new RecieveSave { Callback = callback, Payload = payload });
+                receiveQueueSave.Enqueue(new ReceiveSave { Callback = callback, Payload = payload });
 
                 if (!isRecieving)
                 {
@@ -330,12 +329,12 @@ namespace CustomNetworking
         private void RecieveNewMessage()
         {
             //if we have messages pending
-            while (recieveQueueSave.Count > 0)
+            while (receiveQueueSave.Count > 0)
             {
                 //if we have a string to send.
                 if (incoming.Length > 0)
                 {
-                    RecieveSave recieved = recieveQueueSave.Dequeue();
+                    ReceiveSave recieved = receiveQueueSave.Dequeue();
                     recieved.Callback(incoming.ToString(), recieved.Payload);
                     //ThreadPool.QueueUserWorkItem(o => recieved.Callback(incoming.ToString(), recieved.Payload));
                 }
@@ -346,7 +345,7 @@ namespace CustomNetworking
 
             }
 
-            if (recieveQueueSave.Count > 0)
+            if (receiveQueueSave.Count > 0)
             {
                 try
                 {
@@ -357,7 +356,7 @@ namespace CustomNetworking
                 }
                 catch (ObjectDisposedException)
                 {
-                    recieveQueueSave.Dequeue();
+                    receiveQueueSave.Dequeue();
                 }
             }
             else
