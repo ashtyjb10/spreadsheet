@@ -78,16 +78,18 @@ namespace CustomNetworking
         private readonly object recSync = new object();
         private readonly object recQueSync = new object();
         private bool sendIsOngoing;
-        private bool isRecieving;
+        private bool isReceiving;
 
         private Queue<SendCallback> sendCallbackQueue;
         private Queue<Object> sendCallbackPayloadQueue;
         private Queue<ReceiveCallback> receiveCallbackQueue;
         private Queue<Object> recieveCallbackPayloadQueue;
+        private Queue<string> stringBack;
+        private string partialMessage;
 
         private Queue<SendSave> sendSaveQueue;
-        private Queue<RecieveSave> recieveQueueSave;
-
+        private Queue<ReceiveSave> receiveQueueSave;
+        int pendingRecIndex;
 
         
 
@@ -112,11 +114,13 @@ namespace CustomNetworking
             decoder = e.GetDecoder();
 
             sendSaveQueue = new Queue<SendSave>();
-            recieveQueueSave = new Queue<RecieveSave>();
+            receiveQueueSave = new Queue<ReceiveSave>();
             
 
             incoming = new StringBuilder();
             outgoing = new StringBuilder();
+            stringBack = new Queue<string>();
+            pendingRecIndex = 0;
             string incomingString = "";
             ReceiveCallback sb;
             //this.BeginSend("Hello\n", (bb, pp) => {}, null);
@@ -138,10 +142,11 @@ namespace CustomNetworking
             public SendCallback Callback { get; set; }
         }
 
-        private struct RecieveSave
+        private struct ReceiveSave
         {
             public object Payload { get; set; }
             public ReceiveCallback Callback { get; set; }
+            public int Length { get; set; }
         }
 
         /// <summary>
@@ -312,29 +317,34 @@ namespace CustomNetworking
         {
             lock (recSync)
             {
-                recieveQueueSave.Enqueue(new RecieveSave { Callback = callback, Payload = payload });
+                receiveQueueSave.Enqueue(new ReceiveSave { Callback = callback, Payload = payload,Length = length });
 
-                if (!isRecieving)
+                if (!isReceiving)
                 {
-                    isRecieving = true;
-                    RecieveNewMessage();
-                    isRecieving = false;
+                    isReceiving = true;
+                    ReceiveNewMessage();
+                   // isRecieving = false;
                 }
 
             }
         }
 
-        private void RecieveNewMessage()
+        private void ReceiveNewMessage()
         {
             //if we have messages pending
-            while (recieveQueueSave.Count > 0)
+            while (receiveQueueSave.Count > 0)
             {
                 //if we have a string to send.
-                if (incoming.Length > 0)
+                if (stringBack.Count > 0)
                 {
-                    RecieveSave recieved = recieveQueueSave.Dequeue();
-                    recieved.Callback(incoming.ToString(), recieved.Payload);
-                    //ThreadPool.QueueUserWorkItem(o => recieved.Callback(incoming.ToString(), recieved.Payload));
+                    ReceiveSave received = receiveQueueSave.Dequeue();
+                    string sb = stringBack.Dequeue();
+                    if (received.Length > 0)
+                    {
+                        Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
+                        
+                    }
+                    Task.Run(() => received.Callback(sb, received.Payload));
                 }
                 else
                 {
@@ -342,97 +352,58 @@ namespace CustomNetworking
                 }
 
             }
-
-            if (recieveQueueSave.Count > 0)
+            //int bytesReceived = 0;
+            if (receiveQueueSave.Count > 0)
             {
                 try
                 {
-                    socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
-                            MessageReceived, null);
-
-  
+                   Task.Run(() => socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
+                            MessageReceived, null));
                 }
                 catch (ObjectDisposedException)
                 {
-                    recieveQueueSave.Dequeue();
+                    receiveQueueSave.Dequeue();
                 }
             }
             else
             {
-                isRecieving = false;
+                isReceiving = false;
+            }
+        }
+
+        private void MessageReceived(IAsyncResult ar)
+        {
+            lock (recSync)
+            {
+                // returns the number of bytes received in the previous instance of socket.BeginReceive()
+                int bytesReceived = socket.EndReceive(ar);
+
+                // add the bytes we've received so far to a our partial message string                             
+                partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
+
+                // while partialMessage still has a new line
+                while (!(partialMessage.IndexOf("\n").Equals(-1)))
+                {
+                    // get the index of the newline
+                    int messageLength = partialMessage.IndexOf("\n");
+
+                    // get the completed message and add it to queue
+                    stringBack.Enqueue(partialMessage.Substring(0, messageLength));
+
+                    // advance our starting index and remove the message we just found from partialMessage
+                    partialMessage = partialMessage.Substring(messageLength + 1);
+                }
+                //check for more!
+                ReceiveNewMessage();
             }
 
         }
 
-        private void MessageReceived(IAsyncResult result)
-        {
-            lock (recSync)
-            {
-                int bytesRead = socket.EndReceive(result);
-
-                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                incoming.Append(incomingChars, 0, charsRead);
-                for (int index = 0; index < incoming.Length; index++)
-                {
-
-                    if (incoming[index] == '\n')
-                    { 
-                        incoming.Remove(incoming.Length - 1, 1);
-                    }
-
-
-                }
-                RecieveNewMessage();
-
-            /* // Figure out how many bytes have come in
-             int bytesRead = socket.EndReceive(result);
-
-
-
-             if (bytesRead == 0)
-             {
-                 Console.WriteLine("Socket closed");
-                 ReceiveCallback rec = receiveCallbackQueue.Dequeue();
-                 object pay = recieveCallbackPayloadQueue.Dequeue();
-
-                 rec(incoming.ToString(), pay);
-                 socket.Close();
-             }
-             else
-             {
-
-                 int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                 incoming.Append(incomingChars, 0, charsRead);
-                 for (int index = 0; index < incoming.Length; index++)
-                 {
-
-                     if (incoming[index] == '\n')
-                     {
-
-                         ReceiveCallback rec = receiveCallbackQueue.Dequeue();
-                         object pay = recieveCallbackPayloadQueue.Dequeue();
-
-                         incoming.Remove(incoming.Length - 1, 1);
-                         rec(incoming.ToString(), pay);
-                         incoming.Clear();
-                     }
-                 }
-                 try
-                 {
-                     socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None,
-                         MessageReceived, null);
-                 }
-                 catch (ObjectDisposedException)
-                 { }*/
-
-         }
-
-
-        }
-            /// <summary>
-            /// Frees resources associated with this StringSocket.
-            /// </summary>
-            public void Dispose()
+        
+        /// <summary>
+        /// Frees resources associated with this StringSocket.
+        /// </summary>
+        public void Dispose()
         {
             Shutdown(SocketShutdown.Both);
             Close();
