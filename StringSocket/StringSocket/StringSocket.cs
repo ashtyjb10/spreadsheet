@@ -69,10 +69,7 @@ namespace CustomNetworking
         private const int BUFFER_SIZE = 1024;
         private byte[] incomingBytes = new byte[BUFFER_SIZE];
         private char[] incomingChars = new char[BUFFER_SIZE];
-        private Decoder decoder;
-        private StringBuilder incoming;
-        private int pendingIndex = 0;
-        private StringBuilder outgoing;
+
         private byte[] pendingBytes = new byte[0];
         private readonly object sendSync = new object();
         private readonly object recSync = new object();
@@ -80,16 +77,11 @@ namespace CustomNetworking
         private bool sendIsOngoing;
         private bool isReceiving;
 
-        private Queue<SendCallback> sendCallbackQueue;
-        private Queue<Object> sendCallbackPayloadQueue;
-        private Queue<ReceiveCallback> receiveCallbackQueue;
-        private Queue<Object> recieveCallbackPayloadQueue;
         private Queue<string> stringBack;
         private string partialMessage;
 
         private Queue<SendSave> sendSaveQueue;
         private Queue<ReceiveSave> receiveQueueSave;
-        int pendingRecIndex;
 
         private int sentBytes;
 
