@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CustomNetworking
 {
+
     /// <summary>
     /// The type of delegate that is called when a StringSocket send has completed.
     /// </summary>
@@ -90,8 +91,9 @@ namespace CustomNetworking
         private Queue<ReceiveSave> receiveQueueSave;
         int pendingRecIndex;
 
-        private int sentBytes;
-       
+        
+
+
 
         /// <summary>
         /// Creates a StringSocket from a regular Socket, which should already be connected.  
@@ -109,13 +111,10 @@ namespace CustomNetworking
             receiveCallbackQueue = new Queue<ReceiveCallback>();
             recieveCallbackPayloadQueue = new Queue<object>();
 
+            decoder = e.GetDecoder();
 
             sendSaveQueue = new Queue<SendSave>();
             receiveQueueSave = new Queue<ReceiveSave>();
-            
-
-            decoder = e.GetDecoder();
-            
             
 
             incoming = new StringBuilder();
@@ -136,17 +135,15 @@ namespace CustomNetworking
             // TODO: Complete implementation of StringSocket
         }
 
-
         private struct SendSave
         {
-            public string SentMessage { get; set; }
+            public StringBuilder sentMessage { get; set; }
             public object Payload { get; set; }
             public SendCallback Callback { get; set; }
         }
 
         private struct ReceiveSave
         {
-
             public object Payload { get; set; }
             public ReceiveCallback Callback { get; set; }
             public int Length { get; set; }
@@ -195,7 +192,6 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
-
             
             //remember the callback, string and payload that needs to be stored.
             //send bytes out
@@ -203,78 +199,80 @@ namespace CustomNetworking
             //when the bytes have been completely sent you can quit calling the callback.
             //same idea as the send in the chat server.
 
-            lock (sendSaveQueue)
+            lock (sendSync)
             {
-                
-                
-                sendSaveQueue.Enqueue(new SendSave { SentMessage = s, Callback = callback, Payload = payload });
+                //convert string into an array of bytes.
+                outgoing.Append(s);
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
 
+                sendCallbackQueue.Enqueue(callback);
+                sendCallbackPayloadQueue.Enqueue(payload);
                 if (!sendIsOngoing)
                 {
-                    Console.WriteLine("Sending " + sendSaveQueue.Peek().SentMessage.ToString());
                     sendIsOngoing = true;
-                    SendBytes();
+                    sendBytes();
                 }
             }
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SendBytes()
+
+        public void sendBytes()
         {
-
-            sentBytes = 0;
-            pendingBytes = encoding.GetBytes(sendSaveQueue.Peek().SentMessage);
-            try
+            //we are in the middle of sending.
+            if (pendingIndex < pendingBytes.Length)
             {
+                try
+                {
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                            SocketFlags.None, MessageSent, null);
+                }
+                catch (ObjectDisposedException)
+                {
 
-
-                socket.BeginSend(pendingBytes, 0, pendingBytes.Length, SocketFlags.None, MessageSent, null);
-                
+                }
             }
-            catch(Exception)
+            //not currently have block of bytes, make a new one!
+            else if (outgoing.Length > 0)
             {
-                sendSaveQueue.Dequeue();
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
+                pendingIndex = 0;
+                outgoing.Clear();
+                try
+                {
+                    socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                           SocketFlags.None, MessageSent, null);
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+            }
+            else
+            {
+                SendCallback send = sendCallbackQueue.Dequeue();
+                object pay = sendCallbackPayloadQueue.Dequeue();
+                send(true, pay);
+                sendIsOngoing = false;
             }
         }
 
         private void MessageSent(IAsyncResult result)
         {
-            
-
-            lock (sendSaveQueue)
-            {
-                sentBytes = sentBytes + socket.EndSend(result);
-
-                int leftToSend = pendingBytes.Length - sentBytes;
-
-                if (leftToSend > 0)
+            lock(sendSync)
+            { 
+                int byteSent = socket.EndSend(result);
+                if (byteSent == 0)
                 {
-                    socket.BeginSend(pendingBytes, sentBytes, leftToSend, SocketFlags.None, MessageSent, null);
+                    socket.Close();
+
                 }
                 else
                 {
-                    SendSave toCall = sendSaveQueue.Dequeue();
-                    Task sendCallback = new Task( () => toCall.Callback.Invoke(true, toCall.Payload));
-                    sendCallback.Start();
-
-                    if(sendSaveQueue.Count > 0)
-                    {
-                        SendBytes();
-                    }
-                    else
-                    {
-                        sendIsOngoing = false;
-                    }
-
+                    pendingIndex += byteSent;
+                    sendBytes();
                 }
-
             }
-
-
-
+            
         }
 
         /// <summary>
@@ -325,6 +323,7 @@ namespace CustomNetworking
                 {
                     isReceiving = true;
                     ReceiveNewMessage();
+                   // isRecieving = false;
                 }
 
             }
@@ -332,8 +331,6 @@ namespace CustomNetworking
 
         private void ReceiveNewMessage()
         {
-            string sb = null;
-            
             //if we have messages pending
             while (receiveQueueSave.Count > 0)
             {
@@ -341,9 +338,13 @@ namespace CustomNetworking
                 if (stringBack.Count > 0)
                 {
                     ReceiveSave received = receiveQueueSave.Dequeue();
-                    sb = stringBack.Dequeue();
+                    string sb = stringBack.Dequeue();
+                    if (received.Length > 0)
+                    {
+                        Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
+                        
+                    }
                     Task.Run(() => received.Callback(sb, received.Payload));
-
                 }
                 else
                 {
@@ -351,10 +352,6 @@ namespace CustomNetworking
                 }
 
             }
-            /*if (sb != null)
-            {
-                stringBack.Enqueue(sb);
-            }*/
             //int bytesReceived = 0;
             if (receiveQueueSave.Count > 0)
             {
@@ -381,37 +378,21 @@ namespace CustomNetworking
                 // returns the number of bytes received in the previous instance of socket.BeginReceive()
                 int bytesReceived = socket.EndReceive(ar);
 
-               /* //if (length > 0 )only get bytes we want... even if it contains a newline.
-                if (receiveQueueSave.Peek().Length > 0)
+                // add the bytes we've received so far to a our partial message string                             
+                partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
+
+                // while partialMessage still has a new line
+                while (!(partialMessage.IndexOf("\n").Equals(-1)))
                 {
-                    
-                   string partialMessage2 = encoding.GetString(incomingBytes, 0, receiveQueueSave.Peek().Length);
-                    stringBack.Enqueue(partialMessage2);
-                    partialMessage += encoding.GetString(incomingBytes, partialMessage2.Length, bytesReceived- receiveQueueSave.Peek().Length);
+                    // get the index of the newline
+                    int messageLength = partialMessage.IndexOf("\n");
 
+                    // get the completed message and add it to queue
+                    stringBack.Enqueue(partialMessage.Substring(0, messageLength));
+
+                    // advance our starting index and remove the message we just found from partialMessage
+                    partialMessage = partialMessage.Substring(messageLength + 1);
                 }
-                else
-                {*/
-                    //grab it all!
-                    partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
-                    // while partialMessage still has a new line
-                    while (!(partialMessage.IndexOf("\n").Equals(-1)))
-                    {
-                        // get the index of the newline
-                        int messageLength = partialMessage.IndexOf("\n");
-
-                        // get the completed message and add it to queue
-                        stringBack.Enqueue(partialMessage.Substring(0, messageLength));
-
-                        // advance our starting index and remove the message we just found from partialMessage
-                        partialMessage = partialMessage.Substring(messageLength + 1);
-
-                    }
-
-                //}
-                            
-
-                
                 //check for more!
                 ReceiveNewMessage();
             }
