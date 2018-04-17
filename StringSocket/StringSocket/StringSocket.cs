@@ -93,6 +93,7 @@ namespace CustomNetworking
 
         private int sentBytes;
         int bytesReceivedSoFar;
+        private bool enteredTry;
 
 
 
@@ -316,11 +317,13 @@ namespace CustomNetworking
         {
             lock (recSync)
             {
+                //get the callback info!
                 receiveQueueSave.Enqueue(new ReceiveSave { Callback = callback, Payload = payload,Length = length });
-
 
                 if (!isReceiving)
                 {
+                    //did it enter the try?
+                    enteredTry = false;
                     isReceiving = true;
                     ReceiveNewMessage();
                 }
@@ -338,12 +341,31 @@ namespace CustomNetworking
                 {
                     ReceiveSave received = receiveQueueSave.Dequeue();
                     string sb = stringBack.Dequeue();
-                    /* if (received.Length > 0)
+                    //if we have to remove some of the leftovers and there are no more bytes to
+                    //receive.
+                     if (received.Length > 0 && enteredTry == false)
                      {
+                        //cut off the string and send it back.
                          Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
+                        sb.Substring(received.Length);
 
-                     }*/
-                    Task.Run(() => received.Callback(sb, received.Payload));
+                        //get the new index!
+                        int rec = received.Length;
+                        int sbl = sb.Length;
+                        int remain = sbl - rec;
+
+                        if (remain > 0)
+                        {
+                            stringBack.Enqueue(sb.Substring(remain));
+                        }
+                        
+
+                     }
+                    else
+                    {
+                        Task.Run(() => received.Callback(sb, received.Payload));
+
+                    }
                 }
                
                 else
@@ -352,7 +374,7 @@ namespace CustomNetworking
                 }
 
             }
-            
+            //if we only need to read in part of the line.
             if (receiveQueueSave.Count > 0 && receiveQueueSave.Peek().Length > 0)
             {
                 try
@@ -365,6 +387,7 @@ namespace CustomNetworking
                     receiveQueueSave.Dequeue();
                 }
             }
+            //if we need to read in the whole line.
             else if (receiveQueueSave.Count > 00)
             {
                 try
@@ -379,17 +402,21 @@ namespace CustomNetworking
             }
             else
             {
+                //reset the values!
                 isReceiving = false;
+                enteredTry = false;
             }
         }
         /// <summary>
-        /// 
+        ///  gets the bytes and if there is a length restriction it just adds the bytes to the queue, otherwise we
+        ///  need to remove the \n character.
         /// </summary>
         /// <param name="ar"></param>
         private void MessageReceived(IAsyncResult ar)
         {
             lock (recSync)
             {
+                enteredTry = true;
                 // returns the number of bytes received in the previous instance of socket.BeginReceive()
                 int bytesReceived = socket.EndReceive(ar);
                 bytesReceivedSoFar = bytesReceived;
@@ -409,7 +436,7 @@ namespace CustomNetworking
 
                     // if we still have a new line that needs to be removed.
                     int times = 0;
-                    while (!(partialMessage.IndexOf("\n").Equals(-1)) && times == 0)
+                    while (!(partialMessage.IndexOf("\n").Equals(-1)) && times == 0) 
                     {
                         // get the index, add the substring to the queue, and increase the index of partialMessage/
                         int messageLength = partialMessage.IndexOf("\n");
