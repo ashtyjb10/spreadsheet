@@ -255,9 +255,10 @@ namespace CustomNetworking
                 else
                 {
                     SendSave toCall = sendSaveQueue.Dequeue();
-                    Task sendCallback = new Task(() => toCall.Callback.Invoke(true, toCall.Payload));
-                    sendCallback.Start();
-                    
+                    //Task sendCallback = new Task(() => toCall.Callback.Invoke(true, toCall.Payload));
+
+                    //sendCallback.Start();
+                    ThreadPool.QueueUserWorkItem(o => toCall.Callback(true, toCall.Payload));
                     if (sendSaveQueue.Count > 0)
                     {
                         SendBytes();
@@ -374,20 +375,31 @@ namespace CustomNetworking
                 // returns the number of bytes received in the previous instance of socket.BeginReceive()
                 int bytesReceived = socket.EndReceive(ar);
 
-                // add the bytes we've received so far to a our partial message string                             
-                partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
-
-                // while partialMessage still has a new line
-                while (!(partialMessage.IndexOf("\n").Equals(-1)))
+                if (receiveQueueSave.Peek().Length > 0)
                 {
-                    // get the index of the newline
-                    int messageLength = partialMessage.IndexOf("\n");
 
-                    // get the completed message and add it to queue
-                    stringBack.Enqueue(partialMessage.Substring(0, messageLength));
+                    string partialMessage2 = encoding.GetString(incomingBytes, 0, receiveQueueSave.Peek().Length);
+                    stringBack.Enqueue(partialMessage2);
+                    partialMessage += encoding.GetString(incomingBytes, receiveQueueSave.Peek().Length + 1, bytesReceived);
+                }
+                else
+                {
 
-                    // advance our starting index and remove the message we just found from partialMessage
-                    partialMessage = partialMessage.Substring(messageLength + 1);
+                    // add the bytes we've received so far to a our partial message string                             
+                    partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
+
+                    // while partialMessage still has a new line
+                    while (!(partialMessage.IndexOf("\n").Equals(-1)))
+                    {
+                        // get the index of the newline
+                        int messageLength = partialMessage.IndexOf("\n");
+
+                        // get the completed message and add it to queue
+                        stringBack.Enqueue(partialMessage.Substring(0, messageLength));
+
+                        // advance our starting index and remove the message we just found from partialMessage
+                        partialMessage = partialMessage.Substring(messageLength + 1);
+                    }
                 }
                 //check for more!
                 ReceiveNewMessage();
