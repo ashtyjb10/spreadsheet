@@ -342,19 +342,6 @@ namespace CustomNetworking
                 {
                     ReceiveSave received = receiveQueueSave.Dequeue();
                     sb = stringBack.Dequeue();
-                    /*if (received.Length > 0)
-                    {
-                        Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
-                        Console.WriteLine();
-                        int rl = received.Length;
-                        int sbl = sb.Length;
-                        sb = sb.Substring(received.Length + 1, (sb.Length - 1) - received.Length);
-                        //cut the string...
-                    }
-                    else
-                    {
-                        Task.Run(() => received.Callback(sb, received.Payload));
-                    }*/
                     Task.Run(() => received.Callback(sb, received.Payload));
 
                 }
@@ -394,7 +381,7 @@ namespace CustomNetworking
                 // returns the number of bytes received in the previous instance of socket.BeginReceive()
                 int bytesReceived = socket.EndReceive(ar);
 
-                //if (length > 0 )only get bytes we want... even if it contains a newline.
+               /* //if (length > 0 )only get bytes we want... even if it contains a newline.
                 if (receiveQueueSave.Peek().Length > 0)
                 {
                     
@@ -404,7 +391,7 @@ namespace CustomNetworking
 
                 }
                 else
-                {
+                {*/
                     //grab it all!
                     partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
                     // while partialMessage still has a new line
@@ -421,7 +408,7 @@ namespace CustomNetworking
 
                     }
 
-                }
+                //}
                             
 
                 
