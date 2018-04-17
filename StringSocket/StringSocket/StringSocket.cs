@@ -268,11 +268,7 @@ namespace CustomNetworking
                     }
 
                 }
-
             }
-
-
-
         }
 
         /// <summary>

@@ -787,7 +787,7 @@ namespace GradingTester
         /// </summary>
         [TestMethod()]
         public void Test17()
-        {
+{
             new Test17Class().run(4017);
         }
 
