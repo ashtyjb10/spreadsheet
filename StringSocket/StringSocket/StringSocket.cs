@@ -313,11 +313,16 @@ namespace CustomNetworking
                     string sb = stringBack.Dequeue();
                     //if we have to remove some of the leftovers and there are no more bytes to
                     //receive.
-                     if (received.Length > 0 && enteredTry == false)
+                     if (received.Length > 0 && enteredTry == false & received.Length <= sb.Length)
                      {
                         //cut off the string and send it back.
-                         Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
-                        sb.Substring(received.Length);
+                        
+
+
+                        string toSendBack = sb.Substring(0, received.Length);
+                        string toEnqueue = sb.Substring(received.Length, sb.Length - received.Length);
+                         Task.Run(() => received.Callback(toSendBack, received.Payload));
+                        //sb.Substring(received.Length);
 
                         //get the new index!
                         int rec = received.Length;
@@ -326,7 +331,7 @@ namespace CustomNetworking
 
                         if (remain > 0)
                         {
-                            stringBack.Enqueue(sb.Substring(remain));
+                            stringBack.Enqueue(toEnqueue);
                         }
                         
 
@@ -412,6 +417,12 @@ namespace CustomNetworking
                         int messageLength = partialMessage.IndexOf("\n");
                         stringBack.Enqueue(partialMessage.Substring(0, messageLength));
                         partialMessage = partialMessage.Substring(messageLength + 1);
+
+                        if(partialMessage.IndexOf("\n").Equals(partialMessage.Length -1) && partialMessage.Length > 5
+                            ){
+                            stringBack.Enqueue(partialMessage);
+                            times++;
+                        }
                     }
                 }
                 //check for more!
