@@ -323,7 +323,6 @@ namespace CustomNetworking
                 {
                     isReceiving = true;
                     ReceiveNewMessage();
-                   // isRecieving = false;
                 }
 
             }
@@ -331,6 +330,8 @@ namespace CustomNetworking
 
         private void ReceiveNewMessage()
         {
+            string sb = null;
+            
             //if we have messages pending
             while (receiveQueueSave.Count > 0)
             {
@@ -338,13 +339,22 @@ namespace CustomNetworking
                 if (stringBack.Count > 0)
                 {
                     ReceiveSave received = receiveQueueSave.Dequeue();
-                    string sb = stringBack.Dequeue();
-                    if (received.Length > 0)
+                    sb = stringBack.Dequeue();
+                    /*if (received.Length > 0)
                     {
                         Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
-                        
+                        Console.WriteLine();
+                        int rl = received.Length;
+                        int sbl = sb.Length;
+                        sb = sb.Substring(received.Length + 1, (sb.Length - 1) - received.Length);
+                        //cut the string...
                     }
+                    else
+                    {
+                        Task.Run(() => received.Callback(sb, received.Payload));
+                    }*/
                     Task.Run(() => received.Callback(sb, received.Payload));
+
                 }
                 else
                 {
@@ -352,6 +362,10 @@ namespace CustomNetworking
                 }
 
             }
+            /*if (sb != null)
+            {
+                stringBack.Enqueue(sb);
+            }*/
             //int bytesReceived = 0;
             if (receiveQueueSave.Count > 0)
             {
@@ -378,21 +392,37 @@ namespace CustomNetworking
                 // returns the number of bytes received in the previous instance of socket.BeginReceive()
                 int bytesReceived = socket.EndReceive(ar);
 
-                // add the bytes we've received so far to a our partial message string                             
-                partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
-
-                // while partialMessage still has a new line
-                while (!(partialMessage.IndexOf("\n").Equals(-1)))
+                //if (length > 0 )only get bytes we want... even if it contains a newline.
+                if (receiveQueueSave.Peek().Length > 0)
                 {
-                    // get the index of the newline
-                    int messageLength = partialMessage.IndexOf("\n");
+                    
+                   string partialMessage2 = encoding.GetString(incomingBytes, 0, receiveQueueSave.Peek().Length);
+                    stringBack.Enqueue(partialMessage2);
+                    partialMessage += encoding.GetString(incomingBytes, partialMessage2.Length, bytesReceived- receiveQueueSave.Peek().Length);
 
-                    // get the completed message and add it to queue
-                    stringBack.Enqueue(partialMessage.Substring(0, messageLength));
-
-                    // advance our starting index and remove the message we just found from partialMessage
-                    partialMessage = partialMessage.Substring(messageLength + 1);
                 }
+                else
+                {
+                    //grab it all!
+                    partialMessage += encoding.GetString(incomingBytes, 0, bytesReceived);
+                    // while partialMessage still has a new line
+                    while (!(partialMessage.IndexOf("\n").Equals(-1)))
+                    {
+                        // get the index of the newline
+                        int messageLength = partialMessage.IndexOf("\n");
+
+                        // get the completed message and add it to queue
+                        stringBack.Enqueue(partialMessage.Substring(0, messageLength));
+
+                        // advance our starting index and remove the message we just found from partialMessage
+                        partialMessage = partialMessage.Substring(messageLength + 1);
+
+                    }
+
+                }
+                            
+
+                
                 //check for more!
                 ReceiveNewMessage();
             }

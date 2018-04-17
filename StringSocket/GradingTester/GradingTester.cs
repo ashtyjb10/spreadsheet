@@ -392,7 +392,6 @@ namespace GradingTester
                     if (!SpinWait.SpinUntil(() => count == LIMIT, 5000))
                     {
                         Assert.Fail();
-                        //Console.WriteLine();
                     }
                     for (int i = 0; i < LIMIT; i++)
                     {
