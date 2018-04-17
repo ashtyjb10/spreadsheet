@@ -11,8 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace CustomNetworking
-{
-
+{ 
     /// <summary>
     /// The type of delegate that is called when a StringSocket send has completed.
     /// </summary>
