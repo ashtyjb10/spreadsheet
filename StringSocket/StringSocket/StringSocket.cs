@@ -257,7 +257,7 @@ namespace CustomNetworking
                     SendSave toCall = sendSaveQueue.Dequeue();
                     Task sendCallback = new Task(() => toCall.Callback.Invoke(true, toCall.Payload));
                     sendCallback.Start();
-
+                    
                     if (sendSaveQueue.Count > 0)
                     {
                         SendBytes();
