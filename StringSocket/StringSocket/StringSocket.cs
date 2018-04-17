@@ -322,24 +322,26 @@ namespace CustomNetworking
                     string sb = stringBack.Dequeue();
                     //if we have to remove some of the leftovers and there are no more bytes to
                     //receive.
-                     if (received.Length > 0 && enteredTry == false)
-                     {
+                    if (received.Length > 0 && enteredTry == false)
+                    {
                         //cut off the string and send it back.
-                         Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
-                        sb.Substring(received.Length);
-
-                        //get the new index!
-                        int rec = received.Length;
-                        int sbl = sb.Length;
-                        int remain = sbl - rec;
-
-                        if (remain > 0)
-                        {
-                            stringBack.Enqueue(sb.Substring(remain));
-                        }
+                        //string s = sb.Substring(0, received.Length);
                         
+                            Task.Run(() => received.Callback(sb.Substring(0, received.Length), received.Payload));
+                            sb = sb.Substring(received.Length);
 
-                     }
+                            //get the new index!
+                            // int rec = received.Length;
+                            //int sbl = sb.Length;
+                            //int remain = sbl - rec;
+
+                            if (sb.Length > 0)
+                            {
+                                stringBack.Enqueue(sb);
+                            }
+                       
+                    }
+                   
                     else
                     {
                         Task.Run(() => received.Callback(sb, received.Payload));
