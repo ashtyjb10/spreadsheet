@@ -11,8 +11,10 @@ namespace Boggle
     {
         static void Main(string[] args)
         {
-            //why???
-            //todo: ask about below, fix the dictionary, ask about 6.4, and the boggleGame file
+            
+
+            
+            // fix the dictionary
 
 
             HttpStatusCode status;

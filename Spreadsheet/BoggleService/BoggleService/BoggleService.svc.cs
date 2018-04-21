@@ -54,18 +54,19 @@ namespace Boggle
         /// an http response is sent.
         /// </summary>
         /// <param name="status"></param>
-        private static void SetStatus(HttpStatusCode status)
+        /*private static void SetStatus(HttpStatusCode status)
         {
             WebOperationContext.Current.OutgoingResponse.StatusCode = status;
-        }
+        }*/
 
         /// <summary>
         /// Returns a Stream version of index.html.
         /// </summary>
         /// <returns></returns>
-        public Stream API()
+        public Stream API(out HttpStatusCode status)
         {
-            SetStatus(OK);
+            status = WebOperationContext.Current.OutgoingResponse.StatusCode = OK;
+            //SetStatus(OK);
             WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
@@ -75,12 +76,14 @@ namespace Boggle
         /// otherwise will set the status to OK and remove player1 from the game.
         /// </summary>
         /// <param name="cancelInfo"></param>
-        public void cancelGame(UserCancel cancelInfo)
+        public void cancelGame(UserCancel cancelInfo, out HttpStatusCode status)
         {
             lock (sync)
             {
                 if (cancelInfo.UserToken == null)
                 {
+                    status = WebOperationContext.Current.OutgoingResponse.StatusCode = O;
+
                     SetStatus(Forbidden);
                     return;
                 }

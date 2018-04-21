@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Net;
+using System.ServiceModel.Web;
 using static System.Net.HttpStatusCode;
 
 namespace Boggle
@@ -53,18 +54,19 @@ namespace Boggle
         /// an http response is sent.
         /// </summary>
         /// <param name="status"></param>
-        private static void SetStatus(HttpStatusCode status)
+       /* private static void SetStatus(HttpStatusCode status)
         {
             WebOperationContext.Current.OutgoingResponse.StatusCode = status;
-        }
+        }*/
 
         /// <summary>
         /// Returns a Stream version of index.html.
         /// </summary>
         /// <returns></returns>
-        public Stream API()
+        public Stream API(out HttpStatusCode status)
         {
-            SetStatus(OK);
+            status = HttpStatusCode.OK;
+            //SetStatus(OK);
             WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
@@ -74,13 +76,14 @@ namespace Boggle
         /// otherwise will set the status to OK and remove player1 from the game.
         /// </summary>
         /// <param name="cancelInfo"></param>
-        public void cancelGame(UserCancel cancelInfo)
+        public void cancelGame(UserCancel cancelInfo, out HttpStatusCode status)
         {
             lock (sync)
             {
                 if (cancelInfo.UserToken == null)
                 {
-                    SetStatus(Forbidden);
+                    status = HttpStatusCode.Forbidden;
+                    //SetStatus(Forbidden);
                     return;
                 }
                 using (SqlConnection conn = new SqlConnection(BoggleDB))
@@ -99,7 +102,8 @@ namespace Boggle
                                 //if the userToken is not a valid token then close everything set status and return.
                                 if (!reader.HasRows)
                                 {
-                                    SetStatus(Forbidden);
+                                    status = HttpStatusCode.Forbidden;
+                                    //SetStatus(Forbidden);
                                     reader.Close();
                                     trans.Commit();
                                     return;
@@ -133,8 +137,8 @@ namespace Boggle
                                     //if the game we are in is not pending but active or completed we need set to forbidden
                                     if (gameStatus != "pending" || player1Toke != cancelInfo.UserToken)
                                     {
-
-                                        SetStatus(Forbidden);
+                                        status = HttpStatusCode.Forbidden;
+                                        //SetStatus(Forbidden);
                                         reader.Close();
                                         trans.Commit();
                                         return;
@@ -156,7 +160,8 @@ namespace Boggle
                             }
                             else
                             {
-                                SetStatus(OK);
+                                status = HttpStatusCode.OK;
+                                //SetStatus(OK);
                                 trans.Commit();
                                 return;
                             }
@@ -175,7 +180,7 @@ namespace Boggle
         /// <param name="GameID"></param>
         /// <returns></returns>
 
-        public FullGameInfo getGameStats(string GameID)
+        public FullGameInfo getGameStats(string GameID, out HttpStatusCode status)
         {
             lock (sync)
             {
@@ -207,7 +212,8 @@ namespace Boggle
                                 //invalid gameID 
                                 if (!reader.HasRows)
                                 {
-                                    SetStatus(Forbidden);
+                                    status = HttpStatusCode.Forbidden;
+                                    //SetStatus(Forbidden);
                                     reader.Close();
                                     return null;
                                 }
@@ -221,7 +227,8 @@ namespace Boggle
                                         if (gameStatus == "pending")
                                         {
                                             gameInfo.GameState = gameStatus;
-                                            SetStatus(OK);
+                                            status = HttpStatusCode.OK;
+                                            //SetStatus(OK);
                                             reader.Close();
                                             trans.Commit();
                                             return gameInfo;
@@ -374,7 +381,8 @@ namespace Boggle
                             }
 
                             //remember game status is completed. so set all of the correct information.
-                            SetStatus(OK);
+                            status = HttpStatusCode.OK;
+                            //SetStatus(OK);
                             trans.Commit();
                             gameInfo.Player1.Score = player1Score;
                             gameInfo.Player1.WordsPlayed = player1Words;
@@ -427,8 +435,8 @@ namespace Boggle
                             gameInfo.Player2.Score = player2Score;
                             gameInfo.TimeLeft = timeLeft;
                         }
-
-                        SetStatus(OK);
+                        status = HttpStatusCode.OK;
+                        //SetStatus(OK);
                         trans.Commit();
                         return gameInfo;
 
@@ -445,7 +453,7 @@ namespace Boggle
         /// </summary>
         /// <param name="GameID"></param>
         /// <returns></returns>
-        public FullGameInfo getGameStatsBrief(string GameID)
+        public FullGameInfo getGameStatsBrief(string GameID, out HttpStatusCode status)
         {
 
             lock (sync)
@@ -475,7 +483,8 @@ namespace Boggle
                             {
                                 if (!reader.HasRows)
                                 {
-                                    SetStatus(Forbidden);
+                                    status = HttpStatusCode.Forbidden;
+                                    //SetStatus(Forbidden);
                                     reader.Close();
                                     trans.Commit();
                                     return null;
@@ -491,7 +500,8 @@ namespace Boggle
 
                                         if (gameState == "pending")
                                         {
-                                            SetStatus(Forbidden);
+                                            status = HttpStatusCode.Forbidden;
+                                            //SetStatus(Forbidden);
                                             reader.Close();
                                             trans.Commit();
                                             return null;
@@ -569,8 +579,8 @@ namespace Boggle
 
                             }
                         }
-
-                        SetStatus(OK);
+                        status = HttpStatusCode.OK;
+                        //SetStatus(OK);
                         trans.Commit();
                         gameInfo.Player1.Score = player1Score;
                         gameInfo.Player2.Score = player2Score;
@@ -589,7 +599,7 @@ namespace Boggle
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public UserGame joinGame(JoinGameInfo item)
+        public UserGame joinGame(JoinGameInfo item, out HttpStatusCode status)
         {
             lock (sync)
             {
@@ -600,7 +610,8 @@ namespace Boggle
                 if (item.UserToken == null || item.TimeLimit < 5
                     || item.TimeLimit > 120)
                 {
-                    SetStatus(Forbidden);
+                    status = HttpStatusCode.Forbidden;
+                    //SetStatus(Forbidden);
                     return null;
                 }
                 using (SqlConnection conn = new SqlConnection(BoggleDB))
@@ -620,7 +631,8 @@ namespace Boggle
                                 if (!reader.HasRows)
                                 {
                                     //the userID doesnt exist!
-                                    SetStatus(Forbidden);
+                                    status = HttpStatusCode.Forbidden;
+                                    //SetStatus(Forbidden);
                                     reader.Close();
                                     trans.Commit();
                                     return null;
@@ -690,7 +702,8 @@ namespace Boggle
                                     }
                                 }
                                 // finish everything and set to accepted.
-                                SetStatus(Accepted);
+                                status = HttpStatusCode.Accepted;
+                                //SetStatus(Accepted);
                                 trans.Commit();
                                 return returnGID;
                             }
@@ -719,7 +732,8 @@ namespace Boggle
                                         //set to forbidden and return.
                                         if (item.UserToken == player1Tok)
                                         {
-                                            SetStatus(Conflict);
+                                            status = HttpStatusCode.Conflict;
+                                            //SetStatus(Conflict);
                                             reader.Close();
                                             trans.Commit();
                                             return null;
@@ -764,7 +778,8 @@ namespace Boggle
                                         returnGID.GameID = gameID.ToString();
                                     }
                                 }
-                                SetStatus(Created);
+                                status = HttpStatusCode.Created;
+                                //SetStatus(Created);
                                 trans.Commit();
                                 return returnGID;
                             }
@@ -784,7 +799,7 @@ namespace Boggle
         /// <param name="wordInfo"></param>
         /// <param name="gameID"></param>
         /// <returns></returns>
-        public WordScore playWord(WordToPlay wordInfo, string gameID)
+        public WordScore playWord(WordToPlay wordInfo, string gameID, out HttpStatusCode status)
         {
             lock (sync)
             {
@@ -794,7 +809,8 @@ namespace Boggle
                 //Check the word for valid input.  If not valid, fobidden set and score 0 returned.
                 if (wordInfo.Word == "" || wordInfo.Word == null || wordInfo.Word.Trim().Length > 30)
                 {
-                    SetStatus(Forbidden);
+                    status = HttpStatusCode.Forbidden;
+                    //SetStatus(Forbidden);
                     return score;
                 }
 
@@ -830,7 +846,8 @@ namespace Boggle
                                 //If the reader does not return a row, set forbidden.
                                 if (!GameIdReader.HasRows)
                                 {
-                                    SetStatus(Forbidden);
+                                    status = WebOperationContext.Current.OutgoingResponse.StatusCode = Forbidden;
+                                    //SetStatus(Forbidden);
                                     GameIdReader.Close();
                                     trans.Commit();
                                     return score;
@@ -846,7 +863,8 @@ namespace Boggle
                                     //word can only be played when it is active
                                     if (GameStatus != "active")
                                     {
-                                        SetStatus(Conflict);
+                                        status = HttpStatusCode.Conflict;
+                                        //SetStatus(Conflict);
                                         GameIdReader.Close();
                                         trans.Commit();
                                         return score;
@@ -874,7 +892,8 @@ namespace Boggle
                                     //If the reader does not return a row, set forbidden
                                     if (!UserIdReader.HasRows)
                                     {
-                                        SetStatus(Forbidden);
+                                        status = HttpStatusCode.Forbidden;
+                                        //SetStatus(Forbidden);
                                         UserIdReader.Close();
                                         trans.Commit();
                                         return score;
@@ -889,7 +908,8 @@ namespace Boggle
                             if (Player1 != (wordInfo.UserToken) &&
                                 (Player2 != (wordInfo.UserToken)))
                             {
-                                SetStatus(Forbidden);
+                                status = HttpStatusCode.Forbidden;
+                                //SetStatus(Forbidden);
                                 trans.Commit();
                                 return score;
                             }
@@ -900,7 +920,8 @@ namespace Boggle
                             int timeLeft = (int)(TimeLimit + (time - currentTime));
                             if (timeLeft <= 0)
                             {
-                                SetStatus(Conflict);
+                                status = HttpStatusCode.Conflict;
+                                //SetStatus(Conflict);
                                 trans.Commit();
                                 return score;
                             }
@@ -1007,8 +1028,8 @@ namespace Boggle
                                         {
                                             throw new Exception("Query failed unexpectedly");
                                         }
-
-                                        SetStatus(OK);
+                                        status = HttpStatusCode.OK;
+                                        //SetStatus(OK);
                                         score.Score = wordPoints;
                                         trans.Commit();
                                         return score;
@@ -1117,8 +1138,8 @@ namespace Boggle
                                         {
                                             throw new Exception("Query failed unexpectedly");
                                         }
-
-                                        SetStatus(OK);
+                                        status = HttpStatusCode.OK;
+                                        //SetStatus(OK);
                                         score.Score = wordPoints;
                                         trans.Commit();
                                         return score;
@@ -1143,13 +1164,14 @@ namespace Boggle
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public UserToke Register(UserInfo user)
+        public UserToke Register(UserInfo user, out HttpStatusCode status)
         {
             lock (sync)
             {
                 if (user.Nickname == null || user.Nickname.Trim().Length == 0 || user.Nickname.Trim().Length > 50)
                 {
-                    SetStatus(Forbidden);
+                    status = HttpStatusCode.Forbidden;
+                    //SetStatus(Forbidden);
                     return null;
                 }
                 else
@@ -1179,7 +1201,8 @@ namespace Boggle
                                 {
                                     throw new Exception("Query failed unexpectedly");
                                 }
-                                SetStatus(Created);
+                                status = HttpStatusCode.Created;
+                                //SetStatus(Created);
                                 trans.Commit();
                                 UserToke token = new UserToke();
                                 token.UserToken = userID;
