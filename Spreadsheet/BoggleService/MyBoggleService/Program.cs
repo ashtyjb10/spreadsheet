@@ -98,11 +98,13 @@ namespace Boggle
 
                     if ((int)status / 100 == 2)
                     {
-
+                        string res = JsonConvert.SerializeObject(token);
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
+                        result = res;
                     }
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
                 }
             }
         }
-
     }
 }
