@@ -18,7 +18,7 @@ namespace Boggle
         static void Main(string[] args)
         {
             //BoggleService serv = new BoggleService();
-            SSListener server = new SSListener(60001, Encoding.UTF8);
+            SSListener server = new SSListener(60000, Encoding.UTF8);
             server.Start();
             server.BeginAcceptSS(ConnectionMade, server);
             Console.ReadLine();
