@@ -14,6 +14,7 @@ using System.Threading;
 
 namespace ServerGrader
 {
+
     /// <summary>
     /// NOTE:  The service must already be running elsewhere, such as in a separate Visual Studio
     /// or on a remote server, before these tests are run.  When the tests are started, the pending
@@ -25,6 +26,8 @@ namespace ServerGrader
     [TestClass]
     public class GradingTests
     {
+        [ClassInitialize()]
+
         /// <summary>
         /// Creates an HttpClient for communicating with the boggle server.
         /// </summary>
