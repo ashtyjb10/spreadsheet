@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace CustomNetworking
+namespace Boggle
 {
     /// <summary>
     /// Represents client connections that use StringSockets.

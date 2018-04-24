@@ -90,7 +90,7 @@ namespace Boggle
 
             private void ProcessRequest(string line, object pay = null)
             {
-                if (RegisterPatt.IsMatch(line))
+                if (RegisterPatt.IsMatch(firstLn))
                 {
                     UserInfo nickName = JsonConvert.DeserializeObject<UserInfo>(line);
                     UserToke token = new BoggleService().Register(nickName, out HttpStatusCode status);
