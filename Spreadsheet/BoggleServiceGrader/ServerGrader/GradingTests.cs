@@ -26,7 +26,7 @@ namespace ServerGrader
     [TestClass]
     public class GradingTests
     {
-        [ClassInitialize()]
+        
 
         /// <summary>
         /// Creates an HttpClient for communicating with the boggle server.

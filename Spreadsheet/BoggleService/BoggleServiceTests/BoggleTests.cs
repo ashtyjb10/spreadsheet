@@ -64,6 +64,7 @@ namespace Boggle
         public static void StartIIS(TestContext testContext)
         {
             IISAgent.Start(@"/site:""BoggleService"" /apppool:""Clr4IntegratedAppPool"" /config:""..\..\..\.vs\config\applicationhost.config""");
+            
 
             string path = AppDomain.CurrentDomain.BaseDirectory;
             path = path.Remove(path.Length - 10, 10);

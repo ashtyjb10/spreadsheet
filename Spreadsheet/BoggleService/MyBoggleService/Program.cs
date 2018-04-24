@@ -12,6 +12,8 @@ namespace Boggle
 {
     class Program
     {
+
+
         //private SSCallback ConnectionMade;
         static void Main(string[] args)
         {
@@ -49,7 +51,7 @@ namespace Boggle
             private SS ss;
             private string firstLn;
             private int length;
-            private static readonly Regex RegisterPatt = new Regex(@"^POST /BoggleSErvice.svc/users HTTP");
+            private static readonly Regex RegisterPatt = new Regex(@"^POST /BoggleService.svc/users HTTP");
             private static readonly Regex contentLengthPattern = new Regex(@"^content-length: (\d+)", RegexOptions.IgnoreCase);
             ///
             /// </summary>
