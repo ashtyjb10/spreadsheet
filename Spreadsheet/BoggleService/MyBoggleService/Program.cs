@@ -17,7 +17,7 @@ namespace Boggle
         //private SSCallback ConnectionMade;
         static void Main(string[] args)
         {
-
+            //BoggleService serv = new BoggleService();
             SSListener server = new SSListener(60000, Encoding.UTF8);
             server.Start();
             server.BeginAcceptSS(ConnectionMade, server);
@@ -26,17 +26,17 @@ namespace Boggle
 
              // fix the dictionary
 
-            /*
-             HttpStatusCode status;
-            UserInfo name = new UserInfo { Nickname = "Joe" };
+            
+           HttpStatusCode status;
+           /* UserInfo name = new UserInfo { Nickname = "Joe" };
             BoggleService service = new BoggleService();
             UserToke user = service.Register(name, out status);
             Console.WriteLine(user.UserToken);
-            Console.WriteLine(status.ToString());
+            Console.WriteLine(status.ToString());*/
 
             // This is our way of preventing the main thread from
             // exiting while the server is in use
-            Console.ReadLine();*/
+            Console.ReadLine();
         }
 
         private static void ConnectionMade(SS ss, object payload)
@@ -92,7 +92,7 @@ namespace Boggle
 
             private void ProcessRequest(string line, object pay = null)
             {
-                if (RegisterPatt.IsMatch(line))
+                if (RegisterPatt.IsMatch(firstLn))
                 {
                     UserInfo nickName = JsonConvert.DeserializeObject<UserInfo>(line);
                     UserToke token = new BoggleService().Register(nickName, out HttpStatusCode status);

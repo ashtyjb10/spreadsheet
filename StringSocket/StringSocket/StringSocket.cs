@@ -10,7 +10,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CustomNetworking
+namespace Boggle
 { 
     /// <summary>
     /// The type of delegate that is called when a StringSocket send has completed.
