@@ -55,8 +55,8 @@ namespace Boggle
             private static readonly Regex JoinPattern = new Regex(@"^POST /BoggleService.svc/games HTTP");
             private static readonly Regex CancelJoinPattern = new Regex(@"^PUT /BoggleService.svc/games HTTP");
             private static readonly Regex PlayWordPattern = new Regex(@"^PUT /BoggleService.svc/games/(\d+) HTTP");
-            private static readonly Regex GameStatusBrfYPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+)/(Brief=yes) HTTP");
-            private static readonly Regex GameStatusBrfNPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+)/Brief=no HTTP");
+            private static readonly Regex GameStatusBrfYPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+)\?(brief=yes) HTTP");
+            private static readonly Regex GameStatusBrfNPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+)\?brief=no HTTP");
             private static readonly Regex GameStatusPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+) HTTP");
             private static readonly Regex contentLengthPattern = new Regex(@"^content-length: (\d+)", RegexOptions.IgnoreCase);
             ///

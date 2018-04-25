@@ -39,8 +39,9 @@ namespace Boggle
             //CurrentPendingGame = CreateNewGameID();
 
             //Reads in the dictionary for all games to use.
-            string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
-            StreamReader reader = new StreamReader(path);
+            //string path = AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt";
+            //StreamReader reader = new StreamReader(path);
+            StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt");
             while (reader.Peek() > -1)
             {
                 string wordToAdd = reader.ReadLine();
