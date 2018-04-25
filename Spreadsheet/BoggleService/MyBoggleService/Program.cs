@@ -52,6 +52,12 @@ namespace Boggle
             private string firstLn;
             private int length;
             private static readonly Regex RegisterPatt = new Regex(@"^POST /BoggleService.svc/users HTTP");
+            private static readonly Regex JoinPattern = new Regex(@"^POST /BoggleService.svc/games HTTP");
+            private static readonly Regex CancelJoinPattern = new Regex(@"^PUT /BoggleService.svc/games HTTP");
+            private static readonly Regex PlayWordPattern = new Regex(@"^PUT /BoggleService.svc/games/(\d+) HTTP");
+            private static readonly Regex GameStatusBrfYPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+)/(Brief=yes) HTTP");
+            private static readonly Regex GameStatusBrfNPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+)/Brief=no HTTP");
+            private static readonly Regex GameStatusPattern = new Regex(@"^GET /BoggleService.svc/games/(\d+) HTTP");
             private static readonly Regex contentLengthPattern = new Regex(@"^content-length: (\d+)", RegexOptions.IgnoreCase);
             ///
             /// </summary>
@@ -95,18 +101,131 @@ namespace Boggle
             {
                 if (RegisterPatt.IsMatch(firstLn))
                 {
+
                     UserInfo nickName = JsonConvert.DeserializeObject<UserInfo>(line);
                     UserToke token = new BoggleService().Register(nickName, out HttpStatusCode status);
-                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n";
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
 
                     if ((int)status / 100 == 2)
                     {
                         string res = JsonConvert.SerializeObject(token);
-                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
-                        result = res;
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n\r\n";
+                        result += res;
                     }
                     ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
                 }
+                else if (JoinPattern.IsMatch(firstLn))
+                {
+                    JoinGameInfo newInfo = JsonConvert.DeserializeObject<JoinGameInfo>(line);
+                    UserGame game = new BoggleService().joinGame(newInfo, out HttpStatusCode status);
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
+
+                    if ((int)status == 201 || (int)status == 202)
+                    {
+                        string res = JsonConvert.SerializeObject(game);
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
+                        result += res;
+                    }
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
+                }
+                else if (CancelJoinPattern.IsMatch(firstLn))
+                {
+                    UserCancel token = JsonConvert.DeserializeObject<UserCancel>(line);
+                    new BoggleService().cancelGame(token, out HttpStatusCode status);
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
+
+                }
+                else if (PlayWordPattern.IsMatch(firstLn))
+                {
+                    Match match = PlayWordPattern.Match(firstLn);
+                    string gameid = "";
+                    if (match.Success)
+                    {
+                        gameid = match.Groups[1].Value;
+                    }
+                    WordToPlay wordInfo = JsonConvert.DeserializeObject<WordToPlay>(line);
+                    WordScore score = new BoggleService().playWord(wordInfo, gameid, out HttpStatusCode status);
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
+
+                    if ((int)status == 200)
+                    {
+                        string res = JsonConvert.SerializeObject(score);
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
+                        result += res;
+                    }
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
+                }
+                else if (GameStatusBrfYPattern.IsMatch(firstLn))
+                {
+                    Match match = GameStatusBrfYPattern.Match(firstLn);
+                    string gameid = "";
+                    string brief = "";
+                    if (match.Success)
+                    {
+                        gameid = match.Groups[1].Value;
+                        brief = match.Groups[2].Value; //brief should only be yes!
+
+                    }
+
+                    FullGameInfo gameInfo = new BoggleService().getGameStatsBrief(gameid, out HttpStatusCode status);
+
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
+
+                    if ((int)status == 200)
+                    {
+                        string res = JsonConvert.SerializeObject(gameInfo);
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
+                        result += res;
+                    }
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
+
+                }
+                else if (GameStatusBrfNPattern.IsMatch(firstLn))
+                {
+                    Match match = GameStatusBrfNPattern.Match(firstLn);
+                    string gameid = "";
+                    if(match.Success)
+                    {
+                        gameid = match.Groups[1].Value;
+                    }
+                    FullGameInfo gameInfo = new BoggleService().getGameStats(gameid, out HttpStatusCode status);
+
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
+
+                    if ((int)status == 200)
+                    {
+                        string res = JsonConvert.SerializeObject(gameInfo);
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
+                        result += res;
+                    }
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
+                }
+                else
+                {
+                    //it is just a regular game status.
+                    Match match = GameStatusPattern.Match(firstLn);
+                    string gameid = "";
+                    if (match.Success)
+                    {
+                        gameid = match.Groups[1].Value;
+                    }
+
+                    FullGameInfo gameInfo = new BoggleService().getGameStats(gameid, out HttpStatusCode status);
+
+                    string result = "HTTP/1.1 " + (int)status + " " + status + "\r\n\r\n";
+
+                    if ((int)status == 200)
+                    {
+                        string res = JsonConvert.SerializeObject(gameInfo);
+                        result += "Content-Length: " + Encoding.UTF8.GetByteCount(res) + "\r\n";
+                        result += res;
+                    }
+                    ss.BeginSend(result, (x, y) => { ss.Shutdown(System.Net.Sockets.SocketShutdown.Both); }, null);
+
+
+                }
+
             }
         }
     }
